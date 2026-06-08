@@ -20,4 +20,10 @@ EOF
 # 3. Compile and stage the new secure boot configuration
 sudo rpi-eeprom-config --set boot_config.txt
 
-echo "Secure boot configuration staged. Please reboot your Pi to apply the hardware perimeter lock."
+# 4. Reload and enable systemd OTA verification service
+echo "Reloading systemd daemons and enabling OTA verification services..."
+sudo systemctl daemon-reload
+sudo systemctl enable sovereign-ota.service 2>/dev/null || sudo systemctl enable ota-verify.service
+
+echo "Secure boot and system services staged. Please reboot your Pi to apply the hardware perimeter lock."
+
