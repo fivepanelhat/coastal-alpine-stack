@@ -51,3 +51,8 @@ telemetry_data/media/*
 !telemetry_data/media/.gitkeep
 telemetry_data/sensor_logs/*
 !telemetry_data/sensor_logs/.gitkeep
+
+# Sovereign Keys & OTA Updates
+Sovereign-Keys/
+Staged-Updates/
+
