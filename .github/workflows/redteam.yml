@@ -24,4 +24,4 @@ jobs:
       - name: Execute Red Team Sanitization Scan
         run: |
           # Ensure this path matches exactly where the tool placed the script
-          python coastal-alpine-core/security/prompt_guard.py
+                                  python -m coastal_alpine_core.prompt_guard

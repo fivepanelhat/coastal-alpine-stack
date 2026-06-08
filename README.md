@@ -5,8 +5,8 @@
 
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
-[![Hardware](https://img.shields.io/badge/Hardware-RPi_5%20%2B%20Hailo--8L-orange.svg)]()  
-[![Version](https://img.shields.io/badge/Version-1.2.0-blue.svg)]()
+[![Hardware](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%20%2B%20Hailo-10-orange.svg)]()  
+[![CI](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/redteam.yml/badge.svg)](https://github.com/fivepanelhat/coastal-alpine-stack/actions)
 
 A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autonomous agricultural control, and heavy-industry client compliance.
 
@@ -45,7 +45,7 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 
 ### Prerequisites
 
-- Raspberry Pi 5 (16GB RAM) + Hailo-8L NPU accelerator (or virtualized NPU mappings)
+- Raspberry Pi 5 (16GB RAM) + Hailo-10L accelerator (or virtualized NPU mappings)
 - Python 3.10+
 - Ollama with Gemma 4 model (`gemma4:e4b`)
 - MQTT broker (e.g. Mosquitto)
@@ -110,7 +110,7 @@ flowchart TD
 
     subgraph "Edge Deployment Hardware"
         RPi[Raspberry Pi 5 Node]
-        Hailo[Hailo-8L NPU]
+        Hailo[Hailo-10L NPU]
         Ollama[Local Ollama Server]
         Sensors[ESP32 / CSI Cameras]
         
@@ -148,7 +148,7 @@ coastal-alpine-stack/
 
 **Hardware**  
 - Raspberry Pi 5 (16GB RAM)
-- Hailo-8L NPU PCIe HAT (13 TOPS)
+- Hailo-10L NPU PCIe HAT (13 TOPS)
 - CSI Camera module, USB microphone, ESP32 microcontrollers
 
 **Software**  
@@ -176,7 +176,7 @@ coastal-alpine-stack/
 
 Our tests run locally on the Raspberry Pi 5 to record execution time and power footprint:
 - **Ollama Gemma 4 (INT4):** ~14.5 tokens/sec execution speed under active CPU workload (~9.2W average power).
-- **YOLOv8 OBB (INT8):** Wasp detection pipeline processing a frame in <12.5ms using Hailo-8L NPU (~1.2W active NPU draw).
+- **YOLOv8 OBB (INT8):** Wasp detection pipeline processing a frame in <12.5ms using Hailo-10L NPU (~1.2W active NPU draw).
 
 ---
 
