@@ -43,6 +43,9 @@ sudo tee -a /etc/fstab > /dev/null << 'EOF'
 /dev/mmcblk0p2  /          ext4    ro,noatime,errors=remount-ro  0  1
 /dev/mmcblk0p1  /boot/firmware  vfat    ro,fmask=0022,dmask=0022  0  2
 
+# Mount persistent data partition as read-write
+/dev/mmcblk0p3  /mnt/sovereign-data  ext4  rw,noatime  0  2
+
 # Route Hailo, Python, and system volatile tasks directly to the 16GB RAM pool
 tmpfs           /tmp            tmpfs   nodev,nosuid,size=2G          0  0
 tmpfs           /var/log        tmpfs   nodev,nosuid,size=512M        0  0
