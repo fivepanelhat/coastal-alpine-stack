@@ -62,6 +62,14 @@ sudo cp sovereign_isolation.nft /etc/nftables.conf 2>/dev/null || sudo cp rpi_se
 sudo systemctl enable nftables
 sudo systemctl restart nftables
 
+# 3e. Configure Mosquitto MQTT Access Control List
+echo "Configuring Mosquitto MQTT access control list..."
+sudo cp mosquitto.acl /etc/mosquitto/mosquitto.acl 2>/dev/null || sudo cp rpi_secops/mosquitto.acl /etc/mosquitto/mosquitto.acl
+if [ -f /etc/mosquitto/mosquitto.conf ] && ! grep -q "acl_file" /etc/mosquitto/mosquitto.conf; then
+    echo "acl_file /etc/mosquitto/mosquitto.acl" | sudo tee -a /etc/mosquitto/mosquitto.conf > /dev/null
+fi
+sudo systemctl restart mosquitto 2>/dev/null || true
+
 # 4. Reload and enable systemd OTA verification service
 echo "Reloading systemd daemons and enabling OTA verification services..."
 sudo systemctl daemon-reload

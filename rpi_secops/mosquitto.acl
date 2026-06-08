@@ -1,0 +1,14 @@
+# --- Coastal Alpine Tech Access Control List ---
+
+# Pattern rule: Sensors can only publish to their unique localized topic namespace
+pattern write manakai/soil/%c
+pattern read manakai/soil/%c
+
+# AquaGuard Portal can write actuator triggers but cannot listen to general telemetry arrays
+user aquaguard_gateway
+topic write manakai/actuators/#
+topic read manakai/system/status
+
+# Black Box Logger can read absolutely everything across the stack but can never publish a command
+user blackbox_harvester
+topic read #
