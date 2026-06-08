@@ -1,6 +1,5 @@
 project-includes = [
     "**/*.py*",
-    "**/*.ipynb",
 ]
 search_path = [
     "Blue-Moon-Portal",
