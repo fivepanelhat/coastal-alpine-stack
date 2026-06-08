@@ -56,6 +56,12 @@ tmpfs           /root/.cache    tmpfs   nodev,nosuid,size=1G          0  0
 tmpfs           /var/lib/hailo  tmpfs   nodev,nosuid,size=256M        0  0
 EOF
 
+# 3d. Configure nftables for sovereign network isolation
+echo "Configuring nftables firewall for network isolation..."
+sudo cp sovereign_isolation.nft /etc/nftables.conf 2>/dev/null || sudo cp rpi_secops/sovereign_isolation.nft /etc/nftables.conf
+sudo systemctl enable nftables
+sudo systemctl restart nftables
+
 # 4. Reload and enable systemd OTA verification service
 echo "Reloading systemd daemons and enabling OTA verification services..."
 sudo systemctl daemon-reload

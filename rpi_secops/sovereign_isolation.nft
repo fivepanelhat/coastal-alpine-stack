@@ -1,0 +1,22 @@
+table inet sovereign_isolation {
+    chain input {
+        type filter hook input priority filter; policy drop;
+
+        # Allow loopback interfaces
+        iif "lo" accept
+
+        # Allow established connections
+        ct state established,related accept
+
+        # Only accept incoming secure mTLS MQTT traffic (Port 8883) and local HTTPS (Port 443)
+        tcp dport { 443, 8883 } accept
+    }
+
+    chain forward {
+        type filter hook forward priority filter; policy drop;
+        
+        # Explicitly isolate the web portal containers from accessing core AI training data volumes
+        iifname "br-portal" oifname "br-ai-core" drop
+        iifname "br-portal" accept
+    }
+}
