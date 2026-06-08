@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -19,9 +21,10 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          # Add any dependencies your redteam scripts need here
+          pip install ./coastal_alpine_core
 
       - name: Execute Red Team Sanitization Scan
         run: |
           # Ensure this path matches exactly where the tool placed the script
-                                  python -m coastal_alpine_core.prompt_guard
+          python -m coastal_alpine_core.prompt_guard
+
