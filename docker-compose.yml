@@ -47,6 +47,36 @@ services:
     networks:
       - sovereign_network
 
+  # 4. Prometheus Metrics Engine
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: sovereign_prometheus
+    volumes:
+      - ./telemetry/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d' # Keep local footprint small
+    restart: unless-stopped
+    networks:
+      - sovereign_network
+
+  # 5. Dashboard Layer (Grafana)
+  grafana:
+    image: grafana/grafana-oss:10.0.0
+    container_name: sovereign_grafana
+    ports:
+      - "3001:3000" # Mapped to 3001 to avoid portal collision
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=lock_down_your_admin_password_here
+      - GF_USERS_ALLOW_SIGN_UP=false
+    restart: unless-stopped
+    networks:
+      - sovereign_network
+
 networks:
   sovereign_network:
     driver: bridge
@@ -55,3 +85,5 @@ volumes:
   mosquitto_data:
   mosquitto_log:
   local_logs:
+  prometheus_data:
+  grafana_data:
