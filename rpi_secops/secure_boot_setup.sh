@@ -34,11 +34,31 @@ cma=1024M
 dtoverlay=hailo-10h
 EOF
 
+# 3c. Configure read-only fstab lockdowns and tmpfs mounts in /etc/fstab
+echo "Configuring read-only fstab lockdowns and volatile tmpfs pools..."
+sudo tee -a /etc/fstab > /dev/null << 'EOF'
+
+# Coastal Alpine Tech - Sovereign Root Lockdown
+# Mount core system components as read-only
+/dev/mmcblk0p2  /          ext4    ro,noatime,errors=remount-ro  0  1
+/dev/mmcblk0p1  /boot/firmware  vfat    ro,fmask=0022,dmask=0022  0  2
+
+# Route Hailo, Python, and system volatile tasks directly to the 16GB RAM pool
+tmpfs           /tmp            tmpfs   nodev,nosuid,size=2G          0  0
+tmpfs           /var/log        tmpfs   nodev,nosuid,size=512M        0  0
+tmpfs           /var/tmp        tmpfs   nodev,nosuid,size=512M        0  0
+
+# Crucial Hailo RT and Python wheel compilation directories mapped to RAM
+tmpfs           /root/.cache    tmpfs   nodev,nosuid,size=1G          0  0
+tmpfs           /var/lib/hailo  tmpfs   nodev,nosuid,size=256M        0  0
+EOF
+
 # 4. Reload and enable systemd OTA verification service
 echo "Reloading systemd daemons and enabling OTA verification services..."
 sudo systemctl daemon-reload
 sudo systemctl enable sovereign-ota.service 2>/dev/null || sudo systemctl enable ota-verify.service
 
 echo "Secure boot and system services staged. Please reboot your Pi to apply the hardware perimeter lock."
+
 
 
