@@ -84,6 +84,12 @@ echo "Staging Traefik K3s HelmChart mesh deployment..."
 sudo mkdir -p /var/lib/rancher/k3s/server/manifests/ 2>/dev/null || true
 sudo cp sovereign-edge-mesh.yaml /var/lib/rancher/k3s/server/manifests/sovereign-edge-mesh.yaml 2>/dev/null || sudo cp rpi_secops/sovereign-edge-mesh.yaml /var/lib/rancher/k3s/server/manifests/sovereign-edge-mesh.yaml 2>/dev/null || true
 
+# 3h. Stage Falco local security threat rules
+echo "Staging Falco security threat detection rules..."
+sudo mkdir -p /etc/falco/ 2>/dev/null || true
+sudo cp falco_rules.local.yaml /etc/falco/falco_rules.local.yaml 2>/dev/null || sudo cp rpi_secops/falco_rules.local.yaml /etc/falco/falco_rules.local.yaml 2>/dev/null || true
+sudo systemctl restart falco 2>/dev/null || true
+
 # 4. Reload and enable systemd OTA verification service
 echo "Reloading systemd daemons and enabling OTA verification services..."
 sudo systemctl daemon-reload

@@ -1,0 +1,15 @@
+# Coastal Alpine Tech - Industrial Edge Threat Monitoring
+
+- rule: Unauthorized Shell Spawned in Weaver Broker
+  desc: Detects a shell invocation attempt inside the secure core MQTT environment.
+  condition: container.name = "weaver_broker" and spawned_process and proc.name in (bash, sh, zsh)
+  output: "[CRITICAL THREAT] Shell spawned inside Weaver Broker container! (user=%user.name proc=%proc.cmdline container_id=%container.id)"
+  priority: CRITICAL
+  tags: [sovereign_stack, attack]
+
+- rule: Immutable Root Write Bypass Attempt
+  desc: Detects write attempts to the read-only partition spaces.
+  condition: open_write and fd.name startswith /boot/firmware/ and not proc.name in (unlock-stack)
+  output: "[WARNING] Write execution bypass attempted on Immutable Storage Boundary! (proc=%proc.name file=%fd.name)"
+  priority: WARNING
+  tags: [filesystem, tamper]
