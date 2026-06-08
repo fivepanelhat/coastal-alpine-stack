@@ -79,6 +79,11 @@ if ! grep -q "DOCKER_HOST" ~/.bashrc; then
     echo 'export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock' >> ~/.bashrc
 fi
 
+# 3g. Stage the Traefik K3s HelmChart mesh deployment
+echo "Staging Traefik K3s HelmChart mesh deployment..."
+sudo mkdir -p /var/lib/rancher/k3s/server/manifests/ 2>/dev/null || true
+sudo cp sovereign-edge-mesh.yaml /var/lib/rancher/k3s/server/manifests/sovereign-edge-mesh.yaml 2>/dev/null || sudo cp rpi_secops/sovereign-edge-mesh.yaml /var/lib/rancher/k3s/server/manifests/sovereign-edge-mesh.yaml 2>/dev/null || true
+
 # 4. Reload and enable systemd OTA verification service
 echo "Reloading systemd daemons and enabling OTA verification services..."
 sudo systemctl daemon-reload
