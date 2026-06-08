@@ -70,6 +70,15 @@ if [ -f /etc/mosquitto/mosquitto.conf ] && ! grep -q "acl_file" /etc/mosquitto/m
 fi
 sudo systemctl restart mosquitto 2>/dev/null || true
 
+# 3f. Configure rootless Docker for user space isolation
+echo "Configuring rootless Docker for user space container isolation..."
+sudo apt-get install -y dbus-user-session uidmap 2>/dev/null || true
+sudo systemctl disable --now docker.service docker.socket 2>/dev/null || true
+dockerd-rootless-setuptool.sh install 2>/dev/null || true
+if ! grep -q "DOCKER_HOST" ~/.bashrc; then
+    echo 'export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock' >> ~/.bashrc
+fi
+
 # 4. Reload and enable systemd OTA verification service
 echo "Reloading systemd daemons and enabling OTA verification services..."
 sudo systemctl daemon-reload
