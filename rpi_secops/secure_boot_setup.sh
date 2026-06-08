@@ -20,10 +20,25 @@ EOF
 # 3. Compile and stage the new secure boot configuration
 sudo rpi-eeprom-config --set boot_config.txt
 
+# 3b. Configure PCIe Gen 3 and Hailo NPU Overlay in /boot/firmware/config.txt
+echo "Configuring PCIe Gen 3 and Hailo NPU overlays..."
+sudo tee -a /boot/firmware/config.txt > /dev/null << 'EOF'
+
+# Enable PCIe Gen 3 speeds on the Pi 5 pipe
+dtparam=pciex1_gen=3
+
+# Allocate a generous 1GB CMA pool out of your 16GB total RAM for NPU DMA transfers
+cma=1024M
+
+# Enable the Hailo driver overlay
+dtoverlay=hailo-10h
+EOF
+
 # 4. Reload and enable systemd OTA verification service
 echo "Reloading systemd daemons and enabling OTA verification services..."
 sudo systemctl daemon-reload
 sudo systemctl enable sovereign-ota.service 2>/dev/null || sudo systemctl enable ota-verify.service
 
 echo "Secure boot and system services staged. Please reboot your Pi to apply the hardware perimeter lock."
+
 
