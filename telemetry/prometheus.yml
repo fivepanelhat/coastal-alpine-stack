@@ -1,12 +1,16 @@
 global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
+  scrape_interval: 5s # Fast polling for real-time edge monitoring
+  evaluation_interval: 5s
 
 scrape_configs:
-  - job_name: "prometheus"
+  - job_name: 'sovereign_core'
     static_configs:
-      - targets: ["localhost:9090"]
+      - targets: ['localhost:9090']
 
-  - job_name: "sovereign_nodes"
+  - job_name: 'weaver_broker'
     static_configs:
-      - targets: ["soilguard_portal:3000"]
+      - targets: ['weaver-broker:8883'] # Scraping Mosquitto metrics
+
+  - job_name: 'edge_portals'
+    static_configs:
+      - targets: ['soilguard-portal:3000', 'aquaguard-portal:3000']
