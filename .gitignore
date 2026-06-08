@@ -1,0 +1,53 @@
+# Environments
+.venv/
+venv/
+ENV/
+env/
+.env
+.env.*
+!.env.example
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# ML/DL weights & runs
+*.pt
+*.onnx
+runs/
+*.cache
+data/images/train/*.cache
+data/images/val/*.cache
+
+# Media & telemetry outputs
+telemetry_data/media/*
+!telemetry_data/media/.gitkeep
+telemetry_data/sensor_logs/*
+!telemetry_data/sensor_logs/.gitkeep
