@@ -3,7 +3,7 @@
 **Coastal Alpine Tech Limited**  
 *Edge AI | Sovereign Systems | Practical Intelligence*
 
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
+[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE)  
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
 [![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)]()  
 [![Hardware](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%20%2B%20Hailo--10L%2F10H%20NPU-orange.svg)]()  
@@ -139,10 +139,9 @@ coastal-alpine-stack/
 ├── Blue-Moon-Portal/          # Agritech IoT Crop Optimization Portal
 ├── Sting-Operation-AI/        # Real-time computer vision wasp detection sentinel
 ├── weaver/                    # White-label multi-tenant governance agent scaffold
-├── LICENSE                    # Monorepo MIT License
+├── LICENSE                    # Proprietary License
 ├── README.md                  # This entry point
-├── CHANGELOG.md               # Unified change log
-└── CONTRIBUTING.md            # Stack-wide development standards
+└── CHANGELOG.md               # Unified change log
 ```
 
 ---
@@ -171,7 +170,6 @@ coastal-alpine-stack/
 - [Blue-Moon-Portal/README.md](./Blue-Moon-Portal/README.md) — Blue-Moon-Portal documentation
 - [Sting-Operation-AI/README.md](./Sting-Operation-AI/README.md) — Sting-Operation-AI documentation
 - [CHANGELOG.md](./CHANGELOG.md) — Version history
-- [CONTRIBUTING.md](./CONTRIBUTING.md) — Contribution guidelines
 
 ---
 
@@ -191,15 +189,9 @@ Our tests run locally on the Raspberry Pi 5 to record execution time and power f
 
 ---
 
-## Contributing
-
-Contributions are welcome. Please see [CONTRIBUTING.md](./CONTRIBUTING.md).
-
----
-
 ## License
 
-Licensed under the MIT License — see [LICENSE](./LICENSE) for details.
+Licensed under the Coastal Alpine Tech Limited License — see [LICENSE](./LICENSE) for details.
 
 ---
 
