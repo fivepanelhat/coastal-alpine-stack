@@ -1,0 +1,24 @@
+[submodule "AquaGuard-Portal"]
+	path = AquaGuard-Portal
+	url = https://github.com/fivepanelhat/AquaGuard-Portal
+[submodule "Blue-Moon-Portal"]
+	path = Blue-Moon-Portal
+	url = https://github.com/fivepanelhat/Blue-Moon-Portal.git
+[submodule "SoilGuard-Portal"]
+	path = SoilGuard-Portal
+	url = https://github.com/fivepanelhat/SoilGuard-Portal
+[submodule "Sovereign-Edge-Firmware"]
+	path = Sovereign-Edge-Firmware
+	url = https://github.com/fivepanelhat/Sovereign-Edge-Firmware.git
+[submodule "Sting-Operation-AI"]
+	path = Sting-Operation-AI
+	url = https://github.com/fivepanelhat/Sting-Operation-AI.git
+[submodule "coastal_alpine_core"]
+	path = coastal_alpine_core
+	url = https://github.com/fivepanelhat/coastal-alpine-core
+[submodule "fivepanelhat"]
+	path = fivepanelhat
+	url = https://github.com/fivepanelhat/fivepanelhat
+[submodule "weaver"]
+	path = weaver
+	url = https://github.com/fivepanelhat/Weaver.git
