@@ -63,5 +63,14 @@ sudo systemctl enable sovereign-ota.service 2>/dev/null || sudo systemctl enable
 
 echo "Secure boot and system services staged. Please reboot your Pi to apply the hardware perimeter lock."
 
-
-
+# ==============================================================================
+# MAINTENANCE & UPDATE UTILITIES
+# ==============================================================================
+# Add these aliases to your ~/.bashrc on the Pi 5 to easily toggle system writes:
+#
+# # 1. Unlock the system for updates
+# alias unlock-stack='sudo mount -o remount,rw / && sudo mount -o remount,rw /boot/firmware && echo "Sovereign Stack UNLOCKED for maintenance."'
+#
+# # 2. Relock the perimeter when finished
+# alias lock-stack='sudo mount -o remount,ro / && sudo mount -o remount,ro /boot/firmware && echo "Sovereign Stack RELOCKED. Root filesystem immutable."'
+# ==============================================================================
