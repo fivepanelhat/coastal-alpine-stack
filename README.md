@@ -1,4 +1,4 @@
-# Coastal Alpine Stack: Edge Agentic AI Workspace
+# Coastal Alpine Stack: Edge Agentic AI Workspace (v1.2.0)
 
 **Coastal Alpine Tech Limited**  
 *Edge AI | Sovereign Systems | Practical Intelligence*
@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)  
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
 [![Hardware](https://img.shields.io/badge/Hardware-RPi_5%20%2B%20Hailo--8L-orange.svg)]()  
+[![Version](https://img.shields.io/badge/Version-1.2.0-blue.svg)]()
 
 A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autonomous agricultural control, and heavy-industry client compliance.
 
@@ -36,6 +37,7 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 - **Multi-Modal Telemetry Analysis:** Integrates light, humidity, and soil sensors alongside camera captures.
 - **Hardware-Aware Performance:** Low-power edge metrics and optimized local SLM inference.
 - **Shared Core integration:** A common `coastal-alpine-core` package enabling input guards, connection fallbacks, and diagnostics telemetry.
+- **Hardware SecOps Enforcer:** High-security system configuration locking bootloader interfaces and system volumes.
 
 ---
 
@@ -43,24 +45,32 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 
 ### Prerequisites
 
-- Raspberry Pi 5 (16GB RAM) + Hailo-8L NPU accelerator
+- Raspberry Pi 5 (16GB RAM) + Hailo-8L NPU accelerator (or virtualized NPU mappings)
 - Python 3.10+
 - Ollama with Gemma 4 model (`gemma4:e4b`)
 - MQTT broker (e.g. Mosquitto)
 
-### Installation
+### Installation & System SecOps Provisioning
 
-```bash
-git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
-cd coastal-alpine-stack
+1. **Lock down the hardware perimeter** (on the Pi 5 target):
+   ```bash
+   chmod +x ./rpi_secops/secure_boot_setup.sh
+   ./rpi_secops/secure_boot_setup.sh
+   ```
+   *Note: This stages the EEPROM security parameters, configures PCIe Gen 3/NPU device overlays, and configures the read-only root system layouts.*
 
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+2. **Clone and build Python environment**:
+   ```bash
+   git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
+   cd coastal-alpine-stack
 
-# Install shared core in editable mode
-pip install -e ./coastal_alpine_core
-pip install -r requirements-dev.txt
-```
+   python -m venv .venv
+   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+   # Install shared core in editable mode
+   pip install -e ./coastal_alpine_core
+   pip install -r requirements-dev.txt
+   ```
 
 ### Model Setup
 

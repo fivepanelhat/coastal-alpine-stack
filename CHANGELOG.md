@@ -3,6 +3,14 @@
 All notable changes to the Coastal Alpine Stack will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-06-08
+
+### Added
+- Created `rpi_secops` provisioning systemd & bootloader configuration scripts to enforce high-security read-only root system layouts on Raspberry Pi 5.
+- Implemented secure hardware NPU inference initialization script (`Sting-Operation-AI/src/inference.py`) leveraging virtual Hailo NPU mappings.
+- Established secure MQTT communication guidelines with JWT extraction, certificate verification, and exponential backoff circuit breakers.
+- Integrated lock-stack/unlock-stack shell aliases for runtime firmware write toggles.
+
 ## [1.1.0] - 2026-06-07
 
 ### Added
