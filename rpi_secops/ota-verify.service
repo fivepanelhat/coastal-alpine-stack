@@ -1,0 +1,14 @@
+[Unit]
+Description=Sovereign Stack OTA Signature Verification Daemon
+After=network.target
+Before=ota-execution.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/var/cache/sovereign-ota
+ExecStart=/usr/bin/python3 /usr/local/bin/ota_verify.py /var/cache/sovereign-ota/unpacked/update.bin /var/cache/sovereign-ota/unpacked/update.bin.sig
+RemainAfterExit=no
+
+[Install]
+WantedBy=multi-user.target
