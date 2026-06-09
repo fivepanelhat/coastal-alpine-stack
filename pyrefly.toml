@@ -3,4 +3,9 @@ project-includes = [
 ]
 search_path = [
     "Blue-Moon-Portal",
+    "AquaGuard-Portal",
+    "SoilGuard-Portal",
+    "coastal_alpine_core",
+    "Weaver",
+    "."
 ]
