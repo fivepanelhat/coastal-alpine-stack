@@ -7,7 +7,7 @@ paho-mqtt==2.1.0           # Hardware telemetry
 pydantic==2.5.0            # Schema enforcement
 pydantic-settings==2.1.0   # Configuration validation
 numpy==2.0.0               # Data arrays (ensure Hailo NPU pipeline compatibility)
-opencv-python-headless==4.12.0.84 # Replaced standard OpenCV to strip GUI bloat
+opencv-python-headless==4.12.0.88 # Replaced standard OpenCV to strip GUI bloat
 python-dotenv==1.2.2       # Environment variables
 orjson==3.11.6             # High-speed JSON parsing
 aiofiles==23.2.1           # Async disk I/O
