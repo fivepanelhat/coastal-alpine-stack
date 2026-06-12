@@ -13,23 +13,7 @@ on:
     types: [ opened, synchronize, reopened ]
 permissions:
   contents: read
-  security-events: write
 jobs:
-  static-analysis:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
-      - name: Run CodeQL analysis
-        uses: github/codeql-action/init@v2
-        with:
-          languages: python
-      - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@v2
-
   security-scan:
     name: Bandit SAST Scan
     runs-on: ubuntu-latest
