@@ -1,7 +1,10 @@
 [flake8]
-# Defer strict line-length management to Black
-# Provide a massive buffer for adversarial SecOps payloads and encrypted strings
-max-line-length = 150
-
-# Ignore specific formatting rules that conflict with Black's default behavior
-extend-ignore = E203, W503, E501
+max-line-length = 120
+exclude = 
+    .venv,
+    .git,
+    __pycache__,
+    node_modules,
+    build,
+    dist,
+    tests_security_stress

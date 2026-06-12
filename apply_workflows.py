@@ -95,10 +95,14 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          if [ -f requirements-dev.txt ]; then
+            pip install -r requirements-dev.txt
+          else
+            pip install flake8 pytest
+          fi
       - name: Run linters
         run: |
-          flake8 .
+          flake8 . --exclude=.venv,node_modules,build,dist,tests_security_stress
       - name: Run tests
         run: |
           pytest
