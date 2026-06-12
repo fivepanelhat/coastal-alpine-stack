@@ -1,6 +1,6 @@
 # Coastal Alpine Tech Limited: Kiwi Edge AI Stack
 
-![CI](https://github.com/UNKNOWN_OWNER/fivepanelhat/actions/workflows/secops.yml/badge.svg?branch=main)
+![CI](https://github.com/fivepanelhat/fivepanelhat/actions/workflows/secops.yml/badge.svg?branch=main)
 
 
 ![Coastal Alpine Tech Banner](assets/social_preview.png)
@@ -10,7 +10,7 @@
 [![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)]()  
 [![Hardware: Edge AI](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%20%2B%20Hailo--10L%2F10H%20NPU-orange.svg)]()  
 [![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square)]()  
-[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/coastal-alpine-stack/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/secops.yml)  
+[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/fivepanelhat/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/fivepanelhat/actions/workflows/secops.yml)  
 [![Sustainability](https://img.shields.io/badge/EECA%20NZ-Carbon%20Tracked-green?style=flat-square)]()
 
 Welcome to the official repository landing page for **Coastal Alpine Tech Limited**, headquartered in New Plymouth, Taranaki, New Zealand. We design and deploy offline-native, data-sovereign edge intelligence systems for remote, high-stakes industrial, agricultural, and biosecurity settings across New Zealand.
