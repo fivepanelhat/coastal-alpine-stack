@@ -25,6 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
       - name: Run CodeQL analysis
         uses: github/codeql-action/init@v2
         with:
@@ -48,6 +51,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
       - name: Install OWASP ZAP
         run: |
           sudo apt-get update && sudo apt-get install -y zaproxy
@@ -80,6 +86,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
