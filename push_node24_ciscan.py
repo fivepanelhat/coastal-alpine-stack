@@ -1,49 +1,61 @@
 import os
 import subprocess
-import sys
 
-WORKSPACE = r"C:\Users\Admin\.gemini\antigravity-ide\scratch\coastal-alpine-stack"
-SKIP = {'.git', '__pycache__', 'node_modules', '.venv', '.pytest_cache'}
+WORKSPACE = (
+    r"C:\Users\Admin\.gemini\antigravity-ide\scratch\coastal-alpine-stack"
+)
+SKIP = {".git", "__pycache__", "node_modules", ".venv", ".pytest_cache"}
 
 
 def git_op(repo_path, msg):
     try:
         r = subprocess.run(
-            ['git', 'add', '-A'], cwd=repo_path,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            ["git", "add", "-A"],
+            cwd=repo_path,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         diff = subprocess.run(
-            ['git', 'diff', '--cached', '--quiet'], cwd=repo_path
+            ["git", "diff", "--cached", "--quiet"], cwd=repo_path
         )
         if diff.returncode == 0:
-            return 'no-changes'
+            return "no-changes"
         subprocess.run(
-            ['git', 'commit', '-m', msg], cwd=repo_path, check=True,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            ["git", "commit", "-m", msg],
+            cwd=repo_path,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         subprocess.run(
-            ['git', 'push', '--set-upstream', 'origin', 'main'],
-            cwd=repo_path, check=True,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            ["git", "push", "--set-upstream", "origin", "main"],
+            cwd=repo_path,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
-        return 'pushed'
+        return "pushed"
     except subprocess.CalledProcessError as e:
-        stderr = e.stderr.decode('utf-8', errors='replace') if e.stderr else ''
-        return f'error: {stderr.strip()}'
+        stderr = e.stderr.decode("utf-8", errors="replace") if e.stderr else ""
+        return f"error: {stderr.strip()}"
 
 
 # Retry coastal_alpine_core specifically
-repos_to_retry = ['coastal_alpine_core']
+repos_to_retry = ["coastal_alpine_core"]
 for repo in repos_to_retry:
     repo_path = os.path.join(WORKSPACE, repo)
-    if os.path.isdir(os.path.join(repo_path, '.git')):
+    if os.path.isdir(os.path.join(repo_path, ".git")):
         # Check git status
         status = subprocess.run(
-            ['git', 'status', '--short'], cwd=repo_path,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            ["git", "status", "--short"],
+            cwd=repo_path,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         print(f"{repo} status:\n{status.stdout.decode()}")
-        result = git_op(repo_path, 'Upgrade Node.js from 20 to 24 across all configs')
+        result = git_op(
+            repo_path, "Upgrade Node.js from 20 to 24 across all configs"
+        )
         print(f"{repo}: {result}")
     else:
         print(f"{repo}: not a git repo, skipping")
@@ -87,13 +99,13 @@ jobs:
 
 for repo in os.listdir(WORKSPACE):
     repo_path = os.path.join(WORKSPACE, repo)
-    if not os.path.isdir(repo_path) or repo.startswith('.') or repo in SKIP:
+    if not os.path.isdir(repo_path) or repo.startswith(".") or repo in SKIP:
         continue
-    wf_dir = os.path.join(repo_path, '.github', 'workflows')
-    ci_scan_path = os.path.join(wf_dir, 'ci-scan.yml')
+    wf_dir = os.path.join(repo_path, ".github", "workflows")
+    ci_scan_path = os.path.join(wf_dir, "ci-scan.yml")
     if not os.path.isdir(wf_dir):
         continue
-    with open(ci_scan_path, 'w', encoding='utf-8') as f:
+    with open(ci_scan_path, "w", encoding="utf-8") as f:
         f.write(CI_SCAN)
-    result = git_op(repo_path, 'ci-scan: add Node.js 24 setup step')
+    result = git_op(repo_path, "ci-scan: add Node.js 24 setup step")
     print(f"  {repo}: {result}")

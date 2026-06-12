@@ -4,7 +4,7 @@ import textwrap
 
 WORKSPACE = r"C:\\Users\\Admin\\.gemini\\antigravity-ide\\scratch\\coastal-alpine-stack"
 
-SECOPS = textwrap.dedent('''
+SECOPS = textwrap.dedent("""
 name: SecOps Scan
 on:
   push:
@@ -25,9 +25,9 @@ jobs:
           languages: python
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v2
-''')
+""")
 
-REDTEAM = textwrap.dedent('''
+REDTEAM = textwrap.dedent("""
 name: RedTeam Tests
 on:
   schedule:
@@ -51,9 +51,9 @@ jobs:
         with:
           name: zap-report
           path: zap_report.html
-''')
+""")
 
-CISCAN = textwrap.dedent('''
+CISCAN = textwrap.dedent("""
 name: CI Scan
 on:
   push:
@@ -82,33 +82,45 @@ jobs:
       - name: Run tests
         run: |
           pytest
-''')
+""")
+
 
 def write_workflow(repo_path, name, content):
-    wf_dir = os.path.join(repo_path, '.github', 'workflows')
+    wf_dir = os.path.join(repo_path, ".github", "workflows")
     os.makedirs(wf_dir, exist_ok=True)
     file_path = os.path.join(wf_dir, f"{name}.yml")
-    with open(file_path, 'w', encoding='utf-8') as f:
+    with open(file_path, "w", encoding="utf-8") as f:
         f.write(content)
     return file_path
+
 
 added = []
 for repo in os.listdir(WORKSPACE):
     repo_path = os.path.join(WORKSPACE, repo)
-    if not os.path.isdir(repo_path) or repo.startswith('.'):
+    if not os.path.isdir(repo_path) or repo.startswith("."):
         continue
     # write three workflows (overwrite if exist)
-    added.append(write_workflow(repo_path, 'secops', SECOPS))
-    added.append(write_workflow(repo_path, 'redteam', REDTEAM))
-    added.append(write_workflow(repo_path, 'ci-scan', CISCAN))
+    added.append(write_workflow(repo_path, "secops", SECOPS))
+    added.append(write_workflow(repo_path, "redteam", REDTEAM))
+    added.append(write_workflow(repo_path, "ci-scan", CISCAN))
     # git add, commit, push
     try:
-        subprocess.run(['git', 'add', '.github/workflows'], cwd=repo_path, check=True)
-        subprocess.run(['git', 'commit', '-m', 'Add CI security/redteam workflows'], cwd=repo_path, check=True)
-        subprocess.run(['git', 'push', '--set-upstream', 'origin', 'main'], cwd=repo_path, check=True)
+        subprocess.run(
+            ["git", "add", ".github/workflows"], cwd=repo_path, check=True
+        )
+        subprocess.run(
+            ["git", "commit", "-m", "Add CI security/redteam workflows"],
+            cwd=repo_path,
+            check=True,
+        )
+        subprocess.run(
+            ["git", "push", "--set-upstream", "origin", "main"],
+            cwd=repo_path,
+            check=True,
+        )
     except subprocess.CalledProcessError as e:
         print(f"Git error in {repo}: {e}")
 
-print('Workflows added and pushed for repositories:')
+print("Workflows added and pushed for repositories:")
 for p in added:
     print(p)

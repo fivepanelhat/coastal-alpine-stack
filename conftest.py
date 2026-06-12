@@ -9,11 +9,9 @@ import os
 import sys
 import importlib
 
-_portal_module_caches = {
-    "Blue-Moon-Portal": {},
-    "AquaGuard-Portal": {}
-}
+_portal_module_caches = {"Blue-Moon-Portal": {}, "AquaGuard-Portal": {}}
 _active_portal = None
+
 
 def pytest_collect_file(file_path, parent):
     """
@@ -21,11 +19,13 @@ def pytest_collect_file(file_path, parent):
     """
     _route_context(str(file_path))
 
+
 def pytest_runtest_setup(item):
     """
     Hook run by pytest before executing a test.
     """
     _route_context(str(item.fspath))
+
 
 def _route_context(path_str: str):
     path_lower = path_str.lower()
@@ -35,6 +35,7 @@ def _route_context(path_str: str):
         _setup_portal_context("AquaGuard-Portal")
     else:
         _clear_portal_context()
+
 
 def _setup_portal_context(portal_name: str):
     global _active_portal
@@ -48,12 +49,20 @@ def _setup_portal_context(portal_name: str):
         saved_cache = _portal_module_caches[_active_portal]
         saved_cache.clear()
         for mod_name in list(sys.modules.keys()):
-            if mod_name.startswith("portal_schemas") or mod_name.startswith("portal_core") or mod_name.startswith("tests"):
+            if (
+                mod_name.startswith("portal_schemas")
+                or mod_name.startswith("portal_core")
+                or mod_name.startswith("tests")
+            ):
                 saved_cache[mod_name] = sys.modules[mod_name]
                 del sys.modules[mod_name]
 
     # 2. Update sys.path
-    sys.path = [p for p in sys.path if "Blue-Moon-Portal" not in p and "AquaGuard-Portal" not in p]
+    sys.path = [
+        p
+        for p in sys.path
+        if "Blue-Moon-Portal" not in p and "AquaGuard-Portal" not in p
+    ]
     target_dir = os.path.join(stack_root, portal_name)
     sys.path.insert(0, target_dir)
 
@@ -68,6 +77,7 @@ def _setup_portal_context(portal_name: str):
 
     _active_portal = portal_name
 
+
 def _clear_portal_context():
     global _active_portal
     if _active_portal is None:
@@ -77,14 +87,21 @@ def _clear_portal_context():
     saved_cache = _portal_module_caches[_active_portal]
     saved_cache.clear()
     for mod_name in list(sys.modules.keys()):
-        if mod_name.startswith("portal_schemas") or mod_name.startswith("portal_core") or mod_name.startswith("tests"):
+        if (
+            mod_name.startswith("portal_schemas")
+            or mod_name.startswith("portal_core")
+            or mod_name.startswith("tests")
+        ):
             saved_cache[mod_name] = sys.modules[mod_name]
             del sys.modules[mod_name]
 
     # Remove from sys.path
-    sys.path = [p for p in sys.path if "Blue-Moon-Portal" not in p and "AquaGuard-Portal" not in p]
+    sys.path = [
+        p
+        for p in sys.path
+        if "Blue-Moon-Portal" not in p and "AquaGuard-Portal" not in p
+    ]
 
     sys.path_importer_cache.clear()
     importlib.invalidate_caches()
     _active_portal = None
-
