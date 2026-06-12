@@ -23,11 +23,11 @@ except ModuleNotFoundError:
 
     sys.modules["weaver"] = Weaver
 
-from coastal_alpine_core.security import (
+from coastal_alpine_core.security import (  # noqa: E402
     input_guard_check,
     tenant_isolated_query,
 )
-from weaver.knowledge_base import (
+from weaver.knowledge_base import (  # noqa: E402
     InMemoryKnowledgeBaseClient,
     HashEmbeddingService,
 )

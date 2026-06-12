@@ -37,7 +37,7 @@ class FrameQueueProcessor:
 
     async def run_inference_loop(self):
         while True:
-            frame = await self.queue.get()
+            _ = await self.queue.get()
             # Simulate local NPU inference time (~10ms)
             await asyncio.sleep(0.01)
             self.processed_count += 1

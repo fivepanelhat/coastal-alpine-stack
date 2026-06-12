@@ -24,12 +24,12 @@ for mod in list(sys.modules.keys()):
     if mod.startswith("portal_schemas") or mod.startswith("portal_core"):
         del sys.modules[mod]
 
-from portal_schemas.compliance import (
+from portal_schemas.compliance import (  # noqa: E402
     WaterSensorReading,
     WaterOptimizationPlan,
 )
-from portal_core.media_pruner import MediaPruner
-from pydantic import ValidationError
+from portal_core.media_pruner import MediaPruner  # noqa: E402
+from pydantic import ValidationError  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,
