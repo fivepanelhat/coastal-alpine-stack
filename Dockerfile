@@ -29,8 +29,30 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt
 
-# --- Future Steps ---
-# FROM python:3.10-slim-bookworm AS runner
-# COPY --from=builder /opt/venv /opt/venv
-# COPY . /opt/coastal_alpine
-# ...
+# --- Final Edge Runner Stage ---
+FROM python:3.10-slim-bookworm AS runner
+
+# Enforce environment variables for the edge node execution
+ENV PATH="/opt/venv/bin:$PATH" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# SecOps Directive: Create a strictly permissioned, non-root user.
+# We absolutely do not run edge inference containers as root.
+RUN groupadd -r coastal && useradd -r -g coastal -d /opt/coastal_alpine -s /sbin/nologin coastal
+
+# Set the working directory
+WORKDIR /opt/coastal_alpine
+
+# Pull the fully cached, lean virtual environment from the builder stage
+COPY --from=builder /opt/venv /opt/venv
+
+# Copy the monorepo application code, assigning ownership to our restricted user
+# Note: Ensure your .dockerignore is ruthless so we don't copy local dev bloat
+COPY --chown=coastal:coastal . .
+
+# Drop root privileges immediately
+USER coastal
+
+# Define the entrypoint (Update 'main.py' to your actual edge orchestration script)
+CMD ["python", "main.py"]
