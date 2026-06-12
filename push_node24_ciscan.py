@@ -9,7 +9,7 @@ SKIP = {".git", "__pycache__", "node_modules", ".venv", ".pytest_cache"}
 
 def git_op(repo_path, msg):
     try:
-        r = subprocess.run(
+        subprocess.run(
             ["git", "add", "-A"],
             cwd=repo_path,
             stdout=subprocess.PIPE,
