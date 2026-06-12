@@ -87,7 +87,7 @@ def test_box_coordinate_guards():
         )
         assert (
             outcome == "PASS"
-        ), f"Coordinate validation failed for: Box={x,y,w,h}"
+        ), f"Coordinate validation failed for: Box={x, y, w, h}"
 
     logger.info(
         "✓ PASS: Coordinate guard filters out corrupted or adversarial bounding boxes."
