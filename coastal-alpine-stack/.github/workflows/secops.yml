@@ -1,0 +1,23 @@
+
+name: SecOps Scan
+on:
+  schedule:
+    - cron: "0 */8 * * *"   # every 8 hours starting at 00:00 UTC
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+permissions:
+  contents: read
+  security-events: write
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run CodeQL analysis
+        uses: github/codeql-action/init@v2
+        with:
+          languages: python
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v2
