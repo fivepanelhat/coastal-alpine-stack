@@ -1,12 +1,14 @@
 # coastal-alpine-stack production dependencies
-requests>=2.31.0
-ollama>=0.4.8
-paho-mqtt>=2.1.0
-pydantic>=2.5.0
-pydantic-settings>=2.1.0
-numpy>=2.0,<3
-opencv-python>=4.12.0
-python-dotenv>=1.2.2
-orjson>=3.11.6
-aiofiles>=23.2.1
-structlog>=23.2.0
+# Enforcing exact versions for deterministic edge deployment
+
+aiohttp==3.9.5             # Replaced 'requests' for async, non-blocking local API calls
+ollama==0.4.8              # Local inference bridging
+paho-mqtt==2.1.0           # Hardware telemetry
+pydantic==2.5.0            # Schema enforcement
+pydantic-settings==2.1.0   # Configuration validation
+numpy==2.0.0               # Data arrays (ensure Hailo NPU pipeline compatibility)
+opencv-python-headless==4.12.0.84 # Replaced standard OpenCV to strip GUI bloat
+python-dotenv==1.2.2       # Environment variables
+orjson==3.11.6             # High-speed JSON parsing
+aiofiles==23.2.1           # Async disk I/O
+structlog==23.2.0          # Structured telemetry logging
