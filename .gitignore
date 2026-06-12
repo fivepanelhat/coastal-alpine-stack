@@ -56,3 +56,11 @@ telemetry_data/sensor_logs/*
 Sovereign-Keys/
 Staged-Updates/
 
+# Fine-grained Tokens & Keys (Local Security)
+.token
+*token*
+*.token
+token.txt
+.key
+*.key
+*key*
