@@ -1,0 +1,28 @@
+# coastal-alpine-stack production dependencies
+# Enforcing exact versions for deterministic edge deployment
+
+aiohttp==3.9.5             # Replaced 'requests' for async, non-blocking local API calls
+ollama==0.4.8              # Local inference bridging
+paho-mqtt==2.1.0           # Hardware telemetry
+pydantic>=2.10.0           # Schema enforcement (loosen for Python 3.14 compatibility)
+pydantic-settings>=2.5.0   # Configuration validation (loosen for Python 3.14 compatibility)
+numpy>=2.1.0,<3           # Data arrays (ensure Hailo NPU and langchain compatibility)
+opencv-python-headless==4.10.0.84 # Replaced standard OpenCV to strip GUI bloat (pin for roboflow)
+python-dotenv==1.2.2       # Environment variables
+orjson==3.11.6             # High-speed JSON parsing
+aiofiles==23.2.1           # Async disk I/O
+structlog==23.2.0          # Structured telemetry logging
+
+# Weaver dependencies
+SQLAlchemy>=2.0.0,<3.0.0
+psycopg2-binary>=2.9.12
+langchain-text-splitters>=1.1.2,<2.0.0
+langchain-community>=0.4.2,<1.0.0
+langgraph>=0.2.0,<1.0.0
+
+# Sting-Operation-AI dependencies
+ultralytics>=8.4.66
+pyyaml>=6.0.1
+roboflow>=1.3.9
+torch>=2.1.0
+torchvision>=0.16.0

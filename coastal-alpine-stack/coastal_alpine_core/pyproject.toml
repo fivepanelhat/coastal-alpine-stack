@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "coastal-alpine-core"
+dynamic = ["version"]
+authors = [
+  { name="Wayne Roberts", email="architecture@coastalalpinetech.local" },
+]
+description = "Sovereign Stack Shared Core Models and Auth Logic"
+requires-python = ">=3.9"
+dependencies = [
+    "PyJWT>=2.8.0",
+    "cryptography>=41.0.0"
+]
