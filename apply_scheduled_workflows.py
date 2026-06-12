@@ -15,6 +15,8 @@ on:
     branches: [ main ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 permissions:
   contents: read
   security-events: write
@@ -37,6 +39,8 @@ on:
   schedule:
     - cron: "0 */8 * * *"
   workflow_dispatch:
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 permissions:
   contents: read
 jobs:
@@ -66,6 +70,8 @@ on:
     branches: [ main ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 permissions:
   contents: read
   packages: read
