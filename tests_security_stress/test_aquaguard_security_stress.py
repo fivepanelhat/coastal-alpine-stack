@@ -24,13 +24,6 @@ for mod in list(sys.modules.keys()):
     if mod.startswith("portal_schemas") or mod.startswith("portal_core"):
         del sys.modules[mod]
 
-from portal_schemas.compliance import (  # noqa: E402
-    WaterSensorReading,
-    WaterOptimizationPlan,
-)
-from portal_core.media_pruner import MediaPruner  # noqa: E402
-from pydantic import ValidationError  # noqa: E402
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] AquaGuardSecurityTest: %(message)s",
@@ -39,6 +32,12 @@ logger = logging.getLogger("AquaGuardSecurityTest")
 
 
 def test_pydantic_constraints():
+    from portal_schemas.compliance import (
+        WaterSensorReading,
+        WaterOptimizationPlan,
+    )
+    from pydantic import ValidationError
+
     logger.info(
         "\n"
         + "=" * 50
@@ -116,6 +115,8 @@ def test_pydantic_constraints():
 
 @pytest.mark.asyncio
 async def test_pruner_stress():
+    from portal_core.media_pruner import MediaPruner
+
     logger.info(
         "\n"
         + "=" * 50
