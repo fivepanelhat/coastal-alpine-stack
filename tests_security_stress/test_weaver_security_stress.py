@@ -23,24 +23,29 @@ except ModuleNotFoundError:
 
     sys.modules["weaver"] = Weaver
 
-from coastal_alpine_core.security import (  # noqa: E402
-    input_guard_check,
-    tenant_isolated_query,
-)
-from weaver.knowledge_base import (  # noqa: E402
-    InMemoryKnowledgeBaseClient,
-    HashEmbeddingService,
-)
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] WeaverSecurityTest: %(message)s",
 )
 logger = logging.getLogger("WeaverSecurityTest")
 
-# Initialize shared components
-embedder = HashEmbeddingService()
-kb_client = InMemoryKnowledgeBaseClient(embedder)
+# Initialize shared components lazily to avoid top-level imports and E402 warnings
+embedder = None
+kb_client = None
+
+
+def get_kb_client():
+    global embedder, kb_client
+    if kb_client is None:
+        from weaver.knowledge_base import (
+            InMemoryKnowledgeBaseClient,
+            HashEmbeddingService,
+        )
+
+        embedder = HashEmbeddingService()
+        kb_client = InMemoryKnowledgeBaseClient(embedder)
+    return kb_client
+
 
 # Seed mock database
 TENANT_A_ID = "tenant-a-1111"
@@ -48,12 +53,13 @@ TENANT_B_ID = "tenant-b-2222"
 
 
 def seed_knowledge_base():
-    kb_client.add_document(
+    kb = get_kb_client()
+    kb.add_document(
         tenant_id=TENANT_A_ID,
         content="Standard operating procedure for Fulton Hogan Horowhenua: Use roading equipment safety gear class 3.",
         metadata={"source": "roading_safety.txt"},
     )
-    kb_client.add_document(
+    kb.add_document(
         tenant_id=TENANT_B_ID,
         content="Confidential business strategy for Downer Taranaki: Acquire new asphalt machinery by September.",
         metadata={"source": "roading_strategy.txt"},
@@ -65,18 +71,23 @@ def seed_knowledge_base():
 
 @pytest.fixture(autouse=True)
 def setup_kb():
-    kb_client._chunks.clear()
+    kb = get_kb_client()
+    kb._chunks.clear()
     seed_knowledge_base()
 
 
 def test_tenant_isolation():
+    from coastal_alpine_core.security import tenant_isolated_query
+
     logger.info(
         "\n" + "=" * 50 + "\nAUDIT: RAG Tenant Isolation Bypass\n" + "=" * 50
     )
 
+    kb = get_kb_client()
+
     # 1. Query for Tenant B's data using Tenant A's token
     leakage_query = "asphalt machinery Downer"
-    results = kb_client.query(leakage_query, tenant_id=TENANT_A_ID, top_k=5)
+    results = kb.query(leakage_query, tenant_id=TENANT_A_ID, top_k=5)
 
     logger.info(f"Querying: '{leakage_query}' as Tenant A...")
     logger.info(f"Results returned: {len(results)}")
@@ -102,6 +113,8 @@ def test_tenant_isolation():
 
 
 def test_prompt_injection_guard():
+    from coastal_alpine_core.security import input_guard_check
+
     logger.info(
         "\n"
         + "=" * 50
@@ -137,8 +150,9 @@ def test_prompt_injection_guard():
 
 def run_single_query(query_id: int):
     start = time.perf_counter()
+    kb = get_kb_client()
     # Perform a standard query
-    results = kb_client.query("roading safety", tenant_id=TENANT_A_ID, top_k=2)
+    results = kb.query("roading safety", tenant_id=TENANT_A_ID, top_k=2)
     duration = time.perf_counter() - start
     return duration, len(results)
 
