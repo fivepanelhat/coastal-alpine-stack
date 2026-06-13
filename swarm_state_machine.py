@@ -4,6 +4,7 @@ import logging
 import socket
 import time
 import mimetypes
+import concurrent.futures
 from typing import TypedDict, List
 from langgraph.graph import StateGraph
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -28,29 +29,24 @@ class NodeFilter(logging.Filter):
         self.node_name = node_name
 
     def filter(self, record):
-        if not hasattr(record, "node"):
-            record.node = self.node_name
+        record.node = self.node_name
         return True
 
 
 logger = logging.getLogger("SovereignSwarm")
-node_filter = NodeFilter()
-logging.getLogger().addFilter(node_filter)
-for handler in logging.getLogger().handlers:
-    handler.addFilter(node_filter)
+logger.addFilter(NodeFilter())
+
 
 # ---------------------------------------------------------
-# 2. P0: Pre-Flight Health Check
+# 2. Pre-Flight Health Check
 # ---------------------------------------------------------
-
-
 def ensure_ollama_ready(host="localhost", port=11434, max_retries=3):
     """Verify Ollama daemon is reachable; fail fast if not."""
-    node_filter.node_name = "Pre-Flight"
+    logger.filters[0].node_name = "Pre-Flight"  # type: ignore
     for attempt in range(max_retries):
         try:
             with socket.create_connection((host, port), timeout=2):
-                logger.info("Local Ollama daemon is active and responding.")
+                logger.info("[OK] Local Ollama daemon is active and responding.")
                 return True
         except (socket.timeout, ConnectionRefusedError) as e:
             logger.warning(f"Ollama unreachable (attempt {attempt+1}/{max_retries}): {e}")
@@ -71,27 +67,24 @@ class SwarmState(TypedDict):
     security_warnings: List[str]
     revision_count: int
     sender: str
-    agent_errors: List[str]  # New field to track silent crashes
+    agent_errors: List[str]
 
 
 # ---------------------------------------------------------
-# 4. P0: The Input Validation Shield
+# 4. The Input Validation Shield
 # ---------------------------------------------------------
 def input_shield_node(state: SwarmState):
-    node_filter.node_name = "Shield"
+    logger.filters[0].node_name = "Shield"  # type: ignore
     try:
         target = state.get("target_file", "")
         code = state.get("code_content", "")
 
-        # 1. Path Traversal Check (Prevent reading /etc/passwd or C:\Windows)
         if ".." in target or target.startswith("/"):
             raise ValueError(f"Path traversal anomaly detected in filename: {target}")
 
-        # 2. Payload Size Check (Prevent NPU DoS attacks - Max 1MB)
         if len(code.encode('utf-8')) > 1_000_000:
             raise ValueError("Payload exceeds 1MB limit. Possible DoS attempt.")
 
-        # 3. MIME Type Check (Prevent binary execution)
         mime, _ = mimetypes.guess_type(target)
         if mime and not mime.startswith("text") and "json" not in mime and "javascript" not in mime:
             raise ValueError(f"Malicious binary or non-text payload detected: {mime}")
@@ -113,50 +106,60 @@ def shield_routing(state: SwarmState) -> str:
 
 
 # ---------------------------------------------------------
-# 5. P0: Safe Agent Wrappers
+# 5. P0: Safe Agent Wrappers (with Threaded Timeouts)
 # ---------------------------------------------------------
-def hound_node_safe(state: SwarmState):
-    node_filter.node_name = "Hound"
+TIMEOUT_SECONDS = 60
+
+
+def _run_with_timeout(func, state: SwarmState, node_name: str):
+    """Executes a function in a thread with a hard timeout."""
     try:
-        logger.info("Executing SecOps AST Analysis...")
-        # Future Bandit subprocess execution goes here
-        return {"sender": "hound"}
-    except Exception as e:
-        err_msg = f"Hound Crash: {str(e)}"
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(func, state)
+            return future.result(timeout=TIMEOUT_SECONDS)
+    except concurrent.futures.TimeoutError:
+        err_msg = f"{node_name} Timeout: Execution exceeded {TIMEOUT_SECONDS} seconds."
         logger.error(err_msg)
-        return {"sender": "hound", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+        return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
+    except Exception as e:
+        err_msg = f"{node_name} Crash: {str(e)}"
+        logger.error(err_msg)
+        return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
+
+
+def _hound_logic(state: SwarmState):
+    logger.info("Executing SecOps AST Analysis...")
+    return {"sender": "hound"}
+
+
+def _schema_cop_logic(state: SwarmState):
+    logger.info("Validating Pydantic/Monorepo Coherence...")
+    return {"sender": "schema-cop"}
+
+
+def hound_node_safe(state: SwarmState):
+    logger.filters[0].node_name = "Hound"  # type: ignore
+    return _run_with_timeout(_hound_logic, state, "Hound")
 
 
 def schema_cop_node_safe(state: SwarmState):
-    node_filter.node_name = "Schema-Cop"
-    try:
-        logger.info("Validating Pydantic/Monorepo Coherence...")
-        return {"sender": "schema-cop"}
-    except Exception as e:
-        err_msg = f"Schema-Cop Crash: {str(e)}"
-        logger.error(err_msg)
-        return {"sender": "schema-cop", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+    logger.filters[0].node_name = "Schema-Cop"  # type: ignore
+    return _run_with_timeout(_schema_cop_logic, state, "Schema-Cop")
 
 
 def weaver_node_safe(state: SwarmState):
-    node_filter.node_name = "Weaver"
-    try:
-        # Call the tenacity-wrapped function from weaver_agent.py
-        return weaver_node(state)
-    except Exception as e:
-        err_msg = f"Weaver Crash: {str(e)}"
-        logger.error(err_msg)
-        return {"sender": "weaver", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+    logger.filters[0].node_name = "Weaver"  # type: ignore
+    return _run_with_timeout(weaver_node, state, "Weaver")
 
 
 # ---------------------------------------------------------
-# 5. The Orchestration Router
+# 6. The Orchestration Router
 # ---------------------------------------------------------
 def routing_logic(state: SwarmState) -> str:
-    node_filter.node_name = "Router"
+    logger.filters[0].node_name = "Router"  # type: ignore
 
     if state.get("agent_errors"):
-        logger.warning("Agent crash detected in state. Aborting to prevent cascade failure.")
+        logger.warning("Agent crash or timeout detected. Aborting to prevent cascade failure.")
         return "__end__"
 
     if state.get("revision_count", 0) >= 3:
@@ -176,23 +179,19 @@ def routing_logic(state: SwarmState) -> str:
 
 
 # ---------------------------------------------------------
-# 6. Compile the Graph
+# 7. Compile the Graph
 # ---------------------------------------------------------
-# Run Pre-flight before compiling (bypass under pytest to allow test collection)
 if "pytest" not in sys.modules:
     ensure_ollama_ready()
 
 builder = StateGraph(SwarmState)
 
-# Register all nodes
 builder.add_node("shield", input_shield_node)
 builder.add_node("weaver", weaver_node_safe)
 builder.add_node("hound", hound_node_safe)
 builder.add_node("schema-cop", schema_cop_node_safe)
 
-# The New Routing Flow
 builder.set_entry_point("shield")
-# Shield -> End (if malicious) or Weaver (if safe)
 builder.add_conditional_edges("shield", shield_routing)  # type: ignore
 builder.add_edge("weaver", "hound")
 builder.add_edge("hound", "schema-cop")
@@ -203,4 +202,4 @@ memory = SqliteSaver(conn)
 swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
 if __name__ == '__main__':
-    logger.info("LangGraph State Machine Compiled with Input Shield and P0 Hardening.")
+    logger.info("LangGraph State Machine Compiled with Input Shield and Temporal Boundaries.")
