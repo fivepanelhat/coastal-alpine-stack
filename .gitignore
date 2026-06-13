@@ -62,5 +62,11 @@ Staged-Updates/
 *.token
 token.txt
 .key
+.key
 *.key
 *key*
+
+# Local Swarm State & Logs
+swarm_memory.db*
+swarm_audit.log
+
