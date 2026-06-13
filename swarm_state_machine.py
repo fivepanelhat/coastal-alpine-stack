@@ -1,3 +1,4 @@
+import sys
 import sqlite3
 import logging
 import socket
@@ -48,7 +49,7 @@ def ensure_ollama_ready(host="localhost", port=11434, max_retries=3):
     for attempt in range(max_retries):
         try:
             with socket.create_connection((host, port), timeout=2):
-                logger.info("✓ Local Ollama daemon is active and responding.")
+                logger.info("Local Ollama daemon is active and responding.")
                 return True
         except (socket.timeout, ConnectionRefusedError) as e:
             logger.warning(f"Ollama unreachable (attempt {attempt+1}/{max_retries}): {e}")
@@ -139,7 +140,6 @@ def routing_logic(state: SwarmState) -> str:
 # 6. Compile the Graph
 # ---------------------------------------------------------
 # Run Pre-flight before compiling (bypass under pytest to allow test collection)
-import sys
 if "pytest" not in sys.modules:
     ensure_ollama_ready()
 
