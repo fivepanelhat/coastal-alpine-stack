@@ -150,7 +150,7 @@ def weaver_node_safe(state: SwarmState):
 
 
 # ---------------------------------------------------------
-# 6. The Orchestration Router
+# 5. The Orchestration Router
 # ---------------------------------------------------------
 def routing_logic(state: SwarmState) -> str:
     node_filter.node_name = "Router"
@@ -176,7 +176,7 @@ def routing_logic(state: SwarmState) -> str:
 
 
 # ---------------------------------------------------------
-# 7. Compile the Graph
+# 6. Compile the Graph
 # ---------------------------------------------------------
 # Run Pre-flight before compiling (bypass under pytest to allow test collection)
 if "pytest" not in sys.modules:
@@ -184,13 +184,15 @@ if "pytest" not in sys.modules:
 
 builder = StateGraph(SwarmState)
 
+# Register all nodes
 builder.add_node("shield", input_shield_node)
 builder.add_node("weaver", weaver_node_safe)
 builder.add_node("hound", hound_node_safe)
 builder.add_node("schema-cop", schema_cop_node_safe)
 
+# The New Routing Flow
 builder.set_entry_point("shield")
-builder.add_conditional_edges("shield", shield_routing)  # type: ignore
+builder.add_conditional_edges("shield", shield_routing)  # Shield -> End (if malicious) or Weaver (if safe)
 builder.add_edge("weaver", "hound")
 builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
@@ -200,4 +202,4 @@ memory = SqliteSaver(conn)
 swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
 if __name__ == '__main__':
-    logger.info("LangGraph State Machine Compiled with P0 Hardening.")
+    logger.info("LangGraph State Machine Compiled with Input Shield and P0 Hardening.")
