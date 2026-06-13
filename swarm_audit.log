@@ -19,3 +19,6 @@
 2026-06-13 18:01:19,445 [INFO] (Shield): Input validated safely: auth_routes.py (60 bytes).
 2026-06-13 18:03:53,217 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
 2026-06-13 18:03:53,280 [INFO] (Pre-Flight): Starting Sovereign Edge Webhook Relay on port 8000...
+2026-06-13 18:04:08,927 [INFO] (Pre-Flight): Waking swarm for file: auth_routes.py (Thread: webhook-9ae10a2c)
+2026-06-13 18:04:09,057 [INFO] (Shield): Input validated safely: auth_routes.py (60 bytes).
+2026-06-13 18:04:11,684 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
