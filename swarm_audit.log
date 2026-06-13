@@ -33,3 +33,25 @@
 2026-06-13 19:40:31,757 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
 2026-06-13 19:40:31,825 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
 2026-06-13 19:41:19,493 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 19:46:35,972 [ERROR] (Weaver): [f4e1c406] Weaver Timeout: Execution exceeded 60 seconds.
+2026-06-13 19:46:35,973 [INFO] (Weaver): [f4e1c406] Node completed in 364.15s
+2026-06-13 19:46:35,989 [INFO] (Hound): Executing SecOps AST Analysis...
+2026-06-13 19:46:35,991 [INFO] (Hound): [f4e1c406] Node completed in 0.01s
+2026-06-13 19:46:35,994 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
+2026-06-13 19:46:35,995 [INFO] (Schema-Cop): [f4e1c406] Node completed in 0.00s
+2026-06-13 19:46:35,995 [WARNING] (Router): [f4e1c406] Agent crash detected. Aborting to prevent cascade failure.
+2026-06-13 19:46:50,903 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:46:51,003 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:47:11,878 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:47:11,935 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:47:32,217 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 19:49:51,775 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:49:51,830 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:49:56,295 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 19:51:38,733 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:51:38,827 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:51:43,431 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 19:53:47,181 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:53:47,353 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:53:47,592 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 19:53:49,978 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"

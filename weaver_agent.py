@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING
-from langchain_ollama import ChatOllama
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
@@ -9,6 +8,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 
 if TYPE_CHECKING:
     from swarm_state_machine import SwarmState
+
 
 # ---------------------------------------------------------
 # 1. Sovereign Edge Models & Vector Store

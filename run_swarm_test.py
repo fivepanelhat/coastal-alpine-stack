@@ -1,3 +1,4 @@
+import uuid
 from swarm_state_machine import swarm_graph
 
 
@@ -13,8 +14,9 @@ def execute_test_run():
         "sender": "system"
     }
 
-    # Define our persistent memory thread
-    config = {"configurable": {"thread_id": "secops-ticket-001"}}
+    # Define our persistent memory thread dynamically
+    thread_id = f"secops-ticket-{str(uuid.uuid4())[:8]}"
+    config = {"configurable": {"thread_id": thread_id}}
 
     # Execute with the config attached
     for event in swarm_graph.stream(initial_state, config):  # type: ignore
