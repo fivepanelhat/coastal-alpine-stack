@@ -114,7 +114,7 @@ def shield_routing(state: SwarmState) -> str:
 # ---------------------------------------------------------
 # 5. P0: Observability Tracer & Safe Wrappers
 # ---------------------------------------------------------
-TIMEOUT_SECONDS = 60
+TIMEOUT_SECONDS = 600
 
 
 class SwarmContext:

@@ -71,3 +71,14 @@
 2026-06-13 20:00:53,862 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
 2026-06-13 20:00:54,263 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
 2026-06-13 20:00:56,450 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 20:04:53,496 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 20:04:53,567 [ERROR] (Weaver): [84b5dd59] Weaver Timeout: Execution exceeded 60 seconds.
+2026-06-13 20:04:53,568 [INFO] (Weaver): [84b5dd59] Node completed in 239.70s
+2026-06-13 20:04:53,572 [INFO] (Hound): Executing SecOps AST Analysis...
+2026-06-13 20:04:53,576 [INFO] (Hound): [84b5dd59] Node completed in 0.00s
+2026-06-13 20:04:53,584 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
+2026-06-13 20:04:53,586 [INFO] (Schema-Cop): [84b5dd59] Node completed in 0.00s
+2026-06-13 20:04:53,591 [WARNING] (Router): [84b5dd59] Agent crash detected. Aborting to prevent cascade failure.
+2026-06-13 20:05:27,601 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 20:05:27,667 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 20:05:27,996 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
