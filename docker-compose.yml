@@ -77,6 +77,24 @@ services:
     networks:
       - sovereign_network
 
+  # 6. Webhook Relay Server (FastAPI Swarm Ingress)
+  webhook-relay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: webhook_relay
+    command: ["python", "webhook_relay.py"]
+    ports:
+      - "8000:8000"
+    environment:
+      - GITHUB_WEBHOOK_SECRET=super_secure_sovereign_secret_123!
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - sovereign_network
+
 networks:
   sovereign_network:
     driver: bridge
