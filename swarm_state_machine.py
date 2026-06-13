@@ -3,7 +3,7 @@ import sqlite3
 import logging
 import socket
 import time
-import mimetypes  # noqa: F401
+import mimetypes
 from typing import TypedDict, List
 from langgraph.graph import StateGraph
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -75,7 +75,45 @@ class SwarmState(TypedDict):
 
 
 # ---------------------------------------------------------
-# 4. P0: Safe Agent Wrappers
+# 4. P0: The Input Validation Shield
+# ---------------------------------------------------------
+def input_shield_node(state: SwarmState):
+    node_filter.node_name = "Shield"
+    try:
+        target = state.get("target_file", "")
+        code = state.get("code_content", "")
+
+        # 1. Path Traversal Check (Prevent reading /etc/passwd or C:\Windows)
+        if ".." in target or target.startswith("/"):
+            raise ValueError(f"Path traversal anomaly detected in filename: {target}")
+
+        # 2. Payload Size Check (Prevent NPU DoS attacks - Max 1MB)
+        if len(code.encode('utf-8')) > 1_000_000:
+            raise ValueError("Payload exceeds 1MB limit. Possible DoS attempt.")
+
+        # 3. MIME Type Check (Prevent binary execution)
+        mime, _ = mimetypes.guess_type(target)
+        if mime and not mime.startswith("text") and "json" not in mime and "javascript" not in mime:
+            raise ValueError(f"Malicious binary or non-text payload detected: {mime}")
+
+        logger.info(f"Input validated safely: {target} ({len(code)} bytes).")
+        return {"sender": "shield"}
+
+    except Exception as e:
+        err_msg = f"SECURITY SHIELD BLOCK: {str(e)}"
+        logger.critical(err_msg)
+        return {"sender": "shield", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+
+
+def shield_routing(state: SwarmState) -> str:
+    """If the shield catches a threat, abort before waking Weaver."""
+    if state.get("agent_errors"):
+        return "__end__"
+    return "weaver"
+
+
+# ---------------------------------------------------------
+# 5. P0: Safe Agent Wrappers
 # ---------------------------------------------------------
 def hound_node_safe(state: SwarmState):
     node_filter.node_name = "Hound"
@@ -112,7 +150,7 @@ def weaver_node_safe(state: SwarmState):
 
 
 # ---------------------------------------------------------
-# 5. The Orchestration Router
+# 6. The Orchestration Router
 # ---------------------------------------------------------
 def routing_logic(state: SwarmState) -> str:
     node_filter.node_name = "Router"
@@ -138,7 +176,7 @@ def routing_logic(state: SwarmState) -> str:
 
 
 # ---------------------------------------------------------
-# 6. Compile the Graph
+# 7. Compile the Graph
 # ---------------------------------------------------------
 # Run Pre-flight before compiling (bypass under pytest to allow test collection)
 if "pytest" not in sys.modules:
@@ -146,11 +184,13 @@ if "pytest" not in sys.modules:
 
 builder = StateGraph(SwarmState)
 
+builder.add_node("shield", input_shield_node)
 builder.add_node("weaver", weaver_node_safe)
 builder.add_node("hound", hound_node_safe)
 builder.add_node("schema-cop", schema_cop_node_safe)
 
-builder.set_entry_point("weaver")
+builder.set_entry_point("shield")
+builder.add_conditional_edges("shield", shield_routing)  # type: ignore
 builder.add_edge("weaver", "hound")
 builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
