@@ -30,13 +30,20 @@ def schema_cop_node(state: SwarmState):
 
 # 3. The Orchestration Router
 def routing_logic(state: SwarmState) -> str:
-    # If SecOps finds a vulnerability, route back to Weaver
+    # 1. THE LOOP BREAKER: Abort if we exceed 3 refactor attempts
+    if state.get("revision_count", 0) >= 3:
+        print("\n[!] CRITICAL: Swarm caught in loop. Aborting for manual human review.")
+        return "__end__"
+
+    # 2. If SecOps finds a vulnerability, route back to Weaver
     if len(state.get("security_warnings", [])) > 0:
         return "weaver"
-    # If linting/schemas fail, route back to Weaver
+
+    # 3. If linting/schemas fail, route back to Weaver
     if len(state.get("lint_errors", [])) > 0:
         return "weaver"
-    # If the perimeter is clean, we are clear to push
+
+    # 4. If the perimeter is clean, we are clear to push
     return "__end__"
 
 
