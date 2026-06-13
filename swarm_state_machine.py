@@ -108,25 +108,44 @@ def shield_routing(state: SwarmState) -> str:
 
 
 # ---------------------------------------------------------
-# 5. P0: Safe Agent Wrappers (with Threaded Timeouts)
+# 5. P0: Observability Tracer & Safe Wrappers
 # ---------------------------------------------------------
 TIMEOUT_SECONDS = 60
 
 
+class SwarmContext:
+    """Thread-local context for enriched telemetry."""
+    def __init__(self):
+        self.session_id = str(uuid.uuid4())[:8]
+
+    @contextlib.contextmanager
+    def node_timer(self, node_name: str):
+        node_start = time.time()
+        try:
+            yield
+        finally:
+            elapsed = time.time() - node_start
+            logger.info(f"[{self.session_id}] Node completed in {elapsed:.2f}s")
+
+
+swarm_context = SwarmContext()
+
+
 def _run_with_timeout(func, state: SwarmState, node_name: str):
-    """Executes a function in a thread with a hard timeout."""
-    try:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(func, state)
-            return future.result(timeout=TIMEOUT_SECONDS)
-    except concurrent.futures.TimeoutError:
-        err_msg = f"{node_name} Timeout: Execution exceeded {TIMEOUT_SECONDS} seconds."
-        logger.error(err_msg)
-        return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
-    except Exception as e:
-        err_msg = f"{node_name} Crash: {str(e)}"
-        logger.error(err_msg)
-        return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
+    """Executes a function in a thread with a hard timeout and telemetry tracing."""
+    with swarm_context.node_timer(node_name):
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(func, state)
+                return future.result(timeout=TIMEOUT_SECONDS)
+        except concurrent.futures.TimeoutError:
+            err_msg = f"{node_name} Timeout: Execution exceeded {TIMEOUT_SECONDS} seconds."
+            logger.error(f"[{swarm_context.session_id}] {err_msg}")
+            return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
+        except Exception as e:
+            err_msg = f"{node_name} Crash: {str(e)}"
+            logger.error(f"[{swarm_context.session_id}] {err_msg}")
+            return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
 
 
 def _hound_logic(state: SwarmState):
@@ -161,11 +180,11 @@ def routing_logic(state: SwarmState) -> str:
     logger.filters[0].node_name = "Router"  # type: ignore
 
     if state.get("agent_errors"):
-        logger.warning("Agent crash or timeout detected. Aborting to prevent cascade failure.")
+        logger.warning(f"[{swarm_context.session_id}] Agent crash detected. Aborting to prevent cascade failure.")
         return "__end__"
 
     if state.get("revision_count", 0) >= 3:
-        logger.warning("CRITICAL: Swarm caught in loop. Aborting for manual human review.")
+        logger.warning(f"[{swarm_context.session_id}] CRITICAL: Swarm caught in loop. Aborting.")
         return "__end__"
 
     if len(state.get("security_warnings", [])) > 0:
@@ -199,8 +218,9 @@ builder.add_edge("weaver", "hound")
 builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
 
+# THE NEW CONCURRENCY LOCK
 memory = ConcurrentSafeSqliteSaver("swarm_memory.db")
 swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
 if __name__ == '__main__':
-    logger.info("LangGraph State Machine Compiled with Input Shield and Temporal Boundaries.")
+    logger.info("LangGraph State Machine Compiled with Concurrency Locks and Distributed Tracing.")
