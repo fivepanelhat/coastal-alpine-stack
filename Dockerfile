@@ -22,12 +22,12 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # CACHE HIT: Copy ONLY the requirements file first.
-# This ensures pip install only re-runs if requirements.txt actually changes.
-COPY requirements.txt .
+# This ensures pip install only re-runs if requirements-webhook.txt actually changes.
+COPY requirements-webhook.txt .
 
 # Install production edge dependencies
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+    pip install -r requirements-webhook.txt
 
 # --- Final Edge Runner Stage ---
 FROM python:3.10-slim-bookworm AS runner
@@ -52,6 +52,7 @@ COPY --from=builder /opt/venv /opt/venv
 COPY --chown=coastal:coastal . .
 
 # Drop root privileges immediately
+RUN chown -R coastal:coastal /opt/coastal_alpine
 USER coastal
 
 # Define the entrypoint (Update 'main.py' to your actual edge orchestration script)

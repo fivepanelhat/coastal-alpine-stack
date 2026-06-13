@@ -11,6 +11,7 @@ services:
     volumes:
       - mosquitto_data:/mosquitto/data
       - mosquitto_log:/mosquitto/log
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       # Map your secure certificates directly into the broker
       - ./tls-certs:/mosquitto/config/certs:ro
     restart: unless-stopped
@@ -20,9 +21,11 @@ services:
   # 2. The Log Harvester (Black Box Logger)
   blackbox-logger:
     build:
-      context: ./weaver
+      context: ./Weaver
       dockerfile: Dockerfile # Points to a standard python setup
     container_name: blackbox_logger
+    environment:
+      - MQTT_BROKER=weaver-broker
     volumes:
       - local_logs:/app/logs
     restart: unless-stopped
@@ -40,7 +43,10 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - WEAVER_EDGE_URL=ssl://weaver-broker:8883
+      - MQTT_BROKER=weaver-broker
+      - OLLAMA_HOST=http://host.docker.internal:11434
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped
     depends_on:
       - weaver-broker

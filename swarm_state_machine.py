@@ -1,4 +1,5 @@
 import sys
+import os
 import sqlite3  # noqa: F401
 import logging
 import socket
@@ -46,16 +47,24 @@ for handler in logging.getLogger().handlers:
 # ---------------------------------------------------------
 # 2. Pre-Flight Health Check
 # ---------------------------------------------------------
-def ensure_ollama_ready(host="localhost", port=11434, max_retries=3):
+def ensure_ollama_ready(max_retries=3):
     """Verify Ollama daemon is reachable; fail fast if not."""
+    from urllib.parse import urlparse
+    ollama_env = os.getenv("OLLAMA_HOST", "http://localhost:11434")
+    if not (ollama_env.startswith("http://") or ollama_env.startswith("https://")):
+        ollama_env = "http://" + ollama_env
+    parsed = urlparse(ollama_env)
+    host = parsed.hostname or "localhost"
+    port = parsed.port or 11434
+
     logger.filters[0].node_name = "Pre-Flight"  # type: ignore
     for attempt in range(max_retries):
         try:
             with socket.create_connection((host, port), timeout=2):
-                logger.info("[OK] Local Ollama daemon is active and responding.")
+                logger.info(f"[OK] Ollama daemon is active and responding at {host}:{port}.")
                 return True
         except (socket.timeout, ConnectionRefusedError) as e:
-            logger.warning(f"Ollama unreachable (attempt {attempt+1}/{max_retries}): {e}")
+            logger.warning(f"Ollama unreachable at {host}:{port} (attempt {attempt+1}/{max_retries}): {e}")
             if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)
 
