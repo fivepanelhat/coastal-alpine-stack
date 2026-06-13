@@ -1,6 +1,5 @@
 from typing import TypedDict, List
 from langgraph.graph import StateGraph
-from weaver_agent import autonomous_weaver_node as weaver_node
 
 
 # 1. The Deterministic Swarm State
@@ -14,6 +13,9 @@ class SwarmState(TypedDict):
 
 
 # 2. Node Skeletons (The Agents)
+from weaver_agent import autonomous_weaver_node as weaver_node  # noqa: E402
+
+
 def hound_node(state: SwarmState):
     print("[Hound] Executing SecOps AST Analysis...")
     # Bandit API execution goes here
