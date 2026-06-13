@@ -3,6 +3,7 @@ import sqlite3
 import logging
 import socket
 import time
+import mimetypes  # noqa: F401
 from typing import TypedDict, List
 from langgraph.graph import StateGraph
 from langgraph.checkpoint.sqlite import SqliteSaver
