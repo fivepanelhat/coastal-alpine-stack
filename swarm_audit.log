@@ -90,3 +90,21 @@
 2026-06-13 20:08:04,333 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
 2026-06-13 20:08:04,334 [INFO] (Schema-Cop): [31b55dc4] Node completed in 0.00s
 2026-06-13 20:08:04,334 [INFO] (Router): Perimeter clean. Clear to push.
+2026-06-13 22:34:45,286 [INFO] (Pre-Flight): [OK] Ollama daemon is active and responding at host.docker.internal:11434.
+2026-06-13 22:35:50,866 [INFO] (Pre-Flight): Waking swarm for file: auth_routes.py (Thread: webhook-df71afe7)
+2026-06-13 22:35:50,901 [INFO] (Shield): Input validated safely: auth_routes.py (60 bytes).
+2026-06-13 22:35:54,146 [INFO] (Weaver): HTTP Request: POST http://host.docker.internal:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 22:36:31,580 [INFO] (Weaver): HTTP Request: POST http://host.docker.internal:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 22:40:22,645 [INFO] (Weaver): HTTP Request: POST http://host.docker.internal:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 22:40:23,619 [INFO] (Weaver): [d86075a8] Node completed in 272.68s
+2026-06-13 22:40:23,705 [INFO] (Hound): Executing SecOps AST Analysis...
+2026-06-13 22:40:23,708 [INFO] (Hound): [d86075a8] Node completed in 0.01s
+2026-06-13 22:40:23,716 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
+2026-06-13 22:40:23,719 [INFO] (Schema-Cop): [d86075a8] Node completed in 0.01s
+2026-06-13 22:40:23,728 [INFO] (Router): Perimeter clean. Clear to push.
+2026-06-13 22:40:23,739 [INFO] (Router): Swarm execution complete for thread webhook-df71afe7
+2026-06-13 22:41:17,792 [INFO] (Pre-Flight): [OK] Ollama daemon is active and responding at host.docker.internal:11434.
+2026-06-13 22:41:24,033 [INFO] (Pre-Flight): Waking swarm for file: auth_routes.py (Thread: webhook-6945c206)
+2026-06-13 22:41:24,057 [INFO] (Shield): Input validated safely: auth_routes.py (60 bytes).
+2026-06-13 22:41:25,086 [INFO] (Weaver): HTTP Request: POST http://host.docker.internal:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 22:41:45,638 [INFO] (Weaver): HTTP Request: POST http://host.docker.internal:11434/api/chat "HTTP/1.1 200 OK"
