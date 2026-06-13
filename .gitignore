@@ -62,7 +62,6 @@ Staged-Updates/
 *.token
 token.txt
 .key
-.key
 *.key
 *key*
 
