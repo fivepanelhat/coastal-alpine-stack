@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from swarm_state_machine import SwarmState
 
 # 1. Local Sovereign Edge LLM
-llm = ChatOllama(model="gemma:2b", temperature=0.1)
+llm = ChatOllama(model="gemma4:latest", temperature=0.1)
 
 # 2. System Prompt
 WEAVER_PROMPT = ChatPromptTemplate.from_messages([
