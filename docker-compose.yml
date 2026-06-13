@@ -1,113 +1,23 @@
 version: '3.8'
 
 services:
-  # 1. The Core Message Broker (Weaver)
-  weaver-broker:
-    image: eclipse-mosquitto:2.0
-    container_name: weaver_broker
-    ports:
-      - "1883:1883"   # Standard MQTT (Internal testing)
-      - "8883:8883"   # Secure mTLS MQTT (Production Edge Nodes)
-    volumes:
-      - mosquitto_data:/mosquitto/data
-      - mosquitto_log:/mosquitto/log
-      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
-      # Map your secure certificates directly into the broker
-      - ./tls-certs:/mosquitto/config/certs:ro
+  sovereign-swarm:
+    build: .
+    container_name: coastal_alpine_swarm
     restart: unless-stopped
-    networks:
-      - sovereign_network
-
-  # 2. The Log Harvester (Black Box Logger)
-  blackbox-logger:
-    build:
-      context: ./Weaver
-      dockerfile: Dockerfile # Points to a standard python setup
-    container_name: blackbox_logger
-    environment:
-      - MQTT_BROKER=weaver-broker
-    volumes:
-      - local_logs:/app/logs
-    restart: unless-stopped
-    depends_on:
-      - weaver-broker # Ensures the broker is alive before trying to harvest logs
-    networks:
-      - sovereign_network
-
-  # 3. The Local Web Gateway (SoilGuard / AquaGuard Portal)
-  agritech-portal:
-    build:
-      context: ./SoilGuard-Portal
-    container_name: soilguard_portal
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - MQTT_BROKER=weaver-broker
-      - OLLAMA_HOST=http://host.docker.internal:11434
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: unless-stopped
-    depends_on:
-      - weaver-broker
-    networks:
-      - sovereign_network
-
-  # 4. Prometheus Metrics Engine
-  prometheus:
-    image: prom/prometheus:v2.45.0
-    container_name: sovereign_prometheus
-    volumes:
-      - ./telemetry/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=15d' # Keep local footprint small
-    restart: unless-stopped
-    networks:
-      - sovereign_network
-
-  # 5. Dashboard Layer (Grafana)
-  grafana:
-    image: grafana/grafana-oss:10.0.0
-    container_name: sovereign_grafana
-    ports:
-      - "3001:3000" # Mapped to 3001 to avoid portal collision
-    volumes:
-      - grafana_data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=lock_down_your_admin_password_here
-      - GF_USERS_ALLOW_SIGN_UP=false
-    restart: unless-stopped
-    networks:
-      - sovereign_network
-
-  # 6. Webhook Relay Server (FastAPI Swarm Ingress)
-  webhook-relay:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: webhook_relay
-    command: ["python", "webhook_relay.py"]
     ports:
       - "8000:8000"
+    volumes:
+      # Mount the memory vaults so they persist outside the container
+      - ./swarm_audit.log:/app/swarm_audit.log
+      - ./swarm_memory.db:/app/swarm_memory.db
+      - ./chroma_memory:/app/chroma_memory
+      - ./.env:/app/.env:ro
+      # Mount the actual monorepo so Weaver can rewrite the files
+      - .:/app/repo 
     environment:
-      - GITHUB_WEBHOOK_SECRET=super_secure_sovereign_secret_123!
-      - OLLAMA_HOST=http://host.docker.internal:11434
+      # Tell the containerized swarm to talk to the bare-metal Ollama on the host machine
+      - OLLAMA_HOST=http://host.docker.internal:11434 
     extra_hosts:
+      # Map the host network securely
       - "host.docker.internal:host-gateway"
-    restart: unless-stopped
-    networks:
-      - sovereign_network
-
-networks:
-  sovereign_network:
-    driver: bridge
-
-volumes:
-  mosquitto_data:
-  mosquitto_log:
-  local_logs:
-  prometheus_data:
-  grafana_data:
