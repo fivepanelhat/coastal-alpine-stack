@@ -192,7 +192,8 @@ builder.add_node("schema-cop", schema_cop_node_safe)
 
 # The New Routing Flow
 builder.set_entry_point("shield")
-builder.add_conditional_edges("shield", shield_routing)  # Shield -> End (if malicious) or Weaver (if safe)
+# Shield -> End (if malicious) or Weaver (if safe)
+builder.add_conditional_edges("shield", shield_routing)  # type: ignore
 builder.add_edge("weaver", "hound")
 builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
