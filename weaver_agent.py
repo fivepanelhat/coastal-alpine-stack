@@ -11,18 +11,12 @@ if TYPE_CHECKING:
 
 
 # ---------------------------------------------------------
-# 1. Sovereign Edge Models & Vector Store
+# 1. Sovereign Edge Models
 # ---------------------------------------------------------
 # Using gemma4:latest as verified on the system
 llm = ChatOllama(model="gemma4:latest", temperature=0.1)
 embeddings = OllamaEmbeddings(model="nomic-embed-text")
 
-# Initialize local vector database
-vector_store = Chroma(
-    collection_name="sovereign_secops_memory",
-    embedding_function=embeddings,
-    persist_directory="./chroma_memory"
-)
 
 # ---------------------------------------------------------
 # 2. Pydantic Edge Guard Schema
@@ -83,6 +77,13 @@ def autonomous_weaver_node(state: "SwarmState"):
     if not sec_warn and not lint_err and code != "":
         return {"sender": "weaver"}
 
+    # Initialize local vector database on the current thread
+    vector_store = Chroma(
+        collection_name="sovereign_secops_memory",
+        embedding_function=embeddings,
+        persist_directory="./chroma_memory"
+    )
+
     # 1. Retrieve Historical Context (RAG)
     search_query = f"File: {target} Warnings: {' '.join(sec_warn)} Lint: {' '.join(lint_err)}"
     past_fixes = vector_store.similarity_search(search_query, k=1)
@@ -115,4 +116,5 @@ def autonomous_weaver_node(state: "SwarmState"):
         "sender": "weaver",
         "revision_count": state.get("revision_count", 0) + 1
     }
+
 
