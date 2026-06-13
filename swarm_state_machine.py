@@ -223,8 +223,10 @@ builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
 
 # THE NEW CONCURRENCY LOCK
-memory = ConcurrentSafeSqliteSaver("swarm_memory.db")
+from langgraph.checkpoint.memory import MemorySaver
+memory = MemorySaver()
 swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
 if __name__ == '__main__':
-    logger.info("LangGraph State Machine Compiled with Concurrency Locks and Distributed Tracing.")
+    logger.info("LangGraph State Machine Compiled with In-Memory Checkpointer.")
+

@@ -104,10 +104,16 @@ def autonomous_weaver_node(state: "SwarmState"):
 
     # Extract the strictly parsed code from the Pydantic object
     safe_code = response.refactored_code
+    print(f"[Weaver] Refactored code received (length={len(safe_code)}):")
+    print("-" * 40)
+    print(safe_code)
+    print("-" * 40)
 
     # 3. Save the new fix to Long-Term Memory
+    print("[Weaver] Saving solution to vector memory...")
     memory_payload = f"Issue: {sec_warn} {lint_err}\nSolution:\n{safe_code}"
     vector_store.add_texts(texts=[memory_payload], metadatas=[{"file": target}])
+    print("[Weaver] Solution saved successfully!")
 
     return {
         "code_content": safe_code.strip(),

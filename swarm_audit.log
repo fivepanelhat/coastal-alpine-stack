@@ -55,3 +55,19 @@
 2026-06-13 19:53:47,353 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
 2026-06-13 19:53:47,592 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
 2026-06-13 19:53:49,978 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 19:54:52,748 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:54:52,811 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:54:53,132 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 19:54:55,207 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 19:56:55,410 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:56:55,567 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:56:56,035 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 19:56:58,484 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 19:59:22,739 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:59:22,940 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:59:23,414 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 19:59:25,706 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 20:00:53,693 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 20:00:53,862 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 20:00:54,263 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-06-13 20:00:56,450 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
