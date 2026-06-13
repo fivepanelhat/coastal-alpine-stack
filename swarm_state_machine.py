@@ -47,15 +47,16 @@ for handler in logging.getLogger().handlers:
 # ---------------------------------------------------------
 # 2. Pre-Flight Health Check
 # ---------------------------------------------------------
-def ensure_ollama_ready(max_retries=3):
+def ensure_ollama_ready(host="host.docker.internal", port=11434, max_retries=3):
     """Verify Ollama daemon is reachable; fail fast if not."""
     from urllib.parse import urlparse
-    ollama_env = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-    if not (ollama_env.startswith("http://") or ollama_env.startswith("https://")):
-        ollama_env = "http://" + ollama_env
-    parsed = urlparse(ollama_env)
-    host = parsed.hostname or "localhost"
-    port = parsed.port or 11434
+    ollama_env = os.getenv("OLLAMA_HOST")
+    if ollama_env:
+        if not (ollama_env.startswith("http://") or ollama_env.startswith("https://")):
+            ollama_env = "http://" + ollama_env
+        parsed = urlparse(ollama_env)
+        host = parsed.hostname or host
+        port = parsed.port or port
 
     logger.filters[0].node_name = "Pre-Flight"  # type: ignore
     for attempt in range(max_retries):
