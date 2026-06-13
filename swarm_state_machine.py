@@ -36,7 +36,11 @@ class NodeFilter(logging.Filter):
 
 
 logger = logging.getLogger("SovereignSwarm")
-logger.addFilter(NodeFilter())
+node_filter = NodeFilter()
+logger.addFilter(node_filter)
+logging.getLogger().addFilter(node_filter)
+for handler in logging.getLogger().handlers:
+    handler.addFilter(node_filter)
 
 
 # ---------------------------------------------------------
