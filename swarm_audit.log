@@ -22,3 +22,14 @@
 2026-06-13 18:04:08,927 [INFO] (Pre-Flight): Waking swarm for file: auth_routes.py (Thread: webhook-9ae10a2c)
 2026-06-13 18:04:09,057 [INFO] (Shield): Input validated safely: auth_routes.py (60 bytes).
 2026-06-13 18:04:11,684 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-06-13 18:10:18,045 [ERROR] (Weaver): [858fe62c] Weaver Timeout: Execution exceeded 60 seconds.
+2026-06-13 18:10:18,045 [INFO] (Weaver): [858fe62c] Node completed in 368.99s
+2026-06-13 18:10:18,048 [INFO] (Hound): Executing SecOps AST Analysis...
+2026-06-13 18:10:18,049 [INFO] (Hound): [858fe62c] Node completed in 0.00s
+2026-06-13 18:10:18,052 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
+2026-06-13 18:10:18,053 [INFO] (Schema-Cop): [858fe62c] Node completed in 0.00s
+2026-06-13 18:10:18,053 [WARNING] (Router): [858fe62c] Agent crash detected. Aborting to prevent cascade failure.
+2026-06-13 18:10:18,060 [INFO] (Router): Swarm execution complete for thread webhook-9ae10a2c
+2026-06-13 19:40:31,757 [INFO] (Pre-Flight): [OK] Local Ollama daemon is active and responding.
+2026-06-13 19:40:31,825 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-06-13 19:41:19,493 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
