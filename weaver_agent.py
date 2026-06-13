@@ -67,8 +67,15 @@ def autonomous_weaver_node(state: "SwarmState"):
         "code_content": code
     })
 
+    content = response.content
+    if not isinstance(content, str):
+        content = "".join([
+            chunk.get("text", str(chunk)) if isinstance(chunk, dict) else str(chunk)
+            for chunk in content
+        ])
+
     return {
-        "code_content": response.content.strip(),
+        "code_content": content.strip(),
         "security_warnings": [],
         "lint_errors": [],
         "sender": "weaver",
