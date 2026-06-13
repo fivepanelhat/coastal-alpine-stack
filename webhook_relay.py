@@ -1,93 +1,98 @@
+import os
 import hmac
 import hashlib
-import os
 import uuid
+from dotenv import load_dotenv
+from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
 import logging
-from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, Header
-from pydantic import BaseModel  # noqa: F401
-from swarm_state_machine import swarm_graph
 
-# Setup basic logging for the API Gateway
-logging.basicConfig(level=logging.INFO, format='%(asctime)s [API] %(message)s')
-logger = logging.getLogger("WebhookRelay")
+# Import your hardened swarm
+from swarm_state_machine import swarm_graph, SwarmState  # noqa: F401
 
-app = FastAPI(title="Coastal Alpine Webhook Relay")
+# Load secure environment variables
+load_dotenv()
+WEBHOOK_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET", "")
 
-# 1. The Cryptographic Airlock (Set this in your .env later)
-GITHUB_SECRET = os.getenv("GITHUB_WEBHOOK_SECRET", "super-secret-local-key")
+# Initialize FastAPI
+app = FastAPI(title="Sovereign Edge Webhook Relay")
+logger = logging.getLogger("SovereignSwarm")
 
 
-def verify_signature(payload_body: bytes, signature_header: str):
-    """Mathematically guarantees the webhook actually came from your GitHub repo."""
+def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
+    """Mathematically verify the webhook originated from GitHub."""
     if not signature_header:
-        raise HTTPException(status_code=403, detail="Missing X-Hub-Signature-256 header")
+        return False
 
-    hash_object = hmac.new(GITHUB_SECRET.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
+    hash_object = hmac.new(WEBHOOK_SECRET.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
     expected_signature = "sha256=" + hash_object.hexdigest()
 
-    if not hmac.compare_digest(expected_signature, signature_header):
-        raise HTTPException(status_code=403, detail="Cryptographic signature mismatch.")
+    return hmac.compare_digest(expected_signature, signature_header)
 
 
-# 2. The Asynchronous Swarm Trigger
-def execute_background_swarm(target_file: str, code_payload: str):
-    """Executes the LangGraph orchestrator completely independent of the API thread."""
-    session_id = str(uuid.uuid4())[:8]
-    logger.info(f"[{session_id}] Waking Coastal Alpine Swarm for file: {target_file}")
+def execute_swarm_async(target_file: str, thread_id: str):
+    """Run the LangGraph state machine in the background."""
+    logger.info(f"Waking swarm for file: {target_file} (Thread: {thread_id})")
 
-    # Construct the initial state
+    # In a production scenario, you would checkout the branch and read the real file here.
+    # For now, we mock the vulnerable code injection.
     initial_state = {
         "target_file": target_file,
-        "code_content": code_payload,
+        "code_content": "def login(u, p):\n    if p == 'admin123':\n        return True",
         "lint_errors": ["E225 missing whitespace around operator"],
         "security_warnings": ["B105:hardcoded_password_string"],
         "revision_count": 0,
-        "sender": "github_webhook",
+        "sender": "system",
         "agent_errors": []
     }
 
-    # Isolate the memory thread
-    config = {"configurable": {"thread_id": f"pr-thread-{session_id}"}}
+    config = {"configurable": {"thread_id": thread_id}}
 
-    # Execute the graph
     try:
+        # Execute the hardened graph
         for event in swarm_graph.stream(initial_state, config):  # type: ignore
-            for node_name, state_update in event.items():
-                if "code_content" in state_update and node_name == "weaver":
-                    logger.info(f"[{session_id}] Weaver successfully refactored the payload.")
-        logger.info(f"[{session_id}] Swarm execution complete. Thread closed.")
+            pass  # The graph's internal SqliteSaver and Logger handle the output
+        logger.info(f"Swarm execution complete for thread {thread_id}")
     except Exception as e:
-        logger.error(f"[{session_id}] Fatal swarm exception during background execution: {str(e)}")
+        logger.error(f"Catastrophic swarm failure in background thread: {str(e)}")
 
 
-# 3. The API Endpoint
-@app.post("/github-webhook")
-async def github_webhook_receiver(
-    request: Request,
-    background_tasks: BackgroundTasks,
-    x_hub_signature_256: str = Header(None)
-):
-    # Read the raw bytes for cryptographic verification
-    payload_body = await request.body()  # noqa: F841
+@app.post("/webhook")
+async def github_webhook(request: Request, background_tasks: BackgroundTasks):
+    """Ingress endpoint for GitHub PR events."""
 
-    # Verify the airlock (Commented out for initial local testing, activate for production)
-    # verify_signature(payload_body, x_hub_signature_256)
+    # 1. Cryptographic Verification
+    signature = request.headers.get("x-hub-signature-256")
+    body = await request.body()
 
-    # Parse the JSON payload
-    data = await request.json()
+    if not verify_github_signature(body, signature):
+        logger.warning("Intrusion detected: Invalid webhook signature.")
+        raise HTTPException(status_code=401, detail="Invalid signature")
 
-    # Extract PR data (Simulated extraction for this architecture)
-    action = data.get("action", "unknown")
-    if action not in ["opened", "synchronize"]:
-        return {"status": "ignored", "reason": f"Action '{action}' does not trigger the swarm."}
+    # 2. Parse Payload
+    try:
+        payload = await request.json()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid JSON payload")
 
-    target_file = "simulated_pr_file.py"
-    code_content = "def login(u, p):\n    if p == 'admin123':\n        return True"
+    # Ignore pings or irrelevant events
+    if "pull_request" not in payload and "commits" not in payload:
+        return {"status": "ignored", "message": "Not a PR or Push event"}
 
-    logger.info("Valid PR event received. Offloading to background NPU tasks.")
+    # 3. Dispatch to Swarm
+    # We generate a unique ID for SQLite memory tracking
+    session_id = f"webhook-{uuid.uuid4().hex[:8]}"
 
-    # Hand off the heavy lifting to the background task
-    background_tasks.add_task(execute_background_swarm, target_file, code_content)
+    # In reality, you'd extract the specific changed files from the payload here.
+    # We will pass a dummy file name for the architecture test.
+    target_file = "auth_routes.py"
 
-    # Return 202 Accepted instantly so GitHub doesn't timeout
-    return {"status": "accepted", "message": "Payload verified. Swarm deployed."}
+    # Send the execution to the background so we return 202 to GitHub instantly
+    background_tasks.add_task(execute_swarm_async, target_file, session_id)
+
+    return {"status": "accepted", "session_id": session_id, "message": "Swarm dispatched"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    logger.info("Starting Sovereign Edge Webhook Relay on port 8000...")
+    uvicorn.run(app, host="0.0.0.0", port=8000)
