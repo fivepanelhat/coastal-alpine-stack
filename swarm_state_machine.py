@@ -104,7 +104,7 @@ conn = sqlite3.connect("swarm_memory.db", check_same_thread=False)
 memory = SqliteSaver(conn)
 
 # Compile with persistent memory attached
-swarm_graph = builder.compile(checkpointer=memory)
+swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
 if __name__ == '__main__':
     logger.info("LangGraph State Machine Compiled with SQLite Persistence and Telemetry Ready.")
