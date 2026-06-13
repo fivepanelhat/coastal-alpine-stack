@@ -25,13 +25,14 @@ class NodeFilter(logging.Filter):
         self.node_name = node_name
 
     def filter(self, record):
-        record.node = self.node_name
+        if not hasattr(record, "node"):
+            record.node = self.node_name
         return True
 
 
 logger = logging.getLogger("SovereignSwarm")
 node_filter = NodeFilter()
-logger.addFilter(node_filter)
+logging.getLogger().addFilter(node_filter)
 
 # ---------------------------------------------------------
 # 2. The Deterministic Swarm State
