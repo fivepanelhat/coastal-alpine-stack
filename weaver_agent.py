@@ -1,68 +1,65 @@
 from typing import TYPE_CHECKING
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 if TYPE_CHECKING:
     from swarm_state_machine import SwarmState
 
-# 1. Initialize the Local Inference Engine (Sovereign Edge)
-# We default to gemma or phi3 for fast, local edge execution
+# 1. Local Sovereign Edge LLM
 llm = ChatOllama(model="gemma:2b", temperature=0.1)
 
-# 2. Define the System Prompt
+# 2. System Prompt
 WEAVER_PROMPT = ChatPromptTemplate.from_messages([
     (
         "system",
-        "You are Weaver, an elite Red Team SecOps AI agent. Your job is to write "
-        "highly secure, PEP-8 compliant Python code for an edge computing environment. "
-        "NEVER use plain text passwords. Always validate inputs. You will receive existing "
-        "code and error reports. Output ONLY the corrected raw Python code. "
-        "No markdown formatting, no explanations."
+        "You are Weaver, an elite Red Team SecOps AI agent. Write secure, "
+        "PEP-8 Python. Output ONLY raw code."
     ),
     (
         "human",
-        "Target File: {target_file}\n\n"
-        "Security Warnings (Fix immediately): {security_warnings}\n\n"
-        "Lint Errors (Fix formatting): {lint_errors}\n\n"
-        "Current Code:\n{code_content}\n\n"
-        "Rewrite the code to resolve all issues."
+        "File: {target_file}\n"
+        "Sec Warnings: {security_warnings}\n"
+        "Lint Errors: {lint_errors}\n"
+        "Code:\n{code_content}\n"
+        "Rewrite to resolve issues."
     )
 ])
 
-# 3. Build the Chain
 weaver_chain = WEAVER_PROMPT | llm
 
 
-def autonomous_weaver_node(state: "SwarmState"):
-    print("\n[Weaver] Analyzing state and firing local inference engine...")
+# 3. THE TITANIUM WRAPPER: Exponential Backoff for NPU Resilience
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    reraise=True
+)
+def invoke_local_llm(payload):
+    return weaver_chain.invoke(payload)
 
-    # Extract the current operational context
+
+# 4. The Agent Node
+def autonomous_weaver_node(state: "SwarmState"):
     target = state.get("target_file", "unknown.py")
     code = state.get("code_content", "")
     sec_warn = state.get("security_warnings", [])
     lint_err = state.get("lint_errors", [])
 
-    # If the code is perfectly clean, do not waste NPU cycles rewriting it
+    # Check if perimeter is clear
     if not sec_warn and not lint_err and code != "":
-        print("[Weaver] Perimeter is secure. No refactor required.")
         return {"sender": "weaver"}
 
-    print(
-        f"[Weaver] Refactoring {target} to clear {len(sec_warn)} security "
-        f"warnings and {len(lint_err)} linting errors..."
-    )
+    print(f"[Weaver] Refactoring {target} (Attempt {state.get('revision_count', 0) + 1})...")
 
-    # Execute the local LLM
-    response = weaver_chain.invoke({
+    # Execute inference through the Titanium Wrapper
+    response = invoke_local_llm({
         "target_file": target,
         "security_warnings": "\n".join(sec_warn) if sec_warn else "None",
         "lint_errors": "\n".join(lint_err) if lint_err else "None",
         "code_content": code
     })
 
-    # Update the swarm state with the newly minted secure code
-    # We clear the errors array because Weaver believes it has fixed them;
-    # Hound and Schema-Cop will re-verify on the next pass.
     return {
         "code_content": response.content.strip(),
         "security_warnings": [],
