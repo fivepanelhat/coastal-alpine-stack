@@ -11,13 +11,17 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger("SovereignSwarm")
 
+
 # ---------------------------------------------------------
 # 1. THE PYDANTIC GUARD: Strict Output Schema
 # ---------------------------------------------------------
 class WeaverResponse(BaseModel):
-    refactored_code: str = Field(description="The fully refactored, secure Python code. MUST NOT contain markdown formatting backticks.")
+    refactored_code: str = Field(
+        description="The fully refactored, secure Python code. MUST NOT contain markdown formatting backticks."
+    )
     security_cleared: bool = Field(description="True if all security warnings were resolved.")
     lint_cleared: bool = Field(description="True if all linting errors were resolved.")
+
 
 # ---------------------------------------------------------
 # 2. Local Sovereign Edge LLM (Forced JSON Mode)
@@ -28,6 +32,7 @@ llm = ChatOllama(model="gemma4:latest", temperature=0.1, format="json")
 
 # Initialize the aggressive Pydantic parser
 parser = PydanticOutputParser(pydantic_object=WeaverResponse)
+
 
 # ---------------------------------------------------------
 # 3. Mathematically Bound System Prompt
@@ -49,16 +54,18 @@ WEAVER_PROMPT = PromptTemplate(
 # The Execution Chain
 weaver_chain = WEAVER_PROMPT | llm | parser
 
+
 # ---------------------------------------------------------
 # 4. The Titanium Wrapper
 # ---------------------------------------------------------
 @retry(
-    stop=stop_after_attempt(5), 
+    stop=stop_after_attempt(5),
     wait=wait_exponential(multiplier=1, min=2, max=10),
     reraise=True
 )
 def invoke_local_llm(payload):
     return weaver_chain.invoke(payload)
+
 
 # ---------------------------------------------------------
 # 5. The Agent Node
@@ -68,7 +75,7 @@ def autonomous_weaver_node(state: "SwarmState"):
     code = state.get("code_content", "")
     sec_warn = state.get("security_warnings", [])
     lint_err = state.get("lint_errors", [])
-    
+
     # Check if perimeter is clear
     if not sec_warn and not lint_err and code != "":
         return {"sender": "weaver"}
@@ -84,9 +91,9 @@ def autonomous_weaver_node(state: "SwarmState"):
             "lint_errors": "\n".join(lint_err) if lint_err else "None",
             "code_content": code
         })
-        
-        logger.info(f"Pydantic Validation Passed. Output perfectly structured.")
-        
+
+        logger.info("Pydantic Validation Passed. Output perfectly structured.")
+
         return {
             "code_content": response.refactored_code.strip(),
             "security_warnings": [],
@@ -98,6 +105,7 @@ def autonomous_weaver_node(state: "SwarmState"):
         err_msg = f"Weaver LLM/Pydantic Parsing Error: {str(e)}"
         logger.error(err_msg)
         return {"sender": "weaver", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+
 
 if __name__ == '__main__':
     logger.info("Weaver Agent Module Compiled.")
