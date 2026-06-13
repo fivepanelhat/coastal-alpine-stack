@@ -33,6 +33,8 @@ class NodeFilter(logging.Filter):
 logger = logging.getLogger("SovereignSwarm")
 node_filter = NodeFilter()
 logging.getLogger().addFilter(node_filter)
+for handler in logging.getLogger().handlers:
+    handler.addFilter(node_filter)
 
 # ---------------------------------------------------------
 # 2. The Deterministic Swarm State
