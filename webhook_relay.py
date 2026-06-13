@@ -18,7 +18,7 @@ app = FastAPI(title="Sovereign Edge Webhook Relay")
 logger = logging.getLogger("SovereignSwarm")
 
 
-def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
+def verify_github_signature(payload_body: bytes, signature_header: str | None) -> bool:
     """Mathematically verify the webhook originated from GitHub."""
     if not signature_header:
         return False
