@@ -51,7 +51,7 @@ def execute_background_swarm(target_file: str, code_payload: str):
 
     # Execute the graph
     try:
-        for event in swarm_graph.stream(initial_state, config):
+        for event in swarm_graph.stream(initial_state, config):  # type: ignore
             for node_name, state_update in event.items():
                 if "code_content" in state_update and node_name == "weaver":
                     logger.info(f"[{session_id}] Weaver successfully refactored the payload.")
