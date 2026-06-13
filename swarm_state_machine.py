@@ -30,7 +30,8 @@ class NodeFilter(logging.Filter):
 
 
 logger = logging.getLogger("SovereignSwarm")
-logger.addFilter(NodeFilter())
+node_filter = NodeFilter()
+logger.addFilter(node_filter)
 
 # ---------------------------------------------------------
 # 2. The Deterministic Swarm State
@@ -47,13 +48,13 @@ class SwarmState(TypedDict):
 
 
 def hound_node(state: SwarmState):
-    logger.filters[0].node_name = "Hound"  # type: ignore
+    node_filter.node_name = "Hound"
     logger.info("Executing SecOps AST Analysis...")
     return {"sender": "hound"}
 
 
 def schema_cop_node(state: SwarmState):
-    logger.filters[0].node_name = "Schema-Cop"  # type: ignore
+    node_filter.node_name = "Schema-Cop"
     logger.info("Validating Pydantic/Monorepo Coherence...")
     return {"sender": "schema-cop"}
 
@@ -62,7 +63,7 @@ def schema_cop_node(state: SwarmState):
 # 3. The Orchestration Router
 # ---------------------------------------------------------
 def routing_logic(state: SwarmState) -> str:
-    logger.filters[0].node_name = "Router"  # type: ignore
+    node_filter.node_name = "Router"
 
     # LOOP BREAKER: Abort if we exceed 3 refactor attempts
     if state.get("revision_count", 0) >= 3:
