@@ -1,5 +1,6 @@
 import sys
 import sqlite3
+import threading
 import logging
 import socket
 import time
@@ -35,6 +36,36 @@ class NodeFilter(logging.Filter):
 
 logger = logging.getLogger("SovereignSwarm")
 logger.addFilter(NodeFilter())
+
+
+class ConcurrentSafeSqliteSaver(SqliteSaver):
+    """
+    Wraps LangGraph's SqliteSaver with a strict thread-level advisory lock.
+    Mathematically prevents database corruption when multiple webhooks fire simultaneously.
+    """
+    def __init__(self, db_path: str = "swarm_memory.db"):
+        # Initialize the connection with thread-sharing enabled
+        conn = sqlite3.connect(db_path, check_same_thread=False)
+        super().__init__(conn)
+
+        # The Titanium Lock
+        self._lock = threading.RLock()
+
+    def put(self, config, checkpoint, metadata, new_versions):
+        with self._lock:
+            return super().put(config, checkpoint, metadata, new_versions)
+
+    def put_writes(self, config, writes, task_id):
+        with self._lock:
+            return super().put_writes(config, writes, task_id)
+
+    def get_tuple(self, config):
+        with self._lock:
+            return super().get_tuple(config)
+
+    def list(self, config, filter=None, before=None, limit=None):
+        with self._lock:
+            return super().list(config, filter=filter, before=before, limit=limit)
 
 
 # ---------------------------------------------------------
@@ -197,8 +228,7 @@ builder.add_edge("weaver", "hound")
 builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
 
-conn = sqlite3.connect("swarm_memory.db", check_same_thread=False)
-memory = SqliteSaver(conn)
+memory = ConcurrentSafeSqliteSaver("swarm_memory.db")
 swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
 if __name__ == '__main__':
