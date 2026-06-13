@@ -36,7 +36,14 @@ weaver_chain = WEAVER_PROMPT | llm
     reraise=True
 )
 def invoke_local_llm(payload):
-    return weaver_chain.invoke(payload)
+    response = weaver_chain.invoke(payload)
+    # Normalize response.content to always be a string to prevent list attribute errors
+    if isinstance(response.content, list):
+        response.content = "".join([
+            chunk.get("text", str(chunk)) if isinstance(chunk, dict) else str(chunk)
+            for chunk in response.content
+        ])
+    return response
 
 
 # 4. The Agent Node
@@ -60,17 +67,8 @@ def autonomous_weaver_node(state: "SwarmState"):
         "code_content": code
     })
 
-    response_content = response.content
-    if isinstance(response_content, list):
-        content_str = "".join([
-            chunk.get("text", str(chunk)) if isinstance(chunk, dict) else str(chunk)
-            for chunk in response_content
-        ])
-    else:
-        content_str = response_content
-
     return {
-        "code_content": content_str.strip(),
+        "code_content": response.content.strip(),
         "security_warnings": [],
         "lint_errors": [],
         "sender": "weaver",
