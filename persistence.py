@@ -16,18 +16,18 @@ class ConcurrentSafeSqliteSaver(SqliteSaver):
         # The Titanium Lock
         self._lock = threading.RLock()
 
-    def put(self, config, checkpoint, metadata, new_versions):
+    def put(self, *args, **kwargs):
         with self._lock:
-            return super().put(config, checkpoint, metadata, new_versions)
+            return super().put(*args, **kwargs)
 
-    def put_writes(self, config, writes, task_id):
+    def put_writes(self, *args, **kwargs):
         with self._lock:
-            return super().put_writes(config, writes, task_id)
+            return super().put_writes(*args, **kwargs)
 
-    def get_tuple(self, config):
+    def get_tuple(self, *args, **kwargs):
         with self._lock:
-            return super().get_tuple(config)
+            return super().get_tuple(*args, **kwargs)
 
-    def list(self, config, filter=None, before=None, limit=None):
+    def list(self, *args, **kwargs):
         with self._lock:
-            return super().list(config, filter=filter, before=before, limit=limit)
+            return super().list(*args, **kwargs)
