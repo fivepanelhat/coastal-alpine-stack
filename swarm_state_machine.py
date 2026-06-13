@@ -1,12 +1,14 @@
 import sqlite3
 import logging
+import socket
+import time
 from typing import TypedDict, List
 from langgraph.graph import StateGraph
 from langgraph.checkpoint.sqlite import SqliteSaver
 from weaver_agent import autonomous_weaver_node as weaver_node
 
 # ---------------------------------------------------------
-# 1. THE BLACK BOX: Sovereign Edge Telemetry
+# 1. Sovereign Edge Telemetry
 # ---------------------------------------------------------
 logging.basicConfig(
     level=logging.INFO,
@@ -18,7 +20,6 @@ logging.basicConfig(
 )
 
 
-# Custom filter to inject node names into the logs
 class NodeFilter(logging.Filter):
     def __init__(self, node_name="System"):
         super().__init__()
@@ -37,10 +38,30 @@ for handler in logging.getLogger().handlers:
     handler.addFilter(node_filter)
 
 # ---------------------------------------------------------
-# 2. The Deterministic Swarm State
+# 2. P0: Pre-Flight Health Check
 # ---------------------------------------------------------
 
 
+def ensure_ollama_ready(host="localhost", port=11434, max_retries=3):
+    """Verify Ollama daemon is reachable; fail fast if not."""
+    node_filter.node_name = "Pre-Flight"
+    for attempt in range(max_retries):
+        try:
+            with socket.create_connection((host, port), timeout=2):
+                logger.info("✓ Local Ollama daemon is active and responding.")
+                return True
+        except (socket.timeout, ConnectionRefusedError) as e:
+            logger.warning(f"Ollama unreachable (attempt {attempt+1}/{max_retries}): {e}")
+            if attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+
+    logger.critical("Ollama daemon is dead. Aborting swarm to prevent silent hang.")
+    raise RuntimeError("Ollama daemon health check failed")
+
+
+# ---------------------------------------------------------
+# 3. The Deterministic Swarm State
+# ---------------------------------------------------------
 class SwarmState(TypedDict):
     target_file: str
     code_content: str
@@ -48,37 +69,66 @@ class SwarmState(TypedDict):
     security_warnings: List[str]
     revision_count: int
     sender: str
-
-
-def hound_node(state: SwarmState):
-    node_filter.node_name = "Hound"
-    logger.info("Executing SecOps AST Analysis...")
-    return {"sender": "hound"}
-
-
-def schema_cop_node(state: SwarmState):
-    node_filter.node_name = "Schema-Cop"
-    logger.info("Validating Pydantic/Monorepo Coherence...")
-    return {"sender": "schema-cop"}
+    agent_errors: List[str]  # New field to track silent crashes
 
 
 # ---------------------------------------------------------
-# 3. The Orchestration Router
+# 4. P0: Safe Agent Wrappers
+# ---------------------------------------------------------
+def hound_node_safe(state: SwarmState):
+    node_filter.node_name = "Hound"
+    try:
+        logger.info("Executing SecOps AST Analysis...")
+        # Future Bandit subprocess execution goes here
+        return {"sender": "hound"}
+    except Exception as e:
+        err_msg = f"Hound Crash: {str(e)}"
+        logger.error(err_msg)
+        return {"sender": "hound", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+
+
+def schema_cop_node_safe(state: SwarmState):
+    node_filter.node_name = "Schema-Cop"
+    try:
+        logger.info("Validating Pydantic/Monorepo Coherence...")
+        return {"sender": "schema-cop"}
+    except Exception as e:
+        err_msg = f"Schema-Cop Crash: {str(e)}"
+        logger.error(err_msg)
+        return {"sender": "schema-cop", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+
+
+def weaver_node_safe(state: SwarmState):
+    node_filter.node_name = "Weaver"
+    try:
+        # Call the tenacity-wrapped function from weaver_agent.py
+        return weaver_node(state)
+    except Exception as e:
+        err_msg = f"Weaver Crash: {str(e)}"
+        logger.error(err_msg)
+        return {"sender": "weaver", "agent_errors": state.get("agent_errors", []) + [err_msg]}
+
+
+# ---------------------------------------------------------
+# 5. The Orchestration Router
 # ---------------------------------------------------------
 def routing_logic(state: SwarmState) -> str:
     node_filter.node_name = "Router"
 
-    # LOOP BREAKER: Abort if we exceed 3 refactor attempts
+    if state.get("agent_errors"):
+        logger.warning("Agent crash detected in state. Aborting to prevent cascade failure.")
+        return "__end__"
+
     if state.get("revision_count", 0) >= 3:
         logger.warning("CRITICAL: Swarm caught in loop. Aborting for manual human review.")
         return "__end__"
 
     if len(state.get("security_warnings", [])) > 0:
-        logger.info("Perimeter breached by security warning. Routing back to Weaver.")
+        logger.info("Perimeter breached by security warning. Routing to Weaver.")
         return "weaver"
 
     if len(state.get("lint_errors", [])) > 0:
-        logger.info("Perimeter breached by lint error. Routing back to Weaver.")
+        logger.info("Perimeter breached by lint error. Routing to Weaver.")
         return "weaver"
 
     logger.info("Perimeter clean. Clear to push.")
@@ -86,25 +136,27 @@ def routing_logic(state: SwarmState) -> str:
 
 
 # ---------------------------------------------------------
-# 4. Compile the Graph with The Memory Vault
+# 6. Compile the Graph
 # ---------------------------------------------------------
+# Run Pre-flight before compiling (bypass under pytest to allow test collection)
+import sys
+if "pytest" not in sys.modules:
+    ensure_ollama_ready()
+
 builder = StateGraph(SwarmState)
 
-builder.add_node("weaver", weaver_node)
-builder.add_node("hound", hound_node)
-builder.add_node("schema-cop", schema_cop_node)
+builder.add_node("weaver", weaver_node_safe)
+builder.add_node("hound", hound_node_safe)
+builder.add_node("schema-cop", schema_cop_node_safe)
 
 builder.set_entry_point("weaver")
 builder.add_edge("weaver", "hound")
 builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
 
-# THE MEMORY VAULT: Initialize SQLite checkpointer
 conn = sqlite3.connect("swarm_memory.db", check_same_thread=False)
 memory = SqliteSaver(conn)
-
-# Compile with persistent memory attached
 swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
 if __name__ == '__main__':
-    logger.info("LangGraph State Machine Compiled with SQLite Persistence and Telemetry Ready.")
+    logger.info("LangGraph State Machine Compiled with P0 Hardening.")
