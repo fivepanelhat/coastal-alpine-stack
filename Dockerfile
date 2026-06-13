@@ -1,59 +1,21 @@
-# Base image: ARM64-compatible for the Pi 5
-FROM python:3.10-slim-bookworm AS builder
-
-# Enforce strict deterministic behavior and prevent disk-write bloat
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
-
-# Install bare-minimum system dependencies for C++ / NPU bindings
-# We immediately purge the apt cache to keep the layer size down
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
-
-# Set up the isolated working directory
-WORKDIR /opt/coastal_alpine
-
-# Initialize a virtual environment for strict read-only root compatibility
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# CACHE HIT: Copy ONLY the requirements file first.
-# This ensures pip install only re-runs if requirements-webhook.txt actually changes.
-COPY requirements-webhook.txt .
-
-# Install production edge dependencies
-RUN pip install --upgrade pip && \
-    pip install -r requirements-webhook.txt
-
-# --- Final Edge Runner Stage ---
-FROM python:3.10-slim-bookworm AS runner
-
-# Enforce environment variables for the edge node execution
-ENV PATH="/opt/venv/bin:$PATH" \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-# SecOps Directive: Create a strictly permissioned, non-root user.
-# We absolutely do not run edge inference containers as root.
-RUN groupadd -r coastal && useradd -r -g coastal -d /opt/coastal_alpine -s /sbin/nologin coastal
+# Use a lightweight, secure Python base image
+FROM python:3.11-slim
 
 # Set the working directory
-WORKDIR /opt/coastal_alpine
+WORKDIR /app
 
-# Pull the fully cached, lean virtual environment from the builder stage
-COPY --from=builder /opt/venv /opt/venv
+# Install system dependencies required for ChromaDB and SQLite
+RUN apt-get update && apt-get install -y build-essential curl && rm -rf /var/lib/apt/lists/*
 
-# Copy the monorepo application code, assigning ownership to our restricted user
-# Note: Ensure your .dockerignore is ruthless so we don't copy local dev bloat
-COPY --chown=coastal:coastal . .
+# Copy requirements and install
+COPY requirements-webhook.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Drop root privileges immediately
-RUN chown -R coastal:coastal /opt/coastal_alpine
-USER coastal
+# Copy the entire hardened swarm codebase into the container
+COPY . .
 
-# Define the entrypoint (Update 'main.py' to your actual edge orchestration script)
-CMD ["python", "main.py"]
+# Expose the FastAPI Webhook Port
+EXPOSE 8000
+
+# Ignite the daemon
+CMD ["uvicorn", "webhook_relay:app", "--host", "0.0.0.0", "--port", "8000"]
