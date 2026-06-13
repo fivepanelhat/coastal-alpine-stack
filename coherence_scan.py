@@ -93,7 +93,8 @@ def check_dependency_coherence(report: CoherenceReport, root_path: Path):
                 if repo_version != root_version:
                     report.is_coherent = False
                     report.dependency_drift_errors.append(
-                        f"Version Drift in {repo}: '{pkg}' is v{repo_version}, but root strictly enforces v{root_version}"
+                        f"Version Drift in {repo}: '{pkg}' is v{repo_version}, "
+                        f"but root strictly enforces v{root_version}"
                     )
 
 

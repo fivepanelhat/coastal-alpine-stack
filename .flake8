@@ -7,4 +7,17 @@ exclude =
     node_modules,
     build,
     dist,
-    tests_security_stress
+    tests_security_stress,
+    AquaGuard-Portal,
+    Blue-Moon-Portal,
+    SoilGuard-Portal,
+    Sovereign-Edge-Firmware,
+    Sting-Operation-AI,
+    coastal_alpine_core,
+    fivepanelhat,
+    weaver,
+    Weaver,
+    rpi_secops,
+    telemetry,
+    telemetry_data,
+    tests

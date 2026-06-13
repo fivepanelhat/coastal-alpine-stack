@@ -6,6 +6,7 @@ import sys
 ROOT = r"C:\Users\Admin\.gemini\antigravity-ide\scratch\coastal-alpine-stack"
 SKIP_DIRS = {".venv", ".git", "node_modules", "__pycache__"}
 
+
 def replace_checkout_step(lines):
     new_lines = []
     i = 0
@@ -43,7 +44,7 @@ def replace_checkout_step(lines):
                     new_lines.append(line)
                     i += 1
                     continue
-            
+
             # Find the end of this step block
             end_idx = start_idx + 1
             while end_idx < len(lines):
@@ -57,7 +58,7 @@ def replace_checkout_step(lines):
                 if next_indent <= len(indent) and not next_line.lstrip().startswith("#"):
                     break
                 end_idx += 1
-            
+
             replacement_block = [
                 f"{indent}- name: Checkout repository",
                 f"{indent}  uses: actions/checkout@v4",
@@ -65,23 +66,24 @@ def replace_checkout_step(lines):
                 f"{indent}    submodules: recursive",
                 f"{indent}    fetch-depth: 0"
             ]
-            
+
             existing_block = lines[start_idx:end_idx]
-            existing_stripped = [l.rstrip() for l in existing_block if l.strip()]
-            replacement_stripped = [l.rstrip() for l in replacement_block if l.strip()]
-            
+            existing_stripped = [item.rstrip() for item in existing_block if item.strip()]
+            replacement_stripped = [item.rstrip() for item in replacement_block if item.strip()]
+
             if existing_stripped != replacement_stripped:
                 new_lines.extend(replacement_block)
                 updated = True
             else:
                 new_lines.extend(existing_block)
-            
+
             i = end_idx
         else:
             new_lines.append(line)
             i += 1
-            
+
     return new_lines, updated
+
 
 # First, collect and update all files
 modified_paths = []
@@ -94,10 +96,10 @@ for dirpath, dirs, files in os.walk(ROOT):
                 fpath = os.path.join(dirpath, fname)
                 with open(fpath, "r", encoding="utf-8") as f:
                     content = f.read()
-                
+
                 lines = content.splitlines()
                 new_lines, updated = replace_checkout_step(lines)
-                
+
                 if updated:
                     with open(fpath, "w", encoding="utf-8") as f:
                         f.write("\n".join(new_lines) + "\n")
@@ -118,6 +120,7 @@ submodules = [
     "Weaver",
 ]
 
+
 def git_sync_repo(repo_path, commit_msg, add_pattern=".github/workflows"):
     try:
         # Check current branch
@@ -129,7 +132,7 @@ def git_sync_repo(repo_path, commit_msg, add_pattern=".github/workflows"):
             check=True
         )
         branch = branch_res.stdout.strip()
-        
+
         # Check status
         status_res = subprocess.run(
             ["git", "status", "--porcelain"],
@@ -141,14 +144,14 @@ def git_sync_repo(repo_path, commit_msg, add_pattern=".github/workflows"):
         if not status_res.stdout.strip():
             print(f"[{os.path.basename(repo_path)}] No changes to stage/commit.")
             return True
-            
+
         # Git add
         subprocess.run(
             ["git", "add", add_pattern],
             cwd=repo_path,
             check=True
         )
-        
+
         # Check staged
         diff_res = subprocess.run(
             ["git", "diff", "--cached", "--quiet"],
@@ -157,14 +160,14 @@ def git_sync_repo(repo_path, commit_msg, add_pattern=".github/workflows"):
         if diff_res.returncode == 0:
             print(f"[{os.path.basename(repo_path)}] No staged changes to commit.")
             return True
-            
+
         # Git commit
         subprocess.run(
             ["git", "commit", "--no-verify", "-m", commit_msg],
             cwd=repo_path,
             check=True
         )
-        
+
         # Git push
         subprocess.run(
             ["git", "push", "--set-upstream", "origin", branch],
@@ -177,6 +180,7 @@ def git_sync_repo(repo_path, commit_msg, add_pattern=".github/workflows"):
         stderr_msg = e.stderr if e.stderr else ""
         print(f"[{os.path.basename(repo_path)}] Git error: {e}. Stderr: {stderr_msg}", file=sys.stderr)
         return False
+
 
 # Sync all submodules
 print("\n--- Synchronizing submodules ---")

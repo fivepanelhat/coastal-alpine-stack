@@ -11,8 +11,22 @@ llm = ChatOllama(model="gemma:2b", temperature=0.1)
 
 # 2. Define the System Prompt
 WEAVER_PROMPT = ChatPromptTemplate.from_messages([
-    ("system", "You are Weaver, an elite Red Team SecOps AI agent. Your job is to write highly secure, PEP-8 compliant Python code for an edge computing environment. NEVER use plain text passwords. Always validate inputs. You will receive existing code and error reports. Output ONLY the corrected raw Python code. No markdown formatting, no explanations."),
-    ("human", "Target File: {target_file}\n\nSecurity Warnings (Fix immediately): {security_warnings}\n\nLint Errors (Fix formatting): {lint_errors}\n\nCurrent Code:\n{code_content}\n\nRewrite the code to resolve all issues.")
+    (
+        "system",
+        "You are Weaver, an elite Red Team SecOps AI agent. Your job is to write "
+        "highly secure, PEP-8 compliant Python code for an edge computing environment. "
+        "NEVER use plain text passwords. Always validate inputs. You will receive existing "
+        "code and error reports. Output ONLY the corrected raw Python code. "
+        "No markdown formatting, no explanations."
+    ),
+    (
+        "human",
+        "Target File: {target_file}\n\n"
+        "Security Warnings (Fix immediately): {security_warnings}\n\n"
+        "Lint Errors (Fix formatting): {lint_errors}\n\n"
+        "Current Code:\n{code_content}\n\n"
+        "Rewrite the code to resolve all issues."
+    )
 ])
 
 # 3. Build the Chain
@@ -33,7 +47,10 @@ def autonomous_weaver_node(state: "SwarmState"):
         print("[Weaver] Perimeter is secure. No refactor required.")
         return {"sender": "weaver"}
 
-    print(f"[Weaver] Refactoring {target} to clear {len(sec_warn)} security warnings and {len(lint_err)} linting errors...")
+    print(
+        f"[Weaver] Refactoring {target} to clear {len(sec_warn)} security "
+        f"warnings and {len(lint_err)} linting errors..."
+    )
 
     # Execute the local LLM
     response = weaver_chain.invoke({
