@@ -67,7 +67,7 @@ def autonomous_weaver_node(state: "SwarmState"):
             for chunk in response_content
         ])
     else:
-        content_str = str(response_content)
+        content_str = response_content
 
     return {
         "code_content": content_str.strip(),
