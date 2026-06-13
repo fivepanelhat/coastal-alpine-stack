@@ -40,7 +40,7 @@ def invoke_local_llm(payload):
     # Normalize response.content to always be a string to prevent list attribute errors
     if isinstance(response.content, list):
         response.content = "".join([
-            chunk.get("text", str(chunk)) if isinstance(chunk, dict) else str(chunk)
+            chunk.get("text", str(chunk)) if isinstance(chunk, dict) else chunk
             for chunk in response.content
         ])
     return response
@@ -70,7 +70,7 @@ def autonomous_weaver_node(state: "SwarmState"):
     content = response.content
     if not isinstance(content, str):
         content = "".join([
-            chunk.get("text", str(chunk)) if isinstance(chunk, dict) else str(chunk)
+            chunk.get("text", str(chunk)) if isinstance(chunk, dict) else chunk
             for chunk in content
         ])
 
