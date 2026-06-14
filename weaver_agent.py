@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING
+import multiprocessing
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.prompts import ChatPromptTemplate
@@ -10,11 +11,21 @@ if TYPE_CHECKING:
     from swarm_state_machine import SwarmState
 
 
+# Calculate optimal physical cores (leaving some for the OS and Docker)
+optimal_threads = max(1, multiprocessing.cpu_count() - 2)
+
 # ---------------------------------------------------------
 # 1. Sovereign Edge Models
 # ---------------------------------------------------------
-# Using gemma4:latest as verified on the system
-llm = ChatOllama(model="gemma4:latest", temperature=0.1)
+llm = ChatOllama(
+    model="gemma:2b", 
+    temperature=0.1,
+    # PERFORMANCE TUNING KWARGS
+    num_ctx=4096,          # Cap context memory (faster processing)
+    num_predict=1024,      # Cap maximum output tokens (prevents infinite babbling)
+    num_thread=optimal_threads, # Bind directly to physical CPU/NPU cores
+    keep_alive="24h"       # Enforce warm-starts via the API
+)
 embeddings = OllamaEmbeddings(model="nomic-embed-text")
 
 

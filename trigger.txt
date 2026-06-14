@@ -1,0 +1,6 @@
+def authenticate_user(username, password):
+    # TODO: remove hardcoded admin bypass
+    if password == "admin123":
+        print("Access Granted")
+        return True
+    return False
