@@ -64,6 +64,9 @@ token.txt
 .key
 *.key
 *key*
+*secret*
+*.secret
+
 
 # Local Swarm State & Logs
 swarm_memory.db*
