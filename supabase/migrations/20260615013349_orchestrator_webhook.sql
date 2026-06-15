@@ -1,6 +1,22 @@
 -- Enable the pg_net extension for asynchronous outbound HTTP requests
 CREATE EXTENSION IF NOT EXISTS pg_net WITH SCHEMA extensions;
 
+-- Create unified edge telemetry table if it doesn't exist
+CREATE TABLE IF NOT EXISTS public.unified_edge_telemetry (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    node_id VARCHAR(100) NOT NULL,
+    anomaly_flag BOOLEAN DEFAULT FALSE,
+    metrics JSONB,
+    recorded_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Secure the telemetry table
+ALTER TABLE public.unified_edge_telemetry ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Service Role Only" 
+ON public.unified_edge_telemetry FOR ALL 
+USING (auth.role() = 'service_role');
+
 -- Define the trigger function
 CREATE OR REPLACE FUNCTION public.wake_weaver_orchestrator()
 RETURNS TRIGGER AS $$
