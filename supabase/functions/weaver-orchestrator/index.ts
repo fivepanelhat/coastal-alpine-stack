@@ -1,46 +1,53 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-// Setup type definitions for built-in Supabase Runtime APIs
-import "@supabase/functions-js/edge-runtime.d.ts";
-import { withSupabase } from "@supabase/server";
+serve(async (req) => {
+  // 1. Verify Authorization (Security perimeter)
+  const authHeader = req.headers.get('Authorization')
+  if (authHeader !== `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`) {
+    return new Response(JSON.stringify({ error: "Unauthorized access attempt" }), { status: 401 })
+  }
 
-console.log("Hello from Functions!");
+  try {
+    const payload = await req.json()
+    // Extract pg_net webhook payload
+    const { node_id, metrics, event_type } = payload.record 
 
-// This endpoint uses 'publishable' | 'secret' access, apiKey is required.
-// Use publishable for Client-facing, key-validated endpoints
-// Use secret for Server-to-server, internal calls
-export default {
-  fetch: withSupabase({ auth: ["publishable", "secret"] }, async (req, ctx) => {
-    // Called by another service with a secret key
-    // ctx.supabaseAdmin bypasses RLS — use for privileged operations
-    /*
-    if (ctx.authMode === "secret") {
-      const { user_id } = await req.json();
-      const { data } = await ctx.supabaseAdmin.auth.admin.getUserById(user_id);
+    console.log(`[WEAVER ORCHESTRATOR] Autonomous wake event triggered by Node: ${node_id}`)
 
-      return Response.json({
-        email: data?.user?.email,
-      });
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    )
+
+    // 2. Fetch Node Hardware Context
+    const { data: nodeCtx, error } = await supabase
+      .from('ecosystem_nodes')
+      .select('node_type, beachhead_tag')
+      .eq('node_id', node_id)
+      .single()
+
+    if (error) throw new Error("Hardware node identity not found in registry.")
+
+    // 3. Construct the State Vector for the LLM Agent
+    const agentState = {
+      role: "Weaver Orchestrator",
+      beachhead: nodeCtx?.beachhead_tag,
+      hardware_type: nodeCtx?.node_type,
+      critical_metrics: metrics,
+      action_required: true,
+      timestamp: new Date().toISOString()
     }
-    */
 
-    const { name } = await req.json();
+    // [Future Execution: Dispatch to local LangGraph Python endpoint here]
+    
+    return new Response(JSON.stringify({ 
+      status: "Orchestrator Woken successfully", 
+      context: agentState 
+    }), { status: 200 })
 
-    return Response.json({
-      message: `Hello ${name}!`,
-    });
-  }),
-};
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/weaver-orchestrator' \
-    --header 'apiKey: sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH' \
-    --data '{"name":"Functions"}'
-
-*/
+  } catch (error) {
+    console.error(`[SYSTEM FAULT] ${error.message}`)
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 })
+  }
+})
