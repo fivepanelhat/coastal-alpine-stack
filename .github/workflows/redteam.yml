@@ -12,24 +12,32 @@ jobs:
   redteam:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          cache: 'pip'
 
-      - name: Install testing tools
-        run: pip install requests pytest
-
-      - name: Simulate Prompt Injection & Security Tests
+      - name: Install testing dependencies
         run: |
-          python -m pytest tests_security_stress/ -v --tb=short || true
+          python -m pip install --upgrade pip
+          pip install pytest requests
 
-      - name: Basic API/Endpoint Probing (if services running)
+      - name: Run Security Stress Tests (Adversarial / Prompt Injection)
         run: |
-          echo "Red team simulation: Testing resilience to common edge attack patterns"
-          # Extend with actual local service tests or ZAP against staging when available
+          python -m pytest tests_security_stress/ -v --tb=short
+        # Note: This job is allowed to continue on failure for now
+        # as these are simulated red-team scenarios used for hardening validation.
+        continue-on-error: true
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "Red Team simulation completed."
+          echo "Review test output above for adversarial resilience findings."
