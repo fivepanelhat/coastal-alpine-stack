@@ -27,22 +27,19 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install security tools
+      - name: Run Bandit SAST
         run: |
-          pip install bandit gitleaks
-
-      - name: Bandit SAST Scan
-        run: bandit -r . -ll --exclude ./tests_security_stress/ || true
+          pip install bandit
+          bandit -r . -ll --exclude ./tests_security_stress/ || true
 
       - name: Gitleaks Secret Scan
-        run: |
-          # Install gitleaks if not available via pip
-          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.18.2/gitleaks_8.18.2_linux_x64.tar.gz | tar -xz
-          ./gitleaks detect --source . --report-format sarif --report-path gitleaks-report.sarif || true
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Gitleaks Report
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Trivy Filesystem Scan
+        uses: aquasecurity/trivy-action@master
         with:
-          name: gitleaks-report
-          path: gitleaks-report.sarif
+          scan-type: 'fs'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '0'   # Do not fail the build on findings for now
