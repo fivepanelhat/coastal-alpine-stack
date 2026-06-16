@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: soilguard-portal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: soilguard
+  template:
+    metadata:
+      labels:
+        app: soilguard
+    spec:
+      containers:
+      - name: portal
+        image: soilguard-portal:latest
+        env:
+        - name: OLLAMA_HOST
+          value: "http://ollama-service:11434"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "1000m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: soilguard-portal
+spec:
+  selector:
+    app: soilguard
+  ports:
+  - port: 8080
+    targetPort: 8080
