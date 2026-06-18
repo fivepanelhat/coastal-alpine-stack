@@ -45,39 +45,22 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 
 ---
 
-## Quick Start
+## Installation & Setup
 
-### Prerequisites
+To get started with the Coastal Alpine Stack, we provide separate guides for system environment setup and installation for Windows and Linux users:
 
-- Raspberry Pi 5 (16GB RAM) + Hailo-10L accelerator (or virtualized NPU mappings)
-- Python 3.10+
-- Ollama with Gemma 4 model (`gemma4:e4b`)
-- MQTT broker (e.g. Mosquitto)
+* **Prerequisites & System Setup Guide**: Read [setup.md](file:///c:/Users/Admin/.gemini/antigravity-ide/scratch/coastal-alpine-stack/setup.md)
+* **Installation Guide**: Read [installation.md](file:///c:/Users/Admin/.gemini/antigravity-ide/scratch/coastal-alpine-stack/installation.md)
 
-### Installation & System SecOps Provisioning
+### Quick Start (Automated Setup)
+The fastest way to install is running the cross-platform bootstrap script:
 
-1. **Lock down the hardware perimeter** (on the Pi 5 target):
-
-   ```bash
-   chmod +x ./rpi_secops/secure_boot_setup.sh
-   ./rpi_secops/secure_boot_setup.sh
-   ```
-
-   *Note: This stages the EEPROM security parameters, configures PCIe Gen 3/NPU device overlays, and configures the read-only root system layouts.*
-
-2. **Clone and build Python environment**:
-
-   ```bash
-   git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
-   cd coastal-alpine-stack
-
-   python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-   # Install shared core in editable mode
-   pip install -e ./coastal_alpine_core
-   pip install -r requirements-dev.txt
-   ```
+```bash
+git clone --recursive https://github.com/fivepanelhat/coastal-alpine-stack.git
+cd coastal-alpine-stack
+python bootstrap.py
+```
+This automatically handles virtual environment creation, dependencies installation, and local package setup for your operating system.
 
 ### Model Setup
 

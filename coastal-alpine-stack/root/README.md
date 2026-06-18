@@ -56,28 +56,52 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 
 ### Installation & System SecOps Provisioning
 
-1. **Lock down the hardware perimeter** (on the Pi 5 target):
+1. **Lock down the hardware perimeter** (on the Pi 5 target — Linux only):
 
    ```bash
    chmod +x ./rpi_secops/secure_boot_setup.sh
    ./rpi_secops/secure_boot_setup.sh
    ```
 
-   *Note: This stages the EEPROM security parameters, configures PCIe Gen 3/NPU device overlays, and configures the read-only root system layouts.*
+   *Note: This stages the EEPROM security parameters, configures PCIe Gen 3/NPU device overlays, and configures the read-only root system layouts. This step only applies to Raspberry Pi deployments running Linux.*
 
 2. **Clone and build Python environment**:
 
-   ```bash
-   git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
-   cd coastal-alpine-stack
+<details open>
+<summary><strong>🐧 Linux / macOS (Bash)</strong></summary>
 
-   python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+```bash
+git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
+cd coastal-alpine-stack
 
-   # Install shared core in editable mode
-   pip install -e ./coastal_alpine_core
-   pip install -r requirements-dev.txt
-   ```
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install shared core in editable mode
+pip install -e ./coastal_alpine_core
+pip install -r requirements-dev.txt
+```
+
+</details>
+
+<details>
+<summary><strong>🪟 Windows (PowerShell)</strong></summary>
+
+```powershell
+git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
+cd coastal-alpine-stack
+
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# Install shared core in editable mode
+pip install -e ./coastal_alpine_core
+pip install -r requirements-dev.txt
+```
+
+> **Note:** If you receive an execution policy error, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` first.
+
+</details>
 
 ### Model Setup
 

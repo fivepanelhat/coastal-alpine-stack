@@ -45,14 +45,17 @@
 
 ### Installation (Bare Metal + Virtual Environment)
 
+<details open>
+<summary><strong>🐧 Linux / macOS (Bash)</strong></summary>
+
 ```bash
 # Clone the repository
 git clone https://github.com/fivepanelhat/blue-moon-portal.git
 cd blue-moon-portal
 
 # Create virtual environment
-python3.10 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python3 -m venv venv
+source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -61,6 +64,32 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your settings (MQTT broker, Ollama host, etc.)
 ```
+
+</details>
+
+<details>
+<summary><strong>🪟 Windows (PowerShell)</strong></summary>
+
+```powershell
+# Clone the repository
+git clone https://github.com/fivepanelhat/blue-moon-portal.git
+cd blue-moon-portal
+
+# Create virtual environment
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy environment template and configure
+Copy-Item .env.example .env
+# Edit .env with your settings (MQTT broker, Ollama host, etc.)
+```
+
+> **Note:** If you receive an execution policy error, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` first.
+
+</details>
 
 ### Ollama Model Setup
 

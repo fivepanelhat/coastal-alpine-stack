@@ -82,12 +82,15 @@ Additional challenges addressed:
 
 ### Installation
 
+<details open>
+<summary><strong>🐧 Linux / macOS (Bash)</strong></summary>
+
 ```bash
 git clone https://github.com/fivepanelhat/AquaGuard-Portal.git
 cd AquaGuard-Portal
 
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+python3 -m venv venv
+source venv/bin/activate
 
 # Install shared core and dependencies
 pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
@@ -95,6 +98,29 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 cp .env.example .env
 ```
+
+</details>
+
+<details>
+<summary><strong>🪟 Windows (PowerShell)</strong></summary>
+
+```powershell
+git clone https://github.com/fivepanelhat/AquaGuard-Portal.git
+cd AquaGuard-Portal
+
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+
+# Install shared core and dependencies
+pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
+pip install -r requirements.txt
+pip install -r requirements-dev.txt
+Copy-Item .env.example .env
+```
+
+> **Note:** If you receive an execution policy error, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` first.
+
+</details>
 
 ### Model Setup & Validation
 

@@ -14,22 +14,29 @@ def get_owner_repo(repo_path):
         with open(config_path, "r", encoding="utf-8") as cfg:
             for line in cfg:
                 m = re.search(
-                    r"url = https://github.com/([^/]+)/([^/]+)(?:\\.git)?",
+                    r"url\s*=\s*https://github\.com/([^/]+)/([^\s\)]+)",
                     line,
                 )
                 if m:
-                    return m.group(1), m.group(2)
+                    owner = m.group(1).strip()
+                    repo = m.group(2).strip()
+                    if repo.endswith(".git"):
+                        repo = repo[:-4]
+                    return owner, repo
     # Fallback: use folder name as repo name and unknown owner
     repo_name = os.path.basename(repo_path)
     return "UNKNOWN_OWNER", repo_name
 
 
 def has_badge(content):
+    # Match ![CI](https://github.com/owner/repo/actions/workflows/secops.yml/badge.svg?branch=main)
+    # allowing for potential whitespace or newlines inside the parenthesis
     pattern = re.compile(
-        r"!\\[CI\\].*github\\.com/.*/actions/workflows/"
+        r'!\[CI\]\s*\(\s*https://github\.com/.*?/actions/workflows/'
         + re.escape(WORKFLOW)
-        + r"/badge\\.svg\\?branch="
+        + r'/badge\.svg\?branch='
         + re.escape(BRANCH)
+        + r'\s*\)'
     )
     return bool(pattern.search(content))
 

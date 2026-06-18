@@ -3,14 +3,26 @@
 
 Write-Host "Linking coastal_alpine_core dependency locally across portals..." -ForegroundColor Cyan
 
-$portals = @("Blue-Moon-Portal", "AquaGuard-Portal", "SoilGuard-Portal")
+$portals = @("Blue-Moon-Portal", "AquaGuard-Portal", "SoilGuard-Portal", "Sting-Operation-AI", "Weaver")
 
 foreach ($portal in $portals) {
     if (Test-Path $portal) {
-        Write-Host "Installing in $portal..." -ForegroundColor Yellow
+        Write-Host "Installing core in $portal..." -ForegroundColor Yellow
         Push-Location $portal
-        npm install ../coastal_alpine_core
+
+        # Create venv if not present
+        if (-not (Test-Path "venv")) {
+            Write-Host "  Creating virtual environment..." -ForegroundColor Gray
+            python -m venv venv
+        }
+
+        # Activate venv and install core
+        & .\venv\Scripts\Activate.ps1
+        pip install -e ../coastal_alpine_core
+        deactivate
+
         Pop-Location
+        Write-Host "  Done: $portal" -ForegroundColor Green
     } else {
         Write-Warning "Directory $portal not found. Skipping."
     }

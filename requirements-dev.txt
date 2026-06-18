@@ -43,3 +43,15 @@ ipdb>=0.13.13
 
 # Updated numpy for development (if needed)
 numpy>=2.0,<3
+
+# ── Platform-Specific Dependencies ─────────────────────────────────────
+# These use PEP 508 environment markers — pip installs them only on the
+# matching platform. No manual intervention needed.
+
+# Windows: terminal colours and Win32 API access
+colorama>=0.4.6; sys_platform == 'win32'
+pywin32>=306; sys_platform == 'win32'
+
+# Linux: high-performance async event loop (not available on Windows)
+uvloop>=0.21.0; sys_platform == 'linux'
+

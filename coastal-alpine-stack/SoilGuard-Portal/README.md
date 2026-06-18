@@ -97,13 +97,33 @@ SoilGuard-Portal/
 
 2. **Configure Virtual Environment:**
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
-   pip install -r requirements.txt -r requirements-dev.txt
-   cp .env.example .env
-   ```
+<details open>
+<summary><strong>🐧 Linux / macOS (Bash)</strong></summary>
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
+pip install -r requirements.txt -r requirements-dev.txt
+cp .env.example .env
+```
+
+</details>
+
+<details>
+<summary><strong>🪟 Windows (PowerShell)</strong></summary>
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
+pip install -r requirements.txt -r requirements-dev.txt
+Copy-Item .env.example .env
+```
+
+> **Note:** If you receive an execution policy error, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` first.
+
+</details>
 
 3. **Deploy Gemma 4 Model:**
 
