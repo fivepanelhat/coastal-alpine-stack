@@ -159,6 +159,7 @@ coastal-alpine-stack/
 - [Blue-Moon-Portal/README.md](./Blue-Moon-Portal/README.md) — Blue-Moon-Portal documentation
 - [Sting-Operation-AI/README.md](./Sting-Operation-AI/README.md) — Sting-Operation-AI documentation
 - [CHANGELOG.md](./CHANGELOG.md) — Version history
+- [docs/garden-sensor-network-setup.md](./docs/garden-sensor-network-setup.md) — Garden Sensor Network deployment guide
 
 ---
 
