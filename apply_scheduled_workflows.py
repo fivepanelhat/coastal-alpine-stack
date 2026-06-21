@@ -5,7 +5,6 @@ import sys
 
 WORKSPACE = r"C:\\Users\\Admin\\.gemini\\antigravity-ide\\scratch\\coastal-alpine-stack"
 
-# Workflow definitions with an 8‑hour schedule (UTC midnight start)
 SECOPS = textwrap.dedent("""
 name: SecOps Scan
 on:
@@ -15,8 +14,6 @@ on:
     branches: [ main ]
   pull_request:
     types: [ opened, synchronize, reopened ]
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 permissions:
   contents: read
 jobs:
@@ -51,8 +48,6 @@ on:
   schedule:
     - cron: "0 */8 * * *"
   workflow_dispatch:
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 permissions:
   contents: read
 jobs:
@@ -86,8 +81,6 @@ on:
     branches: [ main ]
   pull_request:
     types: [ opened, synchronize, reopened ]
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 permissions:
   contents: read
   packages: read
