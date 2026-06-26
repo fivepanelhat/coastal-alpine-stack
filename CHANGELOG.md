@@ -1,34 +1,71 @@
 # Changelog
 
 All notable changes to the Coastal Alpine Stack will be documented in this file.
-This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+---
+
+## [Unreleased] - 2026-06-16 — Enterprise Hardening & Data Flywheel Release
+
+### Added
+- **Full Data Flywheel system** with automatic trajectory recording across all portals
+- Hardware outcome recording after every `enforce_plan()` call
+- Human-in-the-Loop (HITL) feedback mechanism
+- Evaluation loop with rule-based + optional LLM-as-judge scoring
+- Golden set curation for future model improvement
+- `DataFlywheel` and `Trajectory` classes in `coastal_alpine_core`
+- `BayesianOptimisationHook` scaffolding
+- New high-level documentation:
+  - `ARCHITECTURE.md` (system overview)
+  - `DATA_FLYWHEEL_GUIDE.md` (detailed usage guide)
+  - Updated root and individual repository READMEs
+
+### Changed
+- Replaced legacy input guards with modern `SecurityGuard` + structured `SecurityResult`
+- Major upgrade to `TelemetryTracker` (context manager, psutil metrics, structured JSON logging)
+- CI/CD standardisation and hardening:
+  - All workflows now use Python 3.10 + pip caching
+  - Replaced unreliable manual Gitleaks installation with official GitHub Action
+  - Made Enterprise CI stricter (reduced error masking)
+- Packaging improvements:
+  - Added modern `pyproject.toml` to Weaver
+  - Improved `pyproject.toml` and dependency management in Coastal-Alpine-Core
+- Docker base image aligned to Python 3.10 for consistency
+
+### Improved
+- Complete end-to-end Data Flywheel coverage in Blue-Moon-Portal, AquaGuard-Portal, and SoilGuard-Portal
+- Sting-Operation-AI now records inference trajectories in `predict.py`
+- Weaver integrated with SecurityGuard, Telemetry, and flywheel
+- Production K3s manifests created for all major components
+- Documentation aligned and improved across the entire stack
+
+### Fixed
+- Multiple CI reliability issues (Gitleaks installation, Python version inconsistency, missing caching)
+
+---
 
 ## [1.2.0] - 2026-06-08
 
 ### Added
-- Created `rpi_secops` provisioning systemd & bootloader configuration scripts to enforce high-security read-only root system layouts on Raspberry Pi 5.
-- Implemented secure hardware NPU inference initialization script (`Sting-Operation-AI/src/inference.py`) leveraging virtual Hailo NPU mappings.
-- Established secure MQTT communication guidelines with JWT extraction, certificate verification, and exponential backoff circuit breakers.
-- Integrated lock-stack/unlock-stack shell aliases for runtime firmware write toggles.
+- Created `rpi_secops` provisioning scripts for high-security Raspberry Pi 5 configurations.
+- Implemented secure hardware NPU inference initialization.
+- Established secure MQTT communication guidelines.
 
 ## [1.1.0] - 2026-06-07
 
 ### Added
 - Implemented `AquaGuard-Portal` water quality and aquaculture edge monitor.
-- Integrated `coastal-alpine-core` shared controls for prompt input scanning, automatic connection retries, and hardware latency/power logging.
-- Created Pydantic compliance schemas for sensors, reasoning plans, and council audits.
-- Implemented `ComplianceExporter` generating New Zealand regional council compliant CSV logs and detailed JSON audits (targeting NES-F and NES-MA).
-- Configured thresholds mapping parameters for pH, dissolved oxygen, temperature, turbidity, and nitrate.
+- Integrated `coastal-alpine-core` shared controls.
+- Created Pydantic compliance schemas and `ComplianceExporter`.
 
 ## [1.0.0] - 2026-06-07
 
 ### Added
-- Created unified Coastal Alpine Stack monorepo workspace.
-- Implemented `coastal-alpine-core` shared Python package containing:
-  - `telemetry`: Latency tracking and energy-efficiency metrics.
-  - `models`: Robust Ollama client wrapper with auto-retries and health checks.
-  - `security`: Sanitization safeguards for input queries and multi-tenant scoping.
-- Restructured `weaver`, `Blue-Moon-Portal`, and `Sting-Operation-AI` directories with uniform presentation and metadata.
-- Created root `LICENSE`, `.gitignore`, `CONTRIBUTING.md`, `CHANGELOG.md`, and `requirements-dev.txt`.
-- Set up Docker environment template for local MQTT and Ollama edge integration.
-- Documented NZ agritech, apiculture, and compliance real-world application examples across all modules.
+- Created unified Coastal Alpine Stack monorepo.
+- Implemented `coastal_alpine_core` shared package.
+- Restructured Weaver, Blue-Moon-Portal, and Sting-Operation-AI.
+
+---
+
+*See git history for full details of earlier development.*

@@ -1,0 +1,16 @@
+title = "Coastal Alpine Tech Gitleaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  ".gitleaks.toml",
+  "tests_security_stress/",
+  "swarm_memory.db",
+]
+regexes = [
+  "example\.com",
+  "localhost",
+  "127\.0\.0\.1",
+]
