@@ -69,8 +69,8 @@ def ensure_ollama_ready(host="host.docker.internal", port=11434, max_retries=3):
             if attempt < max_retries - 1:
                 time.sleep(2 ** attempt)
 
-    logger.critical("Ollama daemon is dead. Aborting swarm to prevent silent hang.")
-    raise RuntimeError("Ollama daemon health check failed")
+    logger.critical("Ollama daemon is dead. Returning False instead of crashing.")
+    return False
 
 
 # ---------------------------------------------------------

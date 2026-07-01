@@ -25,7 +25,17 @@ if ($LASTEXITCODE -eq 0) {
     $allPassed = $false
 }
 
-# 2. Run Pytest Test Suite (70+ unit & stress tests across all repos)
+# 2. Run RedTeam Ops Scan (Sovereign Edge Swarm)
+Write-Host "Running RedTeam Ops Scan..." -ForegroundColor Yellow
+& $venvPython run_swarm_ops.py
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "[PASS] RedTeam Ops Scan Passed!" -ForegroundColor Green
+} else {
+    Write-Host "[FAIL] RedTeam Ops Scan Failed!" -ForegroundColor Red
+    $allPassed = $false
+}
+
+# 3. Run Pytest Test Suite (70+ unit & stress tests across all repos)
 Write-Host "Running Unified Test Suite..." -ForegroundColor Yellow
 & $venvPytest
 if ($LASTEXITCODE -eq 0) {

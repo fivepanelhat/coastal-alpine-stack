@@ -121,3 +121,205 @@
 2026-06-13 22:45:55,443 [INFO] (Shield): Input validated safely: auth_routes.py (60 bytes).
 2026-06-13 22:45:56,066 [INFO] (Weaver): HTTP Request: POST http://host.docker.internal:11434/api/embed "HTTP/1.1 200 OK"
 2026-06-13 22:46:00,879 [INFO] (Weaver): HTTP Request: POST http://host.docker.internal:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:09:59,162 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 1/3): timed out
+2026-07-02 09:10:02,167 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 2/3): timed out
+2026-07-02 09:10:06,172 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 3/3): timed out
+2026-07-02 09:10:06,172 [CRITICAL] (Pre-Flight): Ollama daemon is dead. Aborting swarm to prevent silent hang.
+2026-07-02 09:14:03,603 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 1/3): timed out
+2026-07-02 09:14:06,612 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 2/3): timed out
+2026-07-02 09:14:10,626 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 3/3): timed out
+2026-07-02 09:14:10,626 [CRITICAL] (Pre-Flight): Ollama daemon is dead. Returning False instead of crashing.
+2026-07-02 09:14:10,697 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-07-02 09:14:17,844 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-07-02 09:14:35,867 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:15:06,942 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:15:39,932 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 1/3): timed out
+2026-07-02 09:15:42,950 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 2/3): timed out
+2026-07-02 09:15:46,969 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 3/3): timed out
+2026-07-02 09:15:46,969 [CRITICAL] (Pre-Flight): Ollama daemon is dead. Returning False instead of crashing.
+2026-07-02 09:15:47,938 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-07-02 09:15:49,402 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-07-02 09:15:51,040 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:16:09,650 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:17:00,658 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:17:05,078 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:17:51,185 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:18:04,179 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:18:44,570 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:18:53,874 [ERROR] (Weaver): [82905c38] Weaver Crash: Invalid json output: ```
+
+**Refactored Code:**
+
+```python
+def get_mock_stored_hash(username: str) -> Optional[str]:
+    """
+    Simulates retrieving a hashed password for a given username from a secure store.
+    In production, this would query a database or vault service (e.g., AWS Secrets Manager).
+    Never hardcode hashes.
+    """
+    # Example: Use environment variables to simulate stored credentials
+    if username == "admin":
+        return os.environ.get("ADMIN_HASH")
+    return None
+
+def verify_password(plain_text_password: str, stored_hash: Optional[str]) -> bool:
+    """
+    Simulates a secure password comparison using a dedicated library (e.g., bcrypt or passlib).
+    This function must handle timing attacks and never compare plain text directly.
+    """
+    if not stored_hash:
+        return False
+
+    # WARNING: This is a highly insecure placeholder for demonstration only.
+    # A real implementation MUST use a cryptographic library like bcrypt or Argon2.
+    return bcrypt.checkpw(plain_text_password, stored_hash)
+
+def login(username: str, password: str) -> bool:
+    """
+    Authenticates user credentials against the secure credential store.
+
+    Args:
+        username: The provided username.
+        password: The plain text password provided by the user.
+
+    Returns:
+        True if authentication succeeds, False otherwise.
+    """
+    # 1. Retrieve the stored hash securely
+    stored_hash = get_mock_stored_hash(username)
+
+    if not stored_hash:
+        return False  # User does not exist or credentials are unavailable
+
+    # 2. Use a dedicated function to compare the plaintext password against the stored hash.
+    return verify_password(password, stored_hash)
+```
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+2026-07-02 09:18:53,875 [INFO] (Weaver): [82905c38] Node completed in 283.18s
+2026-07-02 09:18:53,892 [INFO] (Hound): Executing SecOps AST Analysis...
+2026-07-02 09:18:53,895 [INFO] (Hound): [82905c38] Node completed in 0.01s
+2026-07-02 09:18:53,902 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
+2026-07-02 09:18:53,904 [INFO] (Schema-Cop): [82905c38] Node completed in 0.01s
+2026-07-02 09:18:53,905 [WARNING] (Router): [82905c38] Agent crash detected. Aborting to prevent cascade failure.
+2026-07-02 09:19:37,754 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:20:16,194 [ERROR] (Weaver): [7d8d622c] Weaver Crash: Invalid json output: ```
+
+**Refactored Code:**
+
+```python
+def get_mock_stored_hash(username: str) -> Optional[str]:
+    """
+    Simulates retrieving a hashed password for a given username from a secure store.
+    In production, this would query a database or vault service (e.g., AWS Secrets Manager).
+    Never hardcode hashes.
+    """
+    # Example: Use environment variables to simulate stored credentials
+    if username == "admin":
+        return os.environ.get("ADMIN_HASH")
+    return None
+
+def verify_password(plain_text_password: str, stored_hash: Optional[str]) -> bool:
+    """
+    Simulates a secure password comparison using a dedicated library (e.g., bcrypt or passlib).
+    This function must handle timing attacks and never compare plain text directly.
+    """
+    if not stored_hash:
+        return False
+
+    # WARNING: This is a highly insecure placeholder for demonstration only.
+    # A real implementation MUST use a cryptographic library like bcrypt or Argon2.
+    return bcrypt.checkpw(plain_text_password, stored_hash)
+
+def login(username: str, password: str) -> bool:
+    """
+    Authenticates user credentials against the secure credential store.
+
+    Args:
+        username: The provided username.
+        password: The plain text password provided by the user.
+
+    Returns:
+        True if authentication succeeds, False otherwise.
+    """
+    # 1. Retrieve the stored hash securely
+    stored_hash = get_mock_stored_hash(username)
+
+    if not stored_hash:
+        return False  # User does not exist or credentials are unavailable
+
+    # 2. Use a dedicated function to compare the plaintext password against the stored hash.
+    return verify_password(password, stored_hash)
+```
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+2026-07-02 09:20:16,194 [INFO] (Weaver): [7d8d622c] Node completed in 268.25s
+2026-07-02 09:20:16,197 [INFO] (Hound): Executing SecOps AST Analysis...
+2026-07-02 09:20:16,197 [INFO] (Hound): [7d8d622c] Node completed in 0.00s
+2026-07-02 09:20:16,199 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
+2026-07-02 09:20:16,200 [INFO] (Schema-Cop): [7d8d622c] Node completed in 0.00s
+2026-07-02 09:20:16,200 [WARNING] (Router): [7d8d622c] Agent crash detected. Aborting to prevent cascade failure.
+2026-07-02 09:24:49,141 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 1/3): timed out
+2026-07-02 09:24:52,157 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 2/3): timed out
+2026-07-02 09:24:56,174 [WARNING] (Pre-Flight): Ollama unreachable at host.docker.internal:11434 (attempt 3/3): timed out
+2026-07-02 09:24:56,174 [CRITICAL] (Pre-Flight): Ollama daemon is dead. Returning False instead of crashing.
+2026-07-02 09:24:56,295 [INFO] (Shield): Input validated safely: edge_auth.py (60 bytes).
+2026-07-02 09:24:57,154 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2026-07-02 09:24:57,932 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:25:31,118 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:26:04,507 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:26:40,078 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:27:21,194 [INFO] (Weaver): HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-02 09:27:55,101 [ERROR] (Weaver): [4c911781] Weaver Crash: Invalid json output: ```
+
+**Refactored Code:**
+
+```python
+def get_mock_stored_hash(username: str) -> Optional[str]:
+    """
+    Simulates retrieving a hashed password for a given username from a secure store.
+    In production, this would query a database or vault service (e.g., AWS Secrets Manager).
+    Never hardcode hashes.
+    """
+    # Example: Use environment variables to simulate stored credentials
+    if username == "admin":
+        return os.environ.get("ADMIN_HASH")
+    return None
+
+def verify_password(plain_text_password: str, stored_hash: Optional[str]) -> bool:
+    """
+    Simulates a secure password comparison using a dedicated library (e.g., bcrypt or passlib).
+    This function must handle timing attacks and never compare plain text directly.
+    """
+    if not stored_hash:
+        return False
+
+    # WARNING: This is a highly insecure placeholder for demonstration only.
+    # A real implementation MUST use a cryptographic library like bcrypt or Argon2.
+    return bcrypt.checkpw(plain_text_password, stored_hash)
+
+def login(username: str, password: str) -> bool:
+    """
+    Authenticates user credentials against the secure credential store.
+
+    Args:
+        username: The provided username.
+        password: The plain text password provided by the user.
+
+    Returns:
+        True if authentication succeeds, False otherwise.
+    """
+    # 1. Retrieve the stored hash securely
+    stored_hash = get_mock_stored_hash(username)
+
+    if not stored_hash:
+        return False  # User does not exist or credentials are unavailable
+
+    # 2. Use a dedicated function to compare the plaintext password against the stored hash.
+    return verify_password(password, stored_hash)
+```
+For troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE 
+2026-07-02 09:27:55,101 [INFO] (Weaver): [4c911781] Node completed in 178.80s
+2026-07-02 09:27:55,103 [INFO] (Hound): Executing SecOps AST Analysis...
+2026-07-02 09:27:55,104 [INFO] (Hound): [4c911781] Node completed in 0.00s
+2026-07-02 09:27:55,106 [INFO] (Schema-Cop): Validating Pydantic/Monorepo Coherence...
+2026-07-02 09:27:55,107 [INFO] (Schema-Cop): [4c911781] Node completed in 0.00s
+2026-07-02 09:27:55,108 [WARNING] (Router): [4c911781] Agent crash detected. Aborting to prevent cascade failure.
