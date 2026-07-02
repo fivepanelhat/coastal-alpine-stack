@@ -1,0 +1,16 @@
+[project]
+name = "coastal-alpine-stack"
+version = "0.1.0"
+requires-python = ">=3.11"
+description = "Internal workspace for Coastal Alpine Tech stack"
+
+[tool.uv.workspace]
+members = [
+    "coastal_alpine_core",
+    "AquaGuard-Portal",
+    "SoilGuard-Portal",
+    "Blue-Moon-Portal",
+]
+
+[tool.uv.sources]
+coastal-alpine-core = { workspace = true }
