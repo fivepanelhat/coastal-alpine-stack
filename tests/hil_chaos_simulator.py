@@ -31,8 +31,8 @@ class HardwareInTheLoopChaosHarness:
             "\n[CHAOS ENGINE] Splitting physical connection layer. Initiating Air-Gap..."
         )
         # Drop all routing packets heading toward the edge broker node via local iptables manipulation
-        cmd = f"sudo iptables -A OUTPUT -d {self.node_ip} -j DROP"
-        subprocess.run(cmd, shell=True, check=True)
+        cmd = ["sudo", "iptables", "-A", "OUTPUT", "-d", self.node_ip, "-j", "DROP"]
+        subprocess.run(cmd, check=True)
         self.isolation_active = True
         print(
             "[CHAOS ENGINE] Network link cut. Edge node is completely isolated."
@@ -43,8 +43,8 @@ class HardwareInTheLoopChaosHarness:
             print(
                 "\n[CHAOS ENGINE] Re-stitching physical network fabric. Reconnecting..."
             )
-            cmd = f"sudo iptables -D OUTPUT -d {self.node_ip} -j DROP"
-            subprocess.run(cmd, shell=True, check=True)
+            cmd = ["sudo", "iptables", "-D", "OUTPUT", "-d", self.node_ip, "-j", "DROP"]
+            subprocess.run(cmd, check=True)
             self.isolation_active = False
             print("[SUCCESS] Physical connection path restored cleanly.")
 
