@@ -10,7 +10,7 @@ import contextlib  # noqa: F401
 import uuid  # noqa: F401
 from typing import TypedDict, List
 from langgraph.graph import StateGraph
-from persistence import ConcurrentSafeSqliteSaver
+from langgraph.checkpoint.memory import MemorySaver
 from weaver_agent import autonomous_weaver_node as weaver_node
 
 # ---------------------------------------------------------
@@ -233,7 +233,6 @@ builder.add_edge("hound", "schema-cop")
 builder.add_conditional_edges("schema-cop", routing_logic)  # type: ignore
 
 # THE NEW CONCURRENCY LOCK
-from langgraph.checkpoint.memory import MemorySaver
 memory = MemorySaver()
 swarm_graph = builder.compile(checkpointer=memory)  # type: ignore
 
