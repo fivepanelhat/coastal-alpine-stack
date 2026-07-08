@@ -18,6 +18,27 @@ sys.path.insert(
     ),
 )
 
+
+def _ensure_blue_moon_paths() -> None:
+    """Skip early when Blue-Moon portal modules are unavailable."""
+    base_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../Blue-Moon-Portal")
+    )
+    schema_candidates = [
+        os.path.join(base_dir, "portal_schemas"),
+        os.path.join(base_dir, "src", "portal_schemas"),
+    ]
+    core_candidates = [
+        os.path.join(base_dir, "portal_core"),
+        os.path.join(base_dir, "src", "portal_core"),
+    ]
+    if not any(os.path.isdir(p) for p in schema_candidates + core_candidates):
+        pytest.skip(
+            "Blue-Moon-Portal submodule content is required. "
+            "Run: git submodule update --init --recursive",
+            allow_module_level=False,
+        )
+
 # Clean up cached portal modules to avoid monorepo namespace conflicts
 for mod in list(sys.modules.keys()):
     if mod.startswith("portal_schemas") or mod.startswith("portal_core"):
@@ -31,6 +52,7 @@ logger = logging.getLogger("BlueMoonSecurityTest")
 
 
 def test_pydantic_constraints():
+    _ensure_blue_moon_paths()
     from portal_schemas.ai_models import (
         SensorReading,
         CropOptimizationPlan,
@@ -115,6 +137,7 @@ def test_pydantic_constraints():
 
 @pytest.mark.asyncio
 async def test_pruner_stress():
+    _ensure_blue_moon_paths()
     from portal_core.media_pruner import MediaPruner
 
     logger.info(

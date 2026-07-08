@@ -19,6 +19,40 @@ sys.path.insert(
     ),
 )
 
+
+def _ensure_aquaguard_schema_path() -> None:
+    """Skip early when the AquaGuard submodule/schema path is not available."""
+    base_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
+    )
+    schema_candidates = [
+        os.path.join(base_dir, "portal_schemas"),
+        os.path.join(base_dir, "src", "portal_schemas"),
+    ]
+    if not any(os.path.isdir(p) for p in schema_candidates):
+        pytest.skip(
+            "AquaGuard-Portal submodule with portal_schemas is required. "
+            "Run: git submodule update --init --recursive",
+            allow_module_level=False,
+        )
+
+
+def _ensure_aquaguard_core_path() -> None:
+    """Skip when AquaGuard portal_core package is unavailable."""
+    base_dir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
+    )
+    core_candidates = [
+        os.path.join(base_dir, "portal_core"),
+        os.path.join(base_dir, "src", "portal_core"),
+    ]
+    if not any(os.path.isdir(p) for p in core_candidates):
+        pytest.skip(
+            "AquaGuard-Portal submodule with portal_core is required. "
+            "Run: git submodule update --init --recursive",
+            allow_module_level=False,
+        )
+
 # Clean up cached portal modules to avoid monorepo namespace conflicts
 for mod in list(sys.modules.keys()):
     if mod.startswith("portal_schemas") or mod.startswith("portal_core"):
@@ -32,6 +66,7 @@ logger = logging.getLogger("AquaGuardSecurityTest")
 
 
 def test_pydantic_constraints():
+    _ensure_aquaguard_schema_path()
     from portal_schemas.compliance import (
         WaterSensorReading,
         WaterOptimizationPlan,
@@ -115,6 +150,7 @@ def test_pydantic_constraints():
 
 @pytest.mark.asyncio
 async def test_pruner_stress():
+    _ensure_aquaguard_core_path()
     from portal_core.media_pruner import MediaPruner
 
     logger.info(

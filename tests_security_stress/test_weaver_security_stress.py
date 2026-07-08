@@ -2,6 +2,7 @@ import sys
 import os
 import time
 import logging
+import importlib.util
 from concurrent.futures import ThreadPoolExecutor
 import pytest
 
@@ -34,7 +35,17 @@ embedder = None
 kb_client = None
 
 
+def _ensure_weaver_modules() -> None:
+    """Skip early when Weaver package modules are not available locally."""
+    if importlib.util.find_spec("weaver.knowledge_base") is None:
+        pytest.skip(
+            "Weaver module not available. Run: git submodule update --init --recursive",
+            allow_module_level=False,
+        )
+
+
 def get_kb_client():
+    _ensure_weaver_modules()
     global embedder, kb_client
     if kb_client is None:
         from weaver.knowledge_base import (
