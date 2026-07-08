@@ -9,6 +9,10 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened ]
 
+concurrency:
+  group: secops-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
