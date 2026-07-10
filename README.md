@@ -25,7 +25,9 @@ A production-grade, sovereign edge AI ecosystem for New Zealand’s primary indu
 
 The stack repo composes the full **sovereign edge runtime**: field firmware → mTLS MQTT → Core SDK → Weaver → domain portals → Ollama + Hailo-10H, with SecurityGuard, SecOps, and the data flywheel on **RPi 5 16GB**.
 
-![Coastal Alpine Stack architecture — liquid glass system map](assets/architecture_overview.png)
+<p align="center">
+  <img src="assets/architecture_overview.png" alt="Coastal Alpine Stack architecture — liquid glass system map" width="100%" />
+</p>
 
 ### System map
 
@@ -35,7 +37,7 @@ Four planes on one edge node: **field**, **fabric**, **runtime apps**, and **tru
 %%{init: {
   "theme": "dark",
   "themeVariables": {
-    "fontSize": "15px",
+    "fontSize": "22px",
     "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
     "primaryColor": "#0ea5e9",
     "primaryTextColor": "#f8fafc",
@@ -48,11 +50,12 @@ Four planes on one edge node: **field**, **fabric**, **runtime apps**, and **tru
     "titleColor": "#e2e8f0"
   },
   "flowchart": {
-    "nodeSpacing": 28,
-    "rankSpacing": 36,
-    "padding": 16,
+    "nodeSpacing": 48,
+    "rankSpacing": 56,
+    "padding": 28,
     "htmlLabels": true,
-    "curve": "basis"
+    "curve": "basis",
+    "useMaxWidth": true
   }
 }}%%
 flowchart TB
