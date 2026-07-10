@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
 # Submodule code (portals, core, weaver) is linted/scanned/tested by each
 # member repo's own CI. This workflow validates the stack's OWN glue:
 # orchestration scripts, workflows, and the integration install path.

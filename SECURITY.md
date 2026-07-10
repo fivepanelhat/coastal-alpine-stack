@@ -1,21 +1,46 @@
-# Security Policy
+# Security Policy — coastal-alpine-stack
+
+Monorepo / superproject for the Kiwi Edge AI stack (submodules: Core, Weaver, portals, Sting, firmware).
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+| Track | Supported |
+| ----- | --------- |
+| `main` | Yes — security updates |
+| Tags `v*` | Best-effort if still deployed |
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+## Vulnerability Disclosure
 
-## Reporting a Vulnerability
+Do **not** file public issues for exploitable stack defects.
 
-Use this section to tell people how to report a vulnerability.
+- Prefer a **private GitHub Security Advisory** on this repository, or contact the Chief Architect.
+- Include: which submodule/path, edge vs cloud exposure, and whether multi-tenant isolation is affected.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+## Security Notifications
+
+| Channel | Owner | Action |
+| ------- | ----- | ------ |
+| Dependabot (pip / Actions / Docker) | This repo | Weekly; group `security-critical` for chromadb, langsmith, pydantic-settings |
+| Code scanning | Enterprise CI + SecOps | Least-privilege workflow tokens; Bandit + Trivy |
+| Submodule alerts | Member repos | Fix in upstream repo, bump submodule pointer |
+| NVD / GHSA | Architecture | Update `SECURITY_POSTURE_REPORT.md` + pin floors |
+
+## Active threat register (2026-07)
+
+| ID | Threat | Severity | Stack mitigation |
+| -- | ------ | -------- | ---------------- |
+| GHSA-f4j7-r4q5-qw2c | ChromaDB pre-auth code injection (≤1.5.9, **no patch yet**) | Critical | Bind Chroma to `127.0.0.1` only; never expose `/api` externally; disable remote model trust; NetworkPolicy on K3s; watch for fixed release |
+| GHSA-f4xh-w4cj-qxq8 | LangSmith TracingMiddleware file read | High | `langsmith>=0.8.18` in root requirements |
+| GHSA-4xgf-cpjx-pc3j | pydantic-settings secrets_dir symlink | Medium | `pydantic-settings>=2.14.2` |
+| CodeQL missing workflow permissions | Over-broad `GITHUB_TOKEN` | Warning | `permissions: contents: read` on Enterprise CI |
+| Prompt injection across portals | LLM abuse | High | Shared `SecurityGuard` from Core ≥0.5.4 |
+
+## Quality & SecOps
+
+- `enterprise-ci.yml` — lint, Bandit, Trivy, SDK import smoke (submodules recursive).
+- `secops.yml` / `redteam.yml` / `ci-scan.yml` — scheduled and PR security paths.
+- See also: `SECURITY_MATRIX.md`, `SECURITY_POSTURE_REPORT.md`, `THREAT_MODEL.md`, `PRODUCTION_HARDENING.md`.
+
+## SLA
+
+Critical edge/actuator paths: mitigation within **48 hours**. Multi-tenant isolation defects: treat as Critical.

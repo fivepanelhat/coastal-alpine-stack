@@ -24,7 +24,9 @@ uvicorn==0.49.0
 # Vector DB & Swarm Execution
 langgraph-checkpoint-sqlite
 langchain-chroma
-chromadb
+# GHSA-f4j7-r4q5-qw2c (CVE-2026-45829): no fixed chromadb release yet — local-only bind.
+chromadb>=1.5.9
+langsmith>=0.8.18
 tenacity
 requests
 langchain-ollama

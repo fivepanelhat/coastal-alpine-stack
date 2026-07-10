@@ -1,68 +1,71 @@
 # Unified Security Posture & Hardening Report
 
 **Coastal Alpine Tech Kiwi Edge AI Stack**  
-**Date**: 16 June 2026  
-**Scope**: Coastal-Alpine-Core, Weaver, Blue-Moon-Portal, AquaGuard-Portal, SoilGuard-Portal, Sting-Operation-AI
+**Date**: 11 July 2026  
+**Scope**: Coastal-Alpine-Core, Weaver, Blue-Moon-Portal, AquaGuard-Portal, SoilGuard-Portal, Sting-Operation-AI, coastal-alpine-stack, Aether, Front_Line_Whanau, whanau-preterm-support-hub
 
 ## Executive Summary
 
-The stack has undergone significant enterprise-grade hardening. All major components now use the modern `SecurityGuard` class and enhanced `TelemetryTracker` from `Coastal-Alpine-Core`. Security scanning (Gitleaks + Bandit), red team workflows, and K3s deployment hardening have been standardized.
+The stack was re-audited against **GitHub security notifications** (Dependabot, Code Scanning, GHSA/NVD) and local `pip-audit` / `npm audit` runs.
 
-**Overall Posture**: Strong foundation for sovereign edge AI deployments in agriculture, biosecurity, and primary industries. Ready for government/enterprise review with minor remaining gaps in full end-to-end testing and flywheel implementation.
+**Overall posture**: Strong — shared `SecurityGuard`, SecOps/red-team CI, least-privilege workflow tokens, and dependency floors for known CVEs. One **critical** upstream gap remains: ChromaDB pre-auth RCE has **no fixed release** yet (network isolation required).
 
-## Component Status
+## Notification sources used
 
-### 1. Coastal-Alpine-Core (Shared SDK)
-- **Security**: `SecurityGuard` class with `SecurityResult` (rich auditing)
-- **Telemetry**: Enhanced `TelemetryTracker` with optional `psutil` system metrics + structured JSON logging
-- **Strengths**: Reusable across all portals, supports data sovereignty principles
+| Source | Result (2026-07-11) |
+| ------ | ------------------- |
+| Dependabot open alerts (all org repos scanned) | None open (many repos previously lacked Dependabot config — now enabled) |
+| Code scanning open | coastal-alpine-stack: missing workflow permissions (fixed); Sting: clear-text API key write (fixed) |
+| `pip-audit` | Aether env transitive: langsmith, pydantic-settings (floored in Weaver/stack); chromadb GHSA critical (mitigated, not patched upstream) |
+| `npm audit` (Front_Line, whanau, portals) | 0 vulnerabilities |
 
-### 2. Weaver (Orchestrator)
-- **Security**: Deep `SecurityGuard` integration on all incoming messages
-- **Telemetry**: Full `TelemetryTracker` with system metrics on `process_message`
-- **Status**: Production-ready multi-tenant orchestration layer
+## Component status
 
-### 3. Blue-Moon-Portal
-- **Security**: `SecurityGuard` on all LLM prompts in `ai_agent.py`
-- **Telemetry**: Integrated on sensor analysis, visual/audio feedback, and optimization planning
-- **Status**: Fully hardened for multi-modal crop intelligence
+### Coastal-Alpine-Core (v0.5.4)
+- Expanded `SecurityGuard` patterns (jailbreak, SSRF metadata, exfil, pipe-to-shell, private keys).
+- Precompiled hot-path guards, flywheel rotation, edge Ollama client (from 0.5.3).
+- SECURITY.md threat register + SLA.
 
-### 4. AquaGuard-Portal
-- **Security**: Upgraded from legacy `input_guard_check` to new `SecurityGuard` class
-- **Telemetry**: Enhanced with system metrics on all critical paths
-- **Status**: Modernized and aligned with core standards
+### Weaver
+- `langsmith>=0.8.18`, `pydantic-settings>=2.14.2`, Core pin bump path to 0.5.3+.
+- CI least-privilege permissions; Dependabot pip weekly.
 
-### 5. SoilGuard-Portal
-- **Security**: Upgraded to `SecurityGuard` + structured results
-- **Telemetry**: Full integration on soil analysis and planning loops
-- **Status**: Consistent with AquaGuard and Blue-Moon
+### Portals (Aqua / Blue-Moon / SoilGuard)
+- SECURITY.md notifications sections; CI `permissions: contents: read`.
+- Continue using Core `SecurityGuard` on LLM paths.
 
-### 6. Sting-Operation-AI
-- **Security**: `SecurityGuard` applied to text/prompt inputs in inference pipeline
-- **Telemetry**: Added to `predict.py` for vision model inference
-- **Status**: Hardened for production wasp detection workloads
+### Sting-Operation-AI
+- **Fixed** CodeQL clear-text storage: dataset tool no longer writes Roboflow keys to `.env`.
+- CI permissions + SECURITY.md.
 
-## Cross-Cutting Controls
+### coastal-alpine-stack
+- Enterprise CI permissions fixed (clears CodeQL `actions/missing-workflow-permissions`).
+- Dependabot for pip/Actions/Docker; chromadb threat documented; floors for langsmith / pydantic-settings.
+- SECURITY.md rewritten (was placeholder template).
 
-| Control                        | Status     | Details |
-|--------------------------------|------------|---------|
-| Secret Scanning (Gitleaks)    | ✅ Active | Configured in SecOps CI + `.gitleaks.toml` |
-| SAST (Bandit)                 | ✅ Active | Running in CI with exclusions for stress tests |
-| Red Team Testing              | ✅ Active | Focused on actual stack security tests |
-| K3s Deployment Hardening      | ✅ Partial | Core + Weaver + example portal manifests created |
-| Structured Observability      | ✅ Strong | JSON telemetry + optional system metrics |
-| Compliance Alignment          | ✅ Strong | Te Mana Raraunga principles supported via local processing |
+### Aether / Front_Line_Whanau / whanau-preterm-support-hub
+- Dependabot added; SECURITY.md + notifications; CI permissions on FLW/Aether.
 
-## Remaining Gaps & Recommendations
+## Cross-cutting controls
 
-1. **End-to-End Integration Testing** — Expand automated tests across portals in CI.
-2. **Data Flywheel Implementation** — Add golden trajectory collection and self-improvement loops (next priority).
-3. **Full K3s Fleet Manifests** — Add Ingress, NetworkPolicy, and PodDisruptionBudget for production.
-4. **Prometheus Metrics Export** — Expose telemetry as metrics endpoint.
-5. **HITL Governance UI** — Consider lightweight dashboard for high-stakes decisions.
+| Control | Status | Details |
+| ------- | ------ | ------- |
+| Secret scanning (Gitleaks) | Active | SecOps CI + `.gitleaks.toml` where present |
+| SAST (Bandit / CodeQL) | Active | SecOps + Enterprise CI |
+| Red team | Active | Scheduled adversarial suites |
+| Least-privilege Actions | Active | Default `contents: read` on CI workflows |
+| Dependabot | Active | All scanned product repos |
+| npm supply chain | Clean | 0 high/critical on audited lockfiles |
+| ChromaDB exposure | Mitigated | Localhost-only until upstream patch |
+| Prompt injection | Strong | Core `SecurityGuard` 0.5.4 patterns |
+
+## Remaining gaps
+
+1. **ChromaDB GHSA-f4j7-r4q5-qw2c** — wait for fixed release; keep network isolation.
+2. **Secret scanning** disabled on some repos (e.g. Weaver) — enable at org/repo settings when plan allows.
+3. **Code scanning** not configured on all repos (Aether, FLW, etc.) — enable CodeQL where feasible.
+4. Full multi-portal e2e security regression in a single CI job still optional (member repos own CI).
 
 ## Conclusion
 
-The Coastal Alpine Stack now demonstrates a mature, sovereign, and observable edge AI architecture suitable for enterprise and government deployment in New Zealand's primary industries.
-
-**Recommended Next Phase**: Data flywheel scaffolding + Bayesian Optimisation hooks.
+Security notifications have been **actioned**: code fixes, dependency floors, workflow hardening, Dependabot coverage, and markdown threat registers updated across the estate. Ready for continued government/enterprise review with the ChromaDB network control as the primary residual risk.
