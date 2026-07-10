@@ -28,7 +28,7 @@ The monorepo composes field devices, a message fabric, the Core SDK, multi-tenan
 %%{init: {
   "theme": "dark",
   "themeVariables": {
-    "fontSize": "15px",
+    "fontSize": "20px",
     "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
     "primaryColor": "#0ea5e9",
     "primaryTextColor": "#f8fafc",
@@ -41,11 +41,12 @@ The monorepo composes field devices, a message fabric, the Core SDK, multi-tenan
     "titleColor": "#e2e8f0"
   },
   "flowchart": {
-    "nodeSpacing": 28,
-    "rankSpacing": 36,
-    "padding": 16,
+    "nodeSpacing": 44,
+    "rankSpacing": 52,
+    "padding": 24,
     "htmlLabels": true,
-    "curve": "basis"
+    "curve": "basis",
+    "useMaxWidth": true
   }
 }}%%
 flowchart TB
@@ -165,13 +166,13 @@ flowchart TB
 %%{init: {
   "theme": "dark",
   "themeVariables": {
-    "fontSize": "15px",
+    "fontSize": "20px",
     "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
     "lineColor": "#67e8f9",
     "clusterBkg": "#0b1220cc",
     "clusterBorder": "#38bdf880"
   },
-  "flowchart": { "curve": "basis", "nodeSpacing": 32, "rankSpacing": 40 }
+  "flowchart": { "curve": "basis", "nodeSpacing": 48, "rankSpacing": 56, "padding": 24, "useMaxWidth": true }
 }}%%
 flowchart LR
 
