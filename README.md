@@ -1,5 +1,8 @@
 # Coastal Alpine Stack — Sovereign Edge AI Platform
 
+![Banner](assets/social_preview.png)
+
+
 **Coastal Alpine Tech Limited**  
 *Edge-Native | Data Sovereign | Self-Improving*
 
