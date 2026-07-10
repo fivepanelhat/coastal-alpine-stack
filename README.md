@@ -4,7 +4,8 @@
 *Edge-Native | Data Sovereign | Self-Improving*
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
-![Hardware](https://img.shields.io/badge/Target-RPi5%20%2B%20Hailo%20NPU-orange)  
+![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)
+![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square)  
 ![Status](https://img.shields.io/badge/Status-Enterprise%20Hardening%20Phase-green)
 
 A production-grade, sovereign edge AI ecosystem for New Zealand’s primary industries (agriculture, aquaculture, biosecurity). Designed for offline operation, strict data sovereignty, and continuous self-improvement.
@@ -33,7 +34,7 @@ Key layers:
 - **Coastal-Alpine-Core** — Shared SDK (Security, Telemetry, Data Flywheel)
 - **Weaver** — Multi-tenant LangGraph orchestrator
 - **Domain Portals** — Blue-Moon, AquaGuard, SoilGuard, Sting-Operation-AI
-- **Edge Runtime** — RPi5 + Hailo NPU + K3s + Ollama
+- **Edge Runtime** — Raspberry Pi 5 (16GB) + Hailo-10H NPU (40 TOPS) + K3s + Ollama
 
 ---
 

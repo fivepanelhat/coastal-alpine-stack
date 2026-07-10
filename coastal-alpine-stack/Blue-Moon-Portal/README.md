@@ -37,7 +37,7 @@
 
 ### Prerequisites
 
-- Raspberry Pi 5 (16GB RAM) with Raspberry Pi AI HAT+ (Hailo-8 NPU)
+- Raspberry Pi 5 (16GB RAM) with Raspberry Pi AI Accelerator / AI HAT+ 2 (Hailo-10H NPU)
 - ESP32 microcontrollers for sensor integration
 - Python 3.10+
 - Ollama (local LLM runtime)
@@ -214,7 +214,7 @@ Blue_Moon_Portal/
 ### Hardware
 
 - **Compute:** Raspberry Pi 5 (16GB RAM)
-- **Acceleration:** Raspberry Pi AI HAT+ (Hailo-8 NPU, 26 TOPS)
+- **Acceleration:** Raspberry Pi AI Accelerator / AI HAT+ 2 (Hailo-10H NPU, 40 TOPS)
 - **Sensors:** ESP32 microcontrollers streaming via MQTT
 - **Cameras:** CSI camera module (leaf health)
 - **Audio:** USB microphone (anomaly detection)

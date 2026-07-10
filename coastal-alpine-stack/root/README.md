@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE)  
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
 ![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)  
-![Hardware](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%20%2B%20Hailo--10L%2F10H%20NPU-orange.svg)  
+![Hardware](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%20%2B%20Hailo--10H%20NPU-orange.svg)  
 [![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/coastal-alpine-stack/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/secops.yml)  
 [![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/coastal-alpine-stack/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/redteam.yml)  
 ![Interop](https://img.shields.io/badge/Interop-MQTT%20%7C%20OPC--UA-orange?style=flat-square)  
@@ -49,7 +49,7 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 
 ### Prerequisites
 
-- Raspberry Pi 5 (16GB RAM) + Hailo-10L accelerator (or virtualized NPU mappings)
+- Raspberry Pi 5 (16GB RAM) + Hailo-10H accelerator (or virtualized NPU mappings)
 - Python 3.10+
 - Ollama with Gemma 4 model (`gemma4:e4b`)
 - MQTT broker (e.g. Mosquitto)
@@ -117,7 +117,7 @@ flowchart TD
 
     subgraph "Edge Deployment Hardware"
         RPi[Raspberry Pi 5 Node]
-        Hailo[Hailo-10L NPU]
+        Hailo[Hailo-10H NPU]
         Ollama[Local Ollama Server]
         Sensors[ESP32 / CSI Cameras]
         
@@ -155,7 +155,7 @@ coastal-alpine-stack/
 ### Hardware
 
 - Raspberry Pi 5 (16GB RAM)
-- Hailo-10L NPU PCIe HAT (13 TOPS)
+- Hailo-10H NPU PCIe HAT (13 TOPS)
 - CSI Camera module, USB microphone, ESP32 microcontrollers
 
 ### Software
@@ -184,7 +184,7 @@ coastal-alpine-stack/
 Our tests run locally on the Raspberry Pi 5 to record execution time and power footprint:
 
 - **Ollama Gemma 4 (INT4):** ~14.5 tokens/sec execution speed under active CPU workload (~9.2W average power).
-- **YOLOv8 OBB (INT8):** Wasp detection pipeline processing a frame in <12.5ms using Hailo-10L NPU (~1.2W active NPU draw).
+- **YOLOv8 OBB (INT8):** Wasp detection pipeline processing a frame in <12.5ms using Hailo-10H NPU (~1.2W active NPU draw).
 
 ---
 
