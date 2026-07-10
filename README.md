@@ -25,17 +25,84 @@ A production-grade, sovereign edge AI ecosystem for New Zealand’s primary indu
 
 ## Architecture Overview
 
-See the high-level architecture document:
+The stack repo composes the full **sovereign edge runtime**: Core SDK, Weaver, domain portals, MQTT, and K3s/compose on **RPi 5 16GB + Hailo-10H**.
 
-→ **[ARCHITECTURE.md](./ARCHITECTURE.md)**
+![Coastal Alpine Stack architecture — liquid glass overview](assets/architecture_overview.png)
 
-Key layers:
-- **Coastal-Alpine-Core** — Shared SDK (Security, Telemetry, Data Flywheel)
-- **Weaver** — Multi-tenant LangGraph orchestrator
-- **Domain Portals** — Blue-Moon, AquaGuard, SoilGuard, Sting-Operation-AI
-- **Edge Runtime** — Raspberry Pi 5 (16GB) + Hailo-10H NPU (40 TOPS) + K3s + Ollama
+### System map
 
----
+```mermaid
+%%{init: {
+  "theme": "dark",
+  "themeVariables": {
+    "fontSize": "16px",
+    "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
+    "primaryColor": "#0ea5e9",
+    "primaryTextColor": "#f8fafc",
+    "primaryBorderColor": "#38bdf8",
+    "lineColor": "#67e8f9",
+    "secondaryColor": "#1e293b",
+    "tertiaryColor": "#0f172a",
+    "clusterBkg": "#0b1220cc",
+    "clusterBorder": "#38bdf880",
+    "titleColor": "#e2e8f0"
+  },
+  "flowchart": {
+    "nodeSpacing": 40,
+    "rankSpacing": 48,
+    "padding": 20,
+    "htmlLabels": true,
+    "curve": "basis"
+  }
+}}%%
+flowchart TB
+
+    classDef sense fill:#052e16,stroke:#4ade80,stroke-width:2px,color:#f0fdf4
+    classDef edge fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#f0f9ff
+    classDef core fill:#134e4a,stroke:#2dd4bf,stroke-width:2px,color:#f0fdfa
+    classDef act fill:#422006,stroke:#fbbf24,stroke-width:2px,color:#fffbeb
+    classDef store fill:#1e1b4b,stroke:#a5b4fc,stroke-width:2px,color:#eef2ff
+    classDef ai fill:#3b0764,stroke:#e879f9,stroke-width:2px,color:#fdf4ff
+    classDef app fill:#1e1b4b,stroke:#c4b5fd,stroke-width:2px,color:#eef2ff
+
+    FW["Sovereign-Edge-Firmware<br/>ESP32 · mTLS MQTT"] --> BUS["Mosquitto / message bus"]
+    BUS --> CORE["Coastal-Alpine-Core"]
+    CORE --> W["Weaver"]
+    CORE --> A["AquaGuard"]
+    CORE --> S["SoilGuard"]
+    CORE --> B["Blue-Moon"]
+    CORE --> ST["Sting-Operation"]
+    CORE --> OLL["Ollama + Hailo-10H"]
+    K3["K3s / compose runtime"] --> CORE
+    K3 --> BUS
+    K3 --> OLL
+
+    subgraph NODE["Edge node — RPi 5 16GB"]
+        K3
+        CORE
+        OLL
+        W
+        A
+        S
+        B
+        ST
+    end
+
+    class FW sense
+    class BUS,K3 edge
+    class CORE core
+    class W,A,S,B,ST store
+    class OLL ai
+```
+
+| Layer | Components | Role |
+| :--- | :--- | :--- |
+| **Runtime** | K3s / compose | On-device services |
+| **SDK** | Coastal-Alpine-Core | Shared guards + LLM |
+| **Apps** | Weaver + portals | Domain agents |
+| **Hardware** | RPi 5 16GB + Hailo-10H | Canonical target |
+
+*Full detail: [ARCHITECTURE.md](./ARCHITECTURE.md)*
 
 ## Documentation
 
