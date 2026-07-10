@@ -35,7 +35,7 @@ sphinx>=8.1.0
 sphinx-rtd-theme>=3.0.0
 
 # Pre-commit Hooks
-pre-commit>=4.0.0
+pre-commit>=4.6.0
 
 # Development Utilities
 ipython>=8.30.0
