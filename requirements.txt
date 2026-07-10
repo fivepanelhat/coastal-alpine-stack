@@ -11,7 +11,7 @@ opencv-python-headless==4.10.0.84 # Replaced standard OpenCV to strip GUI bloat 
 python-dotenv==1.2.2       # Environment variables
 orjson==3.11.6             # High-speed JSON parsing
 aiofiles==23.2.1           # Async disk I/O
-structlog==23.2.0          # Structured telemetry logging
+structlog==26.1.0          # Structured telemetry logging
 
 # Weaver dependencies
 SQLAlchemy>=2.0.0,<3.0.0
