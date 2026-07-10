@@ -11,31 +11,31 @@ A production-grade, sovereign edge AI ecosystem for New Zealand’s primary indu
 
 ---
 
-## Recent Major Improvements (June 2026)
+## Recent Major Improvements (July 2026)
 
-- **Full Data Flywheel Integration** across all portals (plan generation + hardware outcome recording)
-- **Modern Security Layer** — `SecurityGuard` with structured `SecurityResult`
-- **Enhanced Telemetry** — System metrics, structured JSON logging, context managers
-- **Hardened CI/CD** — Standardised Python 3.10, pip caching, reliable Gitleaks scanning
-- **Improved Packaging** — `pyproject.toml` in Core + Weaver
-- **Production Deployment Assets** — K3s manifests + hardening guide
-- **Comprehensive Documentation** — New Architecture and Data Flywheel guides
+- **Enhanced system map** — multi-plane Mermaid + liquid-glass overview (field → fabric → runtime → trust)
+- **Core SDK 0.5.x** — edge optimisations, expanded `SecurityGuard`, flywheel rotation
+- **Security notifications** — Dependabot estate-wide, least-privilege CI, GHSA floors
+- **Full Data Flywheel** — plan generation + hardware outcome recording across portals
+- **Production deployment** — K3s manifests + `PRODUCTION_HARDENING.md`
 
 ---
 
 ## Architecture Overview
 
-The stack repo composes the full **sovereign edge runtime**: Core SDK, Weaver, domain portals, MQTT, and K3s/compose on **RPi 5 16GB + Hailo-10H**.
+The stack repo composes the full **sovereign edge runtime**: field firmware → mTLS MQTT → Core SDK → Weaver → domain portals → Ollama + Hailo-10H, with SecurityGuard, SecOps, and the data flywheel on **RPi 5 16GB**.
 
-![Coastal Alpine Stack architecture — liquid glass overview](assets/architecture_overview.png)
+![Coastal Alpine Stack architecture — liquid glass system map](assets/architecture_overview.png)
 
 ### System map
+
+Four planes on one edge node: **field**, **fabric**, **runtime apps**, and **trust**.
 
 ```mermaid
 %%{init: {
   "theme": "dark",
   "themeVariables": {
-    "fontSize": "16px",
+    "fontSize": "15px",
     "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
     "primaryColor": "#0ea5e9",
     "primaryTextColor": "#f8fafc",
@@ -48,61 +48,90 @@ The stack repo composes the full **sovereign edge runtime**: Core SDK, Weaver, d
     "titleColor": "#e2e8f0"
   },
   "flowchart": {
-    "nodeSpacing": 40,
-    "rankSpacing": 48,
-    "padding": 20,
+    "nodeSpacing": 28,
+    "rankSpacing": 36,
+    "padding": 16,
     "htmlLabels": true,
     "curve": "basis"
   }
 }}%%
 flowchart TB
 
-    classDef sense fill:#052e16,stroke:#4ade80,stroke-width:2px,color:#f0fdf4
-    classDef edge fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#f0f9ff
+    classDef field fill:#052e16,stroke:#4ade80,stroke-width:2px,color:#f0fdf4
+    classDef fabric fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#f0f9ff
     classDef core fill:#134e4a,stroke:#2dd4bf,stroke-width:2px,color:#f0fdfa
-    classDef act fill:#422006,stroke:#fbbf24,stroke-width:2px,color:#fffbeb
-    classDef store fill:#1e1b4b,stroke:#a5b4fc,stroke-width:2px,color:#eef2ff
+    classDef orch fill:#312e81,stroke:#a5b4fc,stroke-width:2px,color:#eef2ff
+    classDef portal fill:#1e1b4b,stroke:#c4b5fd,stroke-width:2px,color:#eef2ff
     classDef ai fill:#3b0764,stroke:#e879f9,stroke-width:2px,color:#fdf4ff
-    classDef app fill:#1e1b4b,stroke:#c4b5fd,stroke-width:2px,color:#eef2ff
+    classDef fly fill:#422006,stroke:#fbbf24,stroke-width:2px,color:#fffbeb
+    classDef sec fill:#450a0a,stroke:#f87171,stroke-width:2px,color:#fef2f2
+    classDef ops fill:#164e63,stroke:#22d3ee,stroke-width:2px,color:#ecfeff
 
-    FW["Sovereign-Edge-Firmware<br/>ESP32 · mTLS MQTT"] --> BUS["Mosquitto / message bus"]
-    BUS --> CORE["Coastal-Alpine-Core"]
-    CORE --> W["Weaver"]
-    CORE --> A["AquaGuard"]
-    CORE --> S["SoilGuard"]
-    CORE --> B["Blue-Moon"]
-    CORE --> ST["Sting-Operation"]
-    CORE --> OLL["Ollama + Hailo-10H"]
-    K3["K3s / compose runtime"] --> CORE
-    K3 --> BUS
-    K3 --> OLL
-
-    subgraph NODE["Edge node — RPi 5 16GB"]
-        K3
-        CORE
-        OLL
-        W
-        A
-        S
-        B
-        ST
+    subgraph FIELD["1 · Field & firmware"]
+        ESP["Sovereign-Edge-Firmware<br/>ESP32 · sensors · actuators"]
+        CAM["Cameras / mics"]
     end
 
-    class FW sense
-    class BUS,K3 edge
+    subgraph FABRIC["2 · Message fabric"]
+        MQTT["Mosquitto mTLS :8883"]
+        ACL["Topic ACLs · nftables"]
+    end
+
+    subgraph NODE["3 · Edge node — RPi 5 16GB + Hailo-10H"]
+        K3["K3s / compose"]
+        CORE["Coastal-Alpine-Core<br/>SecurityGuard · Telemetry · Flywheel · portal_core"]
+        W["Weaver<br/>LangGraph multi-tenant router"]
+        AQ["AquaGuard"]
+        SO["SoilGuard"]
+        BM["Blue-Moon"]
+        ST["Sting"]
+        OLL["Ollama gemma4:e4b"]
+        HAI["Hailo-10H NPU"]
+        MEM["Chroma local · SQLCipher · flywheel JSONL"]
+    end
+
+    subgraph TRUST["4 · Trust & control"]
+        HITL["HITL gates"]
+        SEC["SecOps · red-team · Dependabot"]
+        PROM["Prometheus"]
+    end
+
+    ESP --> MQTT
+    CAM --> CORE
+    MQTT --> ACL --> CORE
+    CORE --> W
+    W --> AQ & SO & BM & ST
+    AQ & SO & BM & ST --> OLL
+    ST & BM --> HAI
+    AQ & SO & BM & ST --> MEM
+    CORE --> MEM
+    K3 --> CORE & MQTT & OLL
+    CORE -.-> HITL
+    CORE --> PROM
+    SEC -.-> CORE
+
+    class ESP,CAM field
+    class MQTT,ACL fabric
     class CORE core
-    class W,A,S,B,ST store
-    class OLL ai
+    class W orch
+    class AQ,SO,BM,ST portal
+    class OLL,HAI ai
+    class MEM fly
+    class HITL,SEC sec
+    class K3,PROM ops
 ```
 
-| Layer | Components | Role |
+| Plane | Components | Role |
 | :--- | :--- | :--- |
-| **Runtime** | K3s / compose | On-device services |
-| **SDK** | Coastal-Alpine-Core | Shared guards + LLM |
-| **Apps** | Weaver + portals | Domain agents |
-| **Hardware** | RPi 5 16GB + Hailo-10H | Canonical target |
+| **Field** | Sovereign-Edge-Firmware, cameras/mics | Sense + actuate on-site |
+| **Fabric** | Mosquitto mTLS, ACLs, nftables | Encrypted, micro-segmented bus |
+| **SDK** | Coastal-Alpine-Core | Guards, telemetry, flywheel, portal_core |
+| **Orchestration** | Weaver | Multi-tenant routing + RAG |
+| **Portals** | AquaGuard · SoilGuard · Blue-Moon · Sting | Domain agents |
+| **AI** | Ollama + Hailo-10H | Offline LLM + NPU vision |
+| **Trust** | HITL, SecOps, Prometheus | Governance + observability |
 
-*Full detail: [ARCHITECTURE.md](./ARCHITECTURE.md)*
+*Full maps (data plane + trust plane): [ARCHITECTURE.md](./ARCHITECTURE.md)*
 
 ## Documentation
 
@@ -145,7 +174,7 @@ Proprietary — Coastal Alpine Tech Limited
 
 ---
 
-*Last major update: June 2026*
+*Last major update: July 2026*
 
 ---
 
