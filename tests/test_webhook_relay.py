@@ -20,7 +20,7 @@ pytest.importorskip("fastapi", reason="webhook extras not installed")
 
 try:
     webhook_relay = importlib.import_module("webhook_relay")
-except Exception as exc:  # heavy optional deps (swarm graph, langgraph, …)
+except ImportError as exc:  # optional webhook deps (fastapi, swarm graph, langgraph, …)
     pytest.skip(f"webhook_relay not importable: {exc}", allow_module_level=True)
 
 
