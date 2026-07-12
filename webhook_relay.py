@@ -24,6 +24,11 @@ logger = logging.getLogger("SovereignSwarm")
 REPO_DIR = "/app/repo" 
 
 def verify_github_signature(payload_body: bytes, signature_header: str) -> bool:
+    # Diamond: fail closed. Without a configured secret we cannot authenticate
+    # the sender — never validate against an empty HMAC key (forgeable).
+    if not WEBHOOK_SECRET:
+        logger.error("GITHUB_WEBHOOK_SECRET is not set; rejecting webhook (fail-closed).")
+        return False
     if not signature_header:
         return False
     hash_object = hmac.new(WEBHOOK_SECRET.encode('utf-8'), msg=payload_body, digestmod=hashlib.sha256)
