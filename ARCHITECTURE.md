@@ -247,6 +247,44 @@ Detail: [`SECURITY.md`](./SECURITY.md) · [`SECURITY_MATRIX.md`](./SECURITY_MATR
 - Multi-tenant LangGraph orchestrator
 - Security + telemetry + flywheel on process paths
 - Tenant-aware routing between specialist agents
+- Dual-platform install (`install.sh` / `install.ps1` / `bootstrap.py`)
+
+### 5.3 Aether (hybrid companion)
+
+- ReAct agentic development orchestrator
+- Markdown skills (`kiwi-edge-architecture`, security, sovereignty)
+- **Computer use** hybrid: desktop actuation on Windows + Linux
+- HITL gates aligned with stack trust plane
+- Install: `install.sh` (Linux) · `install.ps1` (Windows)
+
+### 5.4 Dual-platform hosts
+
+| Role | Platform | Installer |
+| :--- | :--- | :--- |
+| Dev workstation | Windows 10/11 | `install.ps1` |
+| Dev workstation | Linux / macOS | `install.sh` |
+| Production edge | RPi 5 16GB + Hailo-10H (Linux) | `install.sh` + compose/K3s |
+
+```mermaid
+%%{init: { "theme": "dark", "flowchart": { "curve": "basis", "useMaxWidth": true } }}%%
+flowchart LR
+    subgraph DEV[Develop]
+        Win[Windows]
+        Lin[Linux]
+    end
+    subgraph HYBRID[Hybrid packages]
+        Core[Coastal-Alpine-Core]
+        Weaver
+        Aether
+    end
+    subgraph EDGE[Deploy]
+        RPi[RPi 5 + Hailo]
+        K3[K3s / compose]
+    end
+    Win --> HYBRID
+    Lin --> HYBRID
+    HYBRID --> EDGE
+```
 
 ### 5.3 Domain portals
 

@@ -1,5 +1,13 @@
 # Changelog
 
+
+## Hybrid platform update (July 2026)
+
+- Dual-platform installers: `install.sh` (Linux/macOS) and `install.ps1` (Windows)
+- Mermaid system maps updated for hybridisation (Core · Weaver · Aether · stack) and Windows + Linux hosts
+- Architecture overview images refreshed for hybrid stack + dual OS targets
+- Developer setup / installation docs cover Windows and Linux prerequisites and packages
+
 All notable changes to the Coastal Alpine Stack will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).

@@ -13,8 +13,11 @@ A production-grade, sovereign edge AI ecosystem for New Zealand’s primary indu
 
 ## Recent Major Improvements (July 2026)
 
-- **Enhanced system map** — multi-plane Mermaid + liquid-glass overview (field → fabric → runtime → trust)
+- **Hybridised stack** — Core · Weaver · Aether · monorepo unified for **Windows + Linux** (edge remains RPi 5)
+- **Enhanced system map** — multi-plane Mermaid + liquid-glass overview (field → fabric → runtime → companion → trust)
+- **Dual-platform installers** — `install.sh` (Linux/macOS) + `install.ps1` (Windows) + `bootstrap.py`
 - **Core SDK 0.5.x** — edge optimisations, expanded `SecurityGuard`, flywheel rotation
+- **Aether companion** — ReAct skills, HITL gates, computer use for sovereign development
 - **Security notifications** — Dependabot estate-wide, least-privilege CI, GHSA floors
 - **Full Data Flywheel** — plan generation + hardware outcome recording across portals
 - **Production deployment** — K3s manifests + `PRODUCTION_HARDENING.md`
@@ -23,21 +26,21 @@ A production-grade, sovereign edge AI ecosystem for New Zealand’s primary indu
 
 ## Architecture Overview
 
-The stack repo composes the full **sovereign edge runtime**: field firmware → mTLS MQTT → Core SDK → Weaver → domain portals → Ollama + Hailo-10H, with SecurityGuard, SecOps, and the data flywheel on **RPi 5 16GB**.
+The stack repo composes the full **sovereign edge runtime**: field firmware → mTLS MQTT → Core SDK → Weaver → domain portals → Ollama + Hailo-10H, hybridised with the **Aether** agentic companion. **Develop on Windows or Linux; deploy on RPi 5 16GB**.
 
 <p align="center">
-  <img src="assets/architecture_overview.png" alt="Coastal Alpine Stack architecture — liquid glass system map" width="100%" />
+  <img src="assets/architecture_overview.png" alt="Coastal Alpine Stack architecture — hybrid liquid glass system map" width="100%" />
 </p>
 
 ### System map
 
-Four planes on one edge node: **field**, **fabric**, **runtime apps**, and **trust**.
+Five planes: **field**, **fabric**, **runtime apps**, **companion**, and **trust** — with dual-platform host paths.
 
 ```mermaid
 %%{init: {
   "theme": "dark",
   "themeVariables": {
-    "fontSize": "22px",
+    "fontSize": "16px",
     "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
     "primaryColor": "#0ea5e9",
     "primaryTextColor": "#f8fafc",
@@ -50,9 +53,9 @@ Four planes on one edge node: **field**, **fabric**, **runtime apps**, and **tru
     "titleColor": "#e2e8f0"
   },
   "flowchart": {
-    "nodeSpacing": 48,
-    "rankSpacing": 56,
-    "padding": 28,
+    "nodeSpacing": 40,
+    "rankSpacing": 48,
+    "padding": 20,
     "htmlLabels": true,
     "curve": "basis",
     "useMaxWidth": true
@@ -69,6 +72,8 @@ flowchart TB
     classDef fly fill:#422006,stroke:#fbbf24,stroke-width:2px,color:#fffbeb
     classDef sec fill:#450a0a,stroke:#f87171,stroke-width:2px,color:#fef2f2
     classDef ops fill:#164e63,stroke:#22d3ee,stroke-width:2px,color:#ecfeff
+    classDef companion fill:#4c1d95,stroke:#c4b5fd,stroke-width:2px,color:#f5f3ff
+    classDef host fill:#052e16,stroke:#86efac,stroke-width:2px,color:#f0fdf4
 
     subgraph FIELD["1 · Field & firmware"]
         ESP["Sovereign-Edge-Firmware<br/>ESP32 · sensors · actuators"]
@@ -80,7 +85,7 @@ flowchart TB
         ACL["Topic ACLs · nftables"]
     end
 
-    subgraph NODE["3 · Edge node — RPi 5 16GB + Hailo-10H"]
+    subgraph NODE["3 · Edge runtime — hybrid Core + Weaver + portals"]
         K3["K3s / compose"]
         CORE["Coastal-Alpine-Core<br/>SecurityGuard · Telemetry · Flywheel · portal_core"]
         W["Weaver<br/>LangGraph multi-tenant router"]
@@ -93,10 +98,21 @@ flowchart TB
         MEM["Chroma local · SQLCipher · flywheel JSONL"]
     end
 
-    subgraph TRUST["4 · Trust & control"]
+    subgraph COMPANION["4 · Aether companion"]
+        AETH["Aether<br/>ReAct · skills · computer use"]
+        SK["kiwi-edge + security skills"]
+    end
+
+    subgraph TRUST["5 · Trust & control"]
         HITL["HITL gates"]
         SEC["SecOps · red-team · Dependabot"]
         PROM["Prometheus"]
+    end
+
+    subgraph HOSTS["Hosts — Windows + Linux + edge"]
+        WIN["Windows 10/11<br/>install.ps1"]
+        LIN["Linux workstation<br/>install.sh"]
+        RPI["RPi 5 16GB + Hailo-10H"]
     end
 
     ESP --> MQTT
@@ -112,6 +128,11 @@ flowchart TB
     CORE -.-> HITL
     CORE --> PROM
     SEC -.-> CORE
+    AETH --> SK
+    AETH -.->|dev / remediate / HITL| CORE & W
+    HITL -.-> AETH
+    NODE -.-> HOSTS
+    COMPANION -.-> WIN & LIN
 
     class ESP,CAM field
     class MQTT,ACL fabric
@@ -122,6 +143,8 @@ flowchart TB
     class MEM fly
     class HITL,SEC sec
     class K3,PROM ops
+    class AETH,SK companion
+    class WIN,LIN,RPI host
 ```
 
 | Plane | Components | Role |
@@ -131,8 +154,10 @@ flowchart TB
 | **SDK** | Coastal-Alpine-Core | Guards, telemetry, flywheel, portal_core |
 | **Orchestration** | Weaver | Multi-tenant routing + RAG |
 | **Portals** | AquaGuard · SoilGuard · Blue-Moon · Sting | Domain agents |
+| **Companion** | Aether | Agentic dev, skills, computer use, HITL |
 | **AI** | Ollama + Hailo-10H | Offline LLM + NPU vision |
 | **Trust** | HITL, SecOps, Prometheus | Governance + observability |
+| **Hosts** | Windows · Linux · RPi 5 | Dual-platform install; edge production |
 
 *Full maps (data plane + trust plane): [ARCHITECTURE.md](./ARCHITECTURE.md)*
 
@@ -149,25 +174,102 @@ flowchart TB
 
 ## Quick Links to Repositories
 
-- [Coastal-Alpine-Core](./coastal_alpine_core) — Shared Python SDK
-- [Weaver](./weaver) — Multi-tenant orchestration
-- [Blue-Moon-Portal](./Blue-Moon-Portal) — Crop optimisation
-- [AquaGuard-Portal](./AquaGuard-Portal) — Water quality & aquaculture
-- [SoilGuard-Portal](./SoilGuard-Portal) — Soil & pasture health
-- [Sting-Operation-AI](./Sting-Operation-AI) — Biosecurity vision
+| Repo | Role | Platforms |
+| :--- | :--- | :--- |
+| [Coastal-Alpine-Core](https://github.com/fivepanelhat/Coastal-Alpine-Core) | Shared Python SDK | Windows · Linux · RPi |
+| [Weaver](https://github.com/fivepanelhat/Weaver) | Multi-tenant orchestration | Windows · Linux · RPi |
+| [Aether](https://github.com/fivepanelhat/Aether) | Agentic companion + computer use | Windows · Linux · macOS |
+| [Blue-Moon-Portal](./Blue-Moon-Portal) | Crop optimisation | Edge Linux |
+| [AquaGuard-Portal](./AquaGuard-Portal) | Water quality & aquaculture | Edge Linux |
+| [SoilGuard-Portal](./SoilGuard-Portal) | Soil & pasture health | Edge Linux |
+| [Sting-Operation-AI](./Sting-Operation-AI) | Biosecurity vision | Edge Linux + Hailo |
 
 ---
 
-## Getting Started
+## Getting Started (Windows + Linux)
 
-See individual repository READMEs for setup instructions.
+**Requirements:** Python 3.10+ (stack workspace prefers 3.11+), Git, Docker optional for compose.
 
-**Core requirement**: Python 3.10+
+### One-line install
+
+<details open>
+<summary><strong>🐧 Linux / macOS</strong></summary>
 
 ```bash
-# Example: Install shared core
-pip install -e ./coastal_alpine_core[dev]
+curl -fsSL https://raw.githubusercontent.com/fivepanelhat/coastal-alpine-stack/main/install.sh | bash
 ```
+
+</details>
+
+<details>
+<summary><strong>🪟 Windows (PowerShell)</strong></summary>
+
+```powershell
+irm https://raw.githubusercontent.com/fivepanelhat/coastal-alpine-stack/main/install.ps1 | iex
+```
+
+> **Note:** If script execution is blocked: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+
+</details>
+
+### From a clone
+
+<details open>
+<summary><strong>🐧 Linux / macOS</strong></summary>
+
+```bash
+git clone --recurse-submodules https://github.com/fivepanelhat/coastal-alpine-stack.git
+cd coastal-alpine-stack
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -e "./coastal_alpine_core[dev]"
+pip install -r requirements-dev.txt
+
+# Optional: Docker edge stack
+# docker compose up -d
+```
+
+**System packages (Debian/Ubuntu/RPi OS):**
+
+```bash
+sudo apt-get update
+sudo apt-get install -y python3-dev python3-venv python3-pip git build-essential
+# Optional edge: docker.io docker-compose-v2
+```
+
+</details>
+
+<details>
+<summary><strong>🪟 Windows (PowerShell)</strong></summary>
+
+```powershell
+git clone --recurse-submodules https://github.com/fivepanelhat/coastal-alpine-stack.git
+cd coastal-alpine-stack
+
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -U pip
+pip install -e "./coastal_alpine_core[dev]"
+pip install -r requirements-dev.txt
+
+# Optional: Docker Desktop + compose for local edge services
+# docker compose up -d
+```
+
+**Prerequisites:** [Python 3.10+](https://www.python.org/downloads/) (PATH enabled), [Git for Windows](https://git-scm.com/), optional [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+
+</details>
+
+### Companion (Aether)
+
+Install Aether alongside the stack for skills, remediation, and computer use:
+
+| OS | Command |
+| :--- | :--- |
+| Linux / macOS | `curl -fsSL https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.sh \| bash` |
+| Windows | `irm https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.ps1 \| iex` |
 
 ---
 
@@ -187,6 +289,9 @@ Status badges for this repository (CI, security, license, and stack metadata):
 
 [![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE)  
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square)](https://www.python.org/)  
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20RPi-0078D6?style=flat-square)]()  
+[![Hybrid](https://img.shields.io/badge/Hybrid-Core%20%7C%20Weaver%20%7C%20Aether-8B5CF6?style=flat-square)]()  
+[![Install](https://img.shields.io/badge/Install-install.sh%20%7C%20install.ps1-0ea5e9?style=flat-square)]()  
 [![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)]()  
 [![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square)]()  
 [![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square)]()  
