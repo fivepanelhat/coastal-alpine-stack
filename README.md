@@ -3,11 +3,11 @@
 ![Banner](assets/social_preview.png)
 
 
-**Coastal Alpine Tech Limited**  
+**Coastal Alpine Tech Limited** — pre-seed startup, New Plymouth, Taranaki, Aotearoa New Zealand.
 *Edge-Native | Data Sovereign | Self-Improving*
 
 
-A production-grade, sovereign edge AI ecosystem for New Zealand’s primary industries (agriculture, aquaculture, biosecurity). Designed for offline operation, strict data sovereignty, and continuous self-improvement.
+An early-stage (pre-seed) stack aiming at production-oriented, sovereign edge AI ecosystem for New Zealand’s primary industries (agriculture, aquaculture, biosecurity). Designed for offline operation, strict data sovereignty, and continuous self-improvement.
 
 ---
 
@@ -25,6 +25,8 @@ A production-grade, sovereign edge AI ecosystem for New Zealand’s primary indu
 ---
 
 ## Architecture Overview
+
+> **Diagrams:** Architecture images and Mermaid maps describe the **target product architecture** for this pre-seed stack. They are engineering design maps — not claims of large-scale commercial fleet deployment.
 
 The stack repo composes the full **sovereign edge runtime**: field firmware → mTLS MQTT → Core SDK → Weaver → domain portals → Ollama + Hailo-10H, hybridised with the **Aether** agentic companion. **Develop on Windows or Linux; deploy on RPi 5 16GB**.
 
