@@ -8,6 +8,8 @@ paths = [
   ".gitleaks.toml",
   "tests_security_stress/",
   "swarm_memory.db",
+  ".github/investment/",  # Documentation files, no real secrets
+  ".github/compliance/",  # Documentation files, no real secrets
 ]
 regexes = [
   'example\.com',
