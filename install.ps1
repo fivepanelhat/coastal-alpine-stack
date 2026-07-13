@@ -17,6 +17,11 @@ $InstallDir = if ($env:STACK_HOME)     { $env:STACK_HOME }     else { Join-Path 
 function Info($m) { Write-Host "[stack] $m" -ForegroundColor Cyan }
 function Warn($m) { Write-Host "[stack] $m" -ForegroundColor Yellow }
 function Fail($m) { Write-Host "[stack] $m" -ForegroundColor Red; exit 1 }
+function Require-Ok([string]$Step) {
+    if ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0) {
+        Fail "$Step failed (exit code $LASTEXITCODE)"
+    }
+}
 
 $PythonBin = $null
 foreach ($cand in @("python", "python3", "py")) {
@@ -26,6 +31,8 @@ if (-not $PythonBin) {
     Fail "Python 3.10+ (prefer 3.11+) is required. Install from https://www.python.org (Add to PATH)."
 }
 $PyVer = & $PythonBin -c "import sys; print('%d.%d' % sys.version_info[:2])"
+& $PythonBin -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)"
+if ($LASTEXITCODE -ne 0) { Fail "Python 3.10+ is required (found $PyVer)" }
 Info "Using Python $PyVer ($PythonBin)"
 
 if ((Test-Path "pyproject.toml") -and ((Test-Path "coastal_alpine_core") -or (Test-Path "docker-compose.yml"))) {
@@ -46,6 +53,7 @@ if ((Test-Path "pyproject.toml") -and ((Test-Path "coastal_alpine_core") -or (Te
         git clone --depth 1 --recurse-submodules $RepoUrl $SrcDir 2>$null
         if (-not (Test-Path $SrcDir)) {
             git clone --depth 1 $RepoUrl $SrcDir
+            Require-Ok "git clone"
         }
     }
 }
@@ -55,28 +63,39 @@ $VenvDir = Join-Path $SrcDir ".venv"
 
 Info "Creating virtualenv at $VenvDir"
 & $PythonBin -m venv $VenvDir
+Require-Ok "venv create"
 $VenvPython = Join-Path $VenvDir "Scripts\python.exe"
-& $VenvPython -m pip install --upgrade pip | Out-Null
+if (-not (Test-Path $VenvPython)) { Fail "venv python not found at $VenvPython" }
+& $VenvPython -m pip install --upgrade pip
+Require-Ok "pip upgrade"
 
 if (Test-Path "coastal_alpine_core") {
     Info "Installing Coastal-Alpine-Core (editable hybrid SDK)"
-    try {
-        & $VenvPython -m pip install -e "./coastal_alpine_core[dev]"
-    } catch {
+    & $VenvPython -m pip install -e "./coastal_alpine_core[dev]"
+    if ($LASTEXITCODE -ne 0) {
+        Warn "core[dev] failed; retrying without extras"
         & $VenvPython -m pip install -e "./coastal_alpine_core"
+        Require-Ok "pip install core"
     }
 } else {
     Warn "Local coastal_alpine_core not found; installing from GitHub"
     & $VenvPython -m pip install "git+https://github.com/fivepanelhat/Coastal-Alpine-Core.git@v0.5.4"
+    Require-Ok "pip install core from GitHub"
 }
 
 if (Test-Path "requirements-dev.txt") {
     Info "Installing requirements-dev.txt"
-    try { & $VenvPython -m pip install -r requirements-dev.txt } catch { Warn "Some dev deps failed; continuing." }
+    & $VenvPython -m pip install -r requirements-dev.txt
+    if ($LASTEXITCODE -ne 0) { Warn "Some dev deps failed; continuing." }
 } elseif (Test-Path "requirements.txt") {
     Info "Installing requirements.txt"
-    try { & $VenvPython -m pip install -r requirements.txt } catch { Warn "Some deps failed; continuing." }
+    & $VenvPython -m pip install -r requirements.txt
+    if ($LASTEXITCODE -ne 0) { Warn "Some deps failed; continuing." }
 }
+
+Info "Verifying Core import"
+& $VenvPython -c "import coastal_alpine_core; print('ok')"
+Require-Ok "import coastal_alpine_core"
 
 if (Get-Command docker -ErrorAction SilentlyContinue) {
     Info "Docker detected. Optional:  docker compose up -d"
