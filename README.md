@@ -1,4 +1,4 @@
-# Coastal Alpine Stack â€” Sovereign Edge AI Platform
+# Coastal Alpine Stack  Sovereign Edge AI Platform
 
 <!-- BEGIN CAT_CONGRUENCE_SNIPPET -->
 ## Coastal Alpine Tech portfolio
@@ -8,12 +8,12 @@
 [![HITL](https://img.shields.io/badge/HITL-Draft%2FPrepare%20only-dc2626)](./.github/agent-fleet/AGENTS.md)
 [![Te Mana Raraunga](https://img.shields.io/badge/Te%20Mana%20Raraunga-Aligned-0f766e)](https://github.com/fivepanelhat/fivepanelhat)
 
-**Part of the [Kiwi Edge AI Stack](https://github.com/fivepanelhat/fivepanelhat)** · Founder OS: [NZ-Start-Up](https://github.com/fivepanelhat/NZ-Start-Up) · Agent policy: [`.github/agent-fleet/`](./.github/agent-fleet/)
+**Part of the [Kiwi Edge AI Stack](https://github.com/fivepanelhat/fivepanelhat)** | Founder OS: [NZ-Start-Up](https://github.com/fivepanelhat/NZ-Start-Up) | Agent policy: [`.github/agent-fleet/`](./.github/agent-fleet/)
 
-> Sovereign hybrid edge AI for NZ farms & founders — local-first + multi-model, Te Mana Raraunga aligned — collaborating with Venture Taranaki, startups.com investors & Kotahitanga Investment Fund (HITL + cultural advisory for formal approaches).
+> Sovereign hybrid edge AI for NZ farms and founders - local-first + multi-model, Te Mana Raraunga aligned - collaborating with Venture Taranaki, startups.com investors and Kotahitanga Investment Fund (HITL + cultural advisory for formal approaches).
 
 **Agents inform, draft, prepare, monitor, and remind. Humans advise, sign, file, send, and pay.**  
-Anti-hallucination policy: [`.github/agent-fleet/anti-hallucination.md`](./.github/agent-fleet/anti-hallucination.md) · Congruence: [`CAT_CONGRUENCE.md`](./CAT_CONGRUENCE.md)
+Anti-hallucination policy: [`.github/agent-fleet/anti-hallucination.md`](./.github/agent-fleet/anti-hallucination.md) | Congruence: [`CAT_CONGRUENCE.md`](./CAT_CONGRUENCE.md)
 <!-- END CAT_CONGRUENCE_SNIPPET -->
 
 
@@ -42,7 +42,7 @@ Anti-hallucination policy: [`.github/agent-fleet/anti-hallucination.md`](./.gith
 
 ![Banner](assets/social_preview.png)
 
-**Coastal Alpine Tech Limited** â€” pre-seed startup, New Plymouth, Taranaki, Aotearoa New Zealand.
+**Coastal Alpine Tech Limited**  pre-seed startup, New Plymouth, Taranaki, Aotearoa New Zealand.
 *Edge-Native | Data Sovereign | Self-Improving*
 
 An early-stage (pre-seed) stack aiming at production-oriented, sovereign edge AI ecosystem for New Zealand's primary industries (agriculture, aquaculture, biosecurity). Designed for offline operation, strict data sovereignty, and continuous self-improvement.
@@ -51,30 +51,30 @@ An early-stage (pre-seed) stack aiming at production-oriented, sovereign edge AI
 
 ## Recent Major Improvements (July 2026)
 
-- **Hybridised stack** â€” Core Â· Weaver Â· Aether Â· monorepo unified for **Windows + Linux** (edge remains RPi 5)
-- **Enhanced system map** â€” multi-plane Mermaid + liquid-glass overview (field â†’ fabric â†’ runtime â†’ companion â†’ trust)
-- **Dual-platform installers** â€” `install.sh` (Linux/macOS) + `install.ps1` (Windows) + `bootstrap.py`
-- **Core SDK 0.5.x** â€” edge optimisations, expanded `SecurityGuard`, flywheel rotation
-- **Aether companion** â€” ReAct skills, HITL gates, computer use for sovereign development
-- **Security notifications** â€” Dependabot estate-wide, least-privilege CI, GHSA floors
-- **Full Data Flywheel** â€” plan generation + hardware outcome recording across portals
-- **Production deployment** â€” K3s manifests + `PRODUCTION_HARDENING.md`
+- **Hybridised stack**  Core | Weaver | Aether | monorepo unified for **Windows + Linux** (edge remains RPi 5)
+- **Enhanced system map**  multi-plane Mermaid + liquid-glass overview (field â†' fabric â†' runtime â†' companion â†' trust)
+- **Dual-platform installers**  `install.sh` (Linux/macOS) + `install.ps1` (Windows) + `bootstrap.py`
+- **Core SDK 0.5.x**  edge optimisations, expanded `SecurityGuard`, flywheel rotation
+- **Aether companion**  ReAct skills, HITL gates, computer use for sovereign development
+- **Security notifications**  Dependabot estate-wide, least-privilege CI, GHSA floors
+- **Full Data Flywheel**  plan generation + hardware outcome recording across portals
+- **Production deployment**  K3s manifests + `PRODUCTION_HARDENING.md`
 
 ---
 
 ## Architecture Overview
 
-> **Diagrams:** Architecture images and Mermaid maps describe the **target product architecture** for this pre-seed stack. They are engineering design maps â€” not claims of large-scale commercial fleet deployment.
+> **Diagrams:** Architecture images and Mermaid maps describe the **target product architecture** for this pre-seed stack. They are engineering design maps  not claims of large-scale commercial fleet deployment.
 
-The stack repo composes the full **sovereign edge runtime**: field firmware â†’ mTLS MQTT â†’ Core SDK â†’ Weaver â†’ domain portals â†’ Ollama + Hailo-10H, hybridised with the **Aether** agentic companion. **Develop on Windows or Linux; deploy on RPi 5 16GB**.
+The stack repo composes the full **sovereign edge runtime**: field firmware â†' mTLS MQTT â†' Core SDK â†' Weaver â†' domain portals â†' Ollama + Hailo-10H, hybridised with the **Aether** agentic companion. **Develop on Windows or Linux; deploy on RPi 5 16GB**.
 
 <p align="center">
-  <img src="assets/architecture_overview.png" alt="Coastal Alpine Stack architecture â€” hybrid liquid glass system map" width="100%" />
+  <img src="assets/architecture_overview.png" alt="Coastal Alpine Stack architecture  hybrid liquid glass system map" width="100%" />
 </p>
 
 ### System map
 
-Five planes: **field**, **fabric**, **runtime apps**, **companion**, and **trust** â€” with dual-platform host paths.
+Five planes: **field**, **fabric**, **runtime apps**, **companion**, and **trust**  with dual-platform host paths.
 
 ```mermaid
 %%{init: {
@@ -115,19 +115,19 @@ flowchart TB
     classDef companion fill:#4c1d95,stroke:#c4b5fd,stroke-width:2px,color:#f5f3ff
     classDef host fill:#052e16,stroke:#86efac,stroke-width:2px,color:#f0fdf4
 
-    subgraph FIELD["1 Â· Field & firmware"]
-        ESP["Sovereign-Edge-Firmware<br/>ESP32 Â· sensors Â· actuators"]
+    subgraph FIELD["1 | Field & firmware"]
+        ESP["Sovereign-Edge-Firmware<br/>ESP32 | sensors | actuators"]
         CAM["Cameras / mics"]
     end
 
-    subgraph FABRIC["2 Â· Message fabric"]
+    subgraph FABRIC["2 | Message fabric"]
         MQTT["Mosquitto mTLS :8883"]
-        ACL["Topic ACLs Â· nftables"]
+        ACL["Topic ACLs | nftables"]
     end
 
-    subgraph NODE["3 Â· Edge runtime â€” hybrid Core + Weaver + portals"]
+    subgraph NODE["3 | Edge runtime  hybrid Core + Weaver + portals"]
         K3["K3s / compose"]
-        CORE["Coastal-Alpine-Core<br/>SecurityGuard Â· Telemetry Â· Flywheel Â· portal_core"]
+        CORE["Coastal-Alpine-Core<br/>SecurityGuard | Telemetry | Flywheel | portal_core"]
         W["Weaver<br/>LangGraph multi-tenant router"]
         AQ["AquaGuard"]
         SO["SoilGuard"]
@@ -135,21 +135,21 @@ flowchart TB
         ST["Sting"]
         OLL["Ollama gemma4:e4b"]
         HAI["Hailo-10H NPU"]
-        MEM["Chroma local Â· SQLCipher Â· flywheel JSONL"]
+        MEM["Chroma local | SQLCipher | flywheel JSONL"]
     end
 
-    subgraph COMPANION["4 Â· Aether companion"]
-        AETH["Aether<br/>ReAct Â· skills Â· computer use"]
+    subgraph COMPANION["4 | Aether companion"]
+        AETH["Aether<br/>ReAct | skills | computer use"]
         SK["kiwi-edge + security skills"]
     end
 
-    subgraph TRUST["5 Â· Trust & control"]
+    subgraph TRUST["5 | Trust & control"]
         HITL["HITL gates"]
-        SEC["SecOps Â· red-team Â· Dependabot"]
+        SEC["SecOps | red-team | Dependabot"]
         PROM["Prometheus"]
     end
 
-    subgraph HOSTS["Hosts â€” Windows + Linux + edge"]
+    subgraph HOSTS["Hosts  Windows + Linux + edge"]
         WIN["Windows 10/11<br/>install.ps1"]
         LIN["Linux workstation<br/>install.sh"]
         RPI["RPi 5 16GB + Hailo-10H"]
@@ -169,7 +169,7 @@ flowchart TB
     CORE --> PROM
     SEC -.-> CORE
     AETH --> SK
-    AETH -.->|dev / remediate / HITL| CORE & W
+    AETH -.-> | dev / remediate / HITL | CORE & W
     HITL -.-> AETH
     NODE -.-> HOSTS
     COMPANION -.-> WIN & LIN
@@ -187,42 +187,42 @@ flowchart TB
     class WIN,LIN,RPI host
 ```
 
-| Plane | Components | Role |
-| :--- | :--- | :--- |
-| **Field** | Sovereign-Edge-Firmware, cameras/mics | Sense + actuate on-site |
-| **Fabric** | Mosquitto mTLS, ACLs, nftables | Encrypted, micro-segmented bus |
-| **SDK** | Coastal-Alpine-Core | Guards, telemetry, flywheel, portal_core |
-| **Orchestration** | Weaver | Multi-tenant routing + RAG |
-| **Portals** | AquaGuard Â· SoilGuard Â· Blue-Moon Â· Sting | Domain agents |
-| **Companion** | Aether | Agentic dev, skills, computer use, HITL |
-| **AI** | Ollama + Hailo-10H | Offline LLM + NPU vision |
-| **Trust** | HITL, SecOps, Prometheus | Governance + observability |
-| **Hosts** | Windows Â· Linux Â· RPi 5 | Dual-platform install; edge production |
+ | Plane | Components | Role |
+ | :--- | :--- | :--- |
+ | **Field** | Sovereign-Edge-Firmware, cameras/mics | Sense + actuate on-site |
+ | **Fabric** | Mosquitto mTLS, ACLs, nftables | Encrypted, micro-segmented bus |
+ | **SDK** | Coastal-Alpine-Core | Guards, telemetry, flywheel, portal_core |
+ | **Orchestration** | Weaver | Multi-tenant routing + RAG |
+ | **Portals** | AquaGuard | SoilGuard | Blue-Moon | Sting | Domain agents |
+ | **Companion** | Aether | Agentic dev, skills, computer use, HITL |
+ | **AI** | Ollama + Hailo-10H | Offline LLM + NPU vision |
+ | **Trust** | HITL, SecOps, Prometheus | Governance + observability |
+ | **Hosts** | Windows | Linux | RPi 5 | Dual-platform install; edge production |
 
 *Full maps (data plane + trust plane): [ARCHITECTURE.md](./ARCHITECTURE.md)*
 
 ## Documentation
 
-| Document                        | Description                                      |
-|--------------------------------|--------------------------------------------------|
-| `ARCHITECTURE.md`              | High-level system architecture                   |
-| `DATA_FLYWHEEL_GUIDE.md`       | Complete guide to the self-improving data flywheel |
-| `SECURITY_POSTURE_REPORT.md`   | Security & hardening status across the stack     |
-| `PRODUCTION_HARDENING.md`      | Enterprise / government deployment recommendations |
+ | Document | Description |
+ | -------------------------------- | -------------------------------------------------- |
+ | `ARCHITECTURE.md` | High-level system architecture |
+ | `DATA_FLYWHEEL_GUIDE.md` | Complete guide to the self-improving data flywheel |
+ | `SECURITY_POSTURE_REPORT.md` | Security & hardening status across the stack |
+ | `PRODUCTION_HARDENING.md` | Enterprise / government deployment recommendations |
 
 ---
 
 ## Quick Links to Repositories
 
-| Repo | Role | Platforms |
-| :--- | :--- | :--- |
-| [Coastal-Alpine-Core](https://github.com/fivepanelhat/Coastal-Alpine-Core) | Shared Python SDK | Windows Â· Linux Â· RPi |
-| [Weaver](https://github.com/fivepanelhat/Weaver) | Multi-tenant orchestration | Windows Â· Linux Â· RPi |
-| [Aether](https://github.com/fivepanelhat/Aether) | Agentic companion + computer use | Windows Â· Linux Â· macOS |
-| [Blue-Moon-Portal](./Blue-Moon-Portal) | Crop optimisation | Edge Linux |
-| [AquaGuard-Portal](./AquaGuard-Portal) | Water quality & aquaculture | Edge Linux |
-| [SoilGuard-Portal](./SoilGuard-Portal) | Soil & pasture health | Edge Linux |
-| [Sting-Operation-AI](./Sting-Operation-AI) | Biosecurity vision | Edge Linux + Hailo |
+ | Repo | Role | Platforms |
+ | :--- | :--- | :--- |
+ | [Coastal-Alpine-Core](https://github.com/fivepanelhat/Coastal-Alpine-Core) | Shared Python SDK | Windows | Linux | RPi |
+ | [Weaver](https://github.com/fivepanelhat/Weaver) | Multi-tenant orchestration | Windows | Linux | RPi |
+ | [Aether](https://github.com/fivepanelhat/Aether) | Agentic companion + computer use | Windows | Linux | macOS |
+ | [Blue-Moon-Portal](./Blue-Moon-Portal) | Crop optimisation | Edge Linux |
+ | [AquaGuard-Portal](./AquaGuard-Portal) | Water quality & aquaculture | Edge Linux |
+ | [SoilGuard-Portal](./SoilGuard-Portal) | Soil & pasture health | Edge Linux |
+ | [Sting-Operation-AI](./Sting-Operation-AI) | Biosecurity vision | Edge Linux + Hailo |
 
 ---
 
@@ -306,16 +306,16 @@ pip install -r requirements-dev.txt
 
 Install Aether alongside the stack for skills, remediation, and computer use:
 
-| OS | Command |
-| :--- | :--- |
-| Linux / macOS | `curl -fsSL https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.sh \| bash` |
-| Windows | `irm https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.ps1 \| iex` |
+ | OS | Command |
+ | :--- | :--- |
+ | Linux / macOS | `curl -fsSL https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.sh \ | bash` |
+ | Windows | `irm https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.ps1 \ | iex` |
 
 ---
 
 ## License
 
-Proprietary â€” Coastal Alpine Tech Limited
+Proprietary  Coastal Alpine Tech Limited
 
 ---
 
