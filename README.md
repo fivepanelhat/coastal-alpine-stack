@@ -16,6 +16,40 @@
 Anti-hallucination policy: [`.github/agent-fleet/anti-hallucination.md`](./.github/agent-fleet/anti-hallucination.md) | Congruence: [`CAT_CONGRUENCE.md`](./CAT_CONGRUENCE.md)
 <!-- END CAT_CONGRUENCE_SNIPPET -->
 
+<!-- BEGIN PROBLEMS_SOLUTIONS_ECONOMY -->
+## Problems we are solving
+
+**coastal-alpine-stack** is the compose / K3s monorepo that shows how the full Kiwi Edge system deploys together.
+
+1. **Integration fog** - Separate repos hide how Core, portals, and ops actually run as one system.
+2. **Fragile hand-deploy** - Without compose/K3s maps, pilots stall at "works on my Pi".
+3. **Inconsistent environments** - Windows/Linux dev vs RPi prod drift without a reference stack.
+4. **Weak ops defaults** - Auth, webhooks, and remediation must be documented as fail-closed targets.
+
+## Solution we have built
+
+| Built capability | What it does |
+| :--- | :--- |
+| **Monorepo architecture** | Reference layout for multi-service edge deploy |
+| **Compose / K3s path** | Reproducible bring-up targets for pilots |
+| **Cross-links** | Quick paths into Core, portals, and ops docs |
+| **Hardening notes** | Diamond-oriented webhook and auth patterns |
+
+This repo is architecture proof for technical diligence and pilot engineering - not a separate consumer brand.
+
+### Local (Taranaki) and national (Aotearoa) economic benefits
+
+| Lever | Benefit |
+| :--- | :--- |
+| **Regional R&D HQ** | Product design and IP stay in New Plymouth / Taranaki - not only Auckland/offshore SaaS |
+| **Primary-sector productivity** | On-farm and rural tools aim to cut waste, protect consents, and support export competitiveness |
+| **Skilled employment pathways** | Edge install, field support, agritech ops, software, compliance, and cultural advisory roles as pilots scale |
+| **Data sovereignty** | Te Mana Raraunga-aligned local custody keeps high-value operational data onshore |
+| **HITL jobs quality** | Agents **inform / draft / prepare / monitor / remind**; humans **advise / sign / file / send / pay** - augment people, do not fake full autonomy |
+
+**Stage honesty (pre-seed):** Impact today is founder R&D, near-term contractors, and EDA/partner leverage. Permanent multi-region payroll follows paid pilots and revenue - we do not invent headcount claims.
+<!-- END PROBLEMS_SOLUTIONS_ECONOMY -->
+
 [![License: Proprietary](https://img.shields.io/badge/License-Proprietary--Commercial-blue.svg)](./LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab?logo=python&logoColor=white)](https://www.python.org)
 [![Version](https://img.shields.io/badge/version-0.5.x-blue.svg)](./CHANGELOG.md)
