@@ -42,6 +42,17 @@ Hard refusals: inventing NZBN/IRD/partner consent | autonomous cold email (UEM) 
 5. Extended thinking: list uncertainties and what would change the answer **before** final output.
 6. Watermarks: `DRAFT`, `NOT LEGAL ADVICE`, `NOT FINANCIAL ADVICE`, `DRAFT_NOT_SENT`, `PREPARED BY AGENT`.
 
+## NZ AI Safety (hardened)
+
+All AI systems, agents, and claims of responsible AI must follow the **Hardened NZ AI Safety Guidelines**.
+
+- Skill (canonical): [Aether `aether-nz-ai-safety`](https://github.com/fivepanelhat/Aether/tree/main/skills/aether-nz-ai-safety)
+- Full policy: [`HARDENED_NZ_AI_SAFETY_GUIDELINES.md`](./HARDENED_NZ_AI_SAFETY_GUIDELINES.md)
+- Aligns with Public Service AI Framework, Algorithm Charter for Aotearoa New Zealand, MBIE Responsible AI Guidance, Privacy Act 2020, and Te Mana Raraunga.
+- Risk-tiered HITL is mandatory. Default for production / external / health / cultural actions is L2.
+
+Any external claim of compliance requires explicit founder approval.
+
 ## Agent fleet location
 
 Portable skills and policy live under:
