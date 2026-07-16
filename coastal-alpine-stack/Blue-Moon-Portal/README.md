@@ -5,18 +5,18 @@
 
 ![Blue Moon Portal Banner](assets/social_preview.png)
 
-**Welcome to the Blue Moon Portal**—the central nervous system for the Byte Size Kai initiative. This repository houses the architecture for an autonomous, on-premise agritech crop tracker designed to optimize microgreen cultivation through edge-based AI.
+**Welcome to the Blue Moon Portal**-the central nervous system for the Byte Size Kai initiative. This repository houses the architecture for an autonomous, on-premise agritech crop tracker designed to optimize microgreen cultivation through edge-based AI.
 
-[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE)  
-[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
-![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)  
-![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square)  
-![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square)  
-[![CI/CD: Active](https://github.com/fivepanelhat/Blue-Moon-Portal/actions/workflows/ci.yml/badge.svg)](https://github.com/fivepanelhat/Blue-Moon-Portal/actions)  
-[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Blue-Moon-Portal/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/Blue-Moon-Portal/actions/workflows/secops.yml)  
-[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Blue-Moon-Portal/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/Blue-Moon-Portal/actions/workflows/redteam.yml)  
-![Dependabot](https://img.shields.io/badge/Dependencies-Monitored-brightgreen?style=flat-square&logo=dependabot)  
-![Interop](https://img.shields.io/badge/Interop-MQTT%20%7C%20OPC--UA-orange?style=flat-square)  
+[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE) 
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/) 
+![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white) 
+![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square) 
+![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square) 
+[![CI/CD: Active](https://github.com/fivepanelhat/Blue-Moon-Portal/actions/workflows/ci.yml/badge.svg)](https://github.com/fivepanelhat/Blue-Moon-Portal/actions) 
+[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Blue-Moon-Portal/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/Blue-Moon-Portal/actions/workflows/secops.yml) 
+[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Blue-Moon-Portal/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/Blue-Moon-Portal/actions/workflows/redteam.yml) 
+![Dependabot](https://img.shields.io/badge/Dependencies-Monitored-brightgreen?style=flat-square&logo=dependabot) 
+![Interop](https://img.shields.io/badge/Interop-MQTT%20%7C%20OPC--UA-orange?style=flat-square) 
 ![Sustainability](https://img.shields.io/badge/EECA%20NZ-Carbon%20Tracked-green?style=flat-square)
 
 ## The 5 Ws: Project Context
@@ -52,7 +52,7 @@ cd blue-moon-portal
 
 # Create virtual environment
 python3.10 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -75,7 +75,7 @@ ollama pull gemma4:e4b
 
 # Verify installation
 ollama list
-# Expected output: gemma4:e4b     c6eb396dbd59  9.6 GB  <timestamp>
+# Expected output: gemma4:e4b c6eb396dbd59 9.6 GB <timestamp>
 ```
 
 ### System Validation
@@ -88,27 +88,27 @@ python validate.py
 
 This will test:
 
-- ✓ Configuration loading from `.env`
-- ✓ Ollama connectivity and model availability
-- ✓ MQTT broker connectivity
-- ✓ Audio/Video capture streams
-- ✓ Hardware control simulation
-- ✓ Media pruner functionality
-- ✓ AI Agent methods and LLM integration
+- [OK] Configuration loading from `.env`
+- [OK] Ollama connectivity and model availability
+- [OK] MQTT broker connectivity
+- [OK] Audio/Video capture streams
+- [OK] Hardware control simulation
+- [OK] Media pruner functionality
+- [OK] AI Agent methods and LLM integration
 
 **Expected output (6-7/7 tests pass):**
 
 ```plaintext
-✓ PASS: configuration
-✓ PASS: ollama
-✓ PASS: mqtt (or ✗ FAIL if broker not running)
-✓ PASS: av_capture
-✓ PASS: hardware_control
-✓ PASS: media_pruner
-✓ PASS: ai_agent_methods
+[OK] PASS: configuration
+[OK] PASS: ollama
+[OK] PASS: mqtt (or [X] FAIL if broker not running)
+[OK] PASS: av_capture
+[OK] PASS: hardware_control
+[OK] PASS: media_pruner
+[OK] PASS: ai_agent_methods
 ```
 
-**Note:** MQTT test may fail if no broker is running locally—this is expected in development. The portal will attempt reconnection at runtime.
+**Note:** MQTT test may fail if no broker is running locally-this is expected in development. The portal will attempt reconnection at runtime.
 
 ### Running the Portal
 
@@ -127,40 +127,40 @@ The portal will:
 
 ## Architecture Overview
 
-This is **not** a simple chatbot hooked up to a water pump—it's a fully agentic architecture:
+This is **not** a simple chatbot hooked up to a water pump-it's a fully agentic architecture:
 
 ```plaintext
-┌─────────────────────────────────────────────────────┐
-│           EDGE HARDWARE (RPi 5 + AI HAT+)           │
-├─────────────────────────────────────────────────────┤
-│                                                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
-│  │ MQTT Sensors │  │ CSI Camera   │  │ Microphone│ │
-│  │ (Capacitive  │  │ (Leaf Health)│  │ (Anomaly) │ │
-│  │  Moisture,   │  │              │  │ Detection │ │
-│  │  Light, RH)  │  │              │  │           │ │
-│  └──────┬───────┘  └──────┬───────┘  └─────┬─────┘ │
-│         │                 │                 │        │
-│         └─────────────────┼─────────────────┘        │
-│                           ▼                          │
-│                ┌─────────────────────┐               │
-│                │   AI Agent (Gemma   │               │
-│                │  4 E4B via Ollama)  │               │
-│                │  [Multi-modal LLM]  │               │
-│                └────────┬────────────┘               │
-│                         │                            │
-│         ┌───────────────┼───────────────┐            │
-│         ▼               ▼               ▼            │
-│    ┌────────┐      ┌────────┐      ┌────────┐       │
-│    │ Pump   │      │ Light  │      │Alerts  │       │
-│    │Control │      │ Control│      │System  │       │
-│    └────────┘      └────────┘      └────────┘       │
-│                                                      │
-│  ┌──────────────────────────────────────────────┐   │
-│  │  Media Pruner: Auto-cleanup & Compression   │   │
-│  │  (Prevents 24/7 capture from saturating SD) │   │
-│  └──────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────┘
+-----------------------------------------------------
+| EDGE HARDWARE (RPi 5 + AI HAT+) |
+|-----------------------------------------------------
+| |
+| -------------- -------------- ----------- |
+| | MQTT Sensors | | CSI Camera | | Microphone| |
+| | (Capacitive | | (Leaf Health)| | (Anomaly) | |
+| | Moisture, | | | | Detection | |
+| | Light, RH) | | | | | |
+| `------------- `------------- `---------- |
+| | | | |
+| `---------------------------------- |
+| |
+| --------------------- |
+| | AI Agent (Gemma | |
+| | 4 E4B via Ollama) | |
+| | [Multi-modal LLM] | |
+| `-------------------- |
+| | |
+| ------------------------------ |
+| |
+| -------- -------- -------- |
+| | Pump | | Light | |Alerts | |
+| |Control | | Control| |System | |
+| `-------- `-------- `-------- |
+| |
+| ---------------------------------------------- |
+| | Media Pruner: Auto-cleanup & Compression | |
+| | (Prevents 24/7 capture from saturating SD) | |
+| `---------------------------------------------- |
+`-----------------------------------------------------
 ```
 
 **Data Flow:**
@@ -173,41 +173,41 @@ This is **not** a simple chatbot hooked up to a water pump—it's a fully agenti
 
 ```plaintext
 Blue_Moon_Portal/
-│
-├── portal_core/               # The Engine Room
-│   ├── __init__.py
-│   ├── ai_agent.py            # Multi-modal LLM controller (Gemma 4 via Ollama)
-│   ├── mqtt_client.py         # Paho MQTT subscriber for ESP32 telemetry
-│   ├── av_capture.py          # OpenCV/PyAudio streams (CSI camera + mic)
-│   └── media_pruner.py        # Storage lifecycle management (auto-delete/compress)
-│
-├── portal_schemas/            # The Rulebook (Pydantic enforcement)
-│   ├── __init__.py
-│   └── ai_models.py           # Pydantic classes (SensorReading, AnalysisResult, CropOptimizationPlan)
-│
-├── telemetry_data/            # Local Knowledge Base
-│   ├── sensor_logs/           # Historical MQTT JSON payloads
-│   └── media/                 # Image and audio buffer storage
-│
-├── requirements.txt           # Python dependencies
-├── requirements-dev.txt       # Development tools (pytest, black, mypy)
-├── main.py                    # Asynchronous event loop orchestrator
-├── setup.py                   # Package configuration
-├── .env.example               # Environment variable template
-├── .gitignore                 # Git exclusions (media, .env, __pycache__)
-├── blue-moon.service          # Systemd service for auto-start on boot
-│
-├── README.md                  # This file
-├── ARCHITECTURE.md            # Detailed technical breakdown
-├── HARDWARE_SETUP.md          # RPi5 + Hailo-10H NPU assembly & driver installation
-└── DEVELOPMENT.md             # Local dev setup, mocking, testing
+|
+|-- portal_core/ # The Engine Room
+| |-- __init__.py
+| |-- ai_agent.py # Multi-modal LLM controller (Gemma 4 via Ollama)
+| |-- mqtt_client.py # Paho MQTT subscriber for ESP32 telemetry
+| |-- av_capture.py # OpenCV/PyAudio streams (CSI camera + mic)
+| `-- media_pruner.py # Storage lifecycle management (auto-delete/compress)
+|
+|-- portal_schemas/ # The Rulebook (Pydantic enforcement)
+| |-- __init__.py
+| `-- ai_models.py # Pydantic classes (SensorReading, AnalysisResult, CropOptimizationPlan)
+|
+|-- telemetry_data/ # Local Knowledge Base
+| |-- sensor_logs/ # Historical MQTT JSON payloads
+| `-- media/ # Image and audio buffer storage
+|
+|-- requirements.txt # Python dependencies
+|-- requirements-dev.txt # Development tools (pytest, black, mypy)
+|-- main.py # Asynchronous event loop orchestrator
+|-- setup.py # Package configuration
+|-- .env.example # Environment variable template
+|-- .gitignore # Git exclusions (media, .env, __pycache__)
+|-- blue-moon.service # Systemd service for auto-start on boot
+|
+|-- README.md # This file
+|-- ARCHITECTURE.md # Detailed technical breakdown
+|-- HARDWARE_SETUP.md # RPi5 + Hailo-10H NPU assembly & driver installation
+`-- DEVELOPMENT.md # Local dev setup, mocking, testing
 ```
 
 ## Documentation
 
-- **[ARCHITECTURE.md](ARCHITECTURE.md)** — Data flow, module responsibilities, Gemma 4 config, Pydantic schema definitions
-- **[HARDWARE_SETUP.md](HARDWARE_SETUP.md)** — RPi 5 + Hailo-10H NPU assembly, ESP32 wiring, Ollama installation, **critical NPU driver setup**
-- **[DEVELOPMENT.md](DEVELOPMENT.md)** — Local dev environment, mock MQTT payloads, testing strategies
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - Data flow, module responsibilities, Gemma 4 config, Pydantic schema definitions
+- **[HARDWARE_SETUP.md](HARDWARE_SETUP.md)** - RPi 5 + Hailo-10H NPU assembly, ESP32 wiring, Ollama installation, **critical NPU driver setup**
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Local dev environment, mock MQTT payloads, testing strategies
 
 ## Technology Stack
 
@@ -231,12 +231,12 @@ Blue_Moon_Portal/
 
 ## Key Features
 
-✓ **Edge-Native:** All inference runs locally on RPi 5. No cloud dependency.  
-✓ **Multi-Modal AI:** Simultaneously processes sensor telemetry, visual, and audio data.  
-✓ **Deterministic Output:** Pydantic schemas prevent conversational hallucinations; LLM must output valid JSON or fail loudly.  
-✓ **Auto-Recovery:** Systemd service ensures portal restarts after power loss.  
-✓ **Storage-Aware:** Automated media pruning prevents 24/7 AV capture from filling the SD card.  
-✓ **Open Source:** Full transparency for agricultural data sovereignty.  
+[OK] **Edge-Native:** All inference runs locally on RPi 5. No cloud dependency. 
+[OK] **Multi-Modal AI:** Simultaneously processes sensor telemetry, visual, and audio data. 
+[OK] **Deterministic Output:** Pydantic schemas prevent conversational hallucinations; LLM must output valid JSON or fail loudly. 
+[OK] **Auto-Recovery:** Systemd service ensures portal restarts after power loss. 
+[OK] **Storage-Aware:** Automated media pruning prevents 24/7 AV capture from filling the SD card. 
+[OK] **Open Source:** Full transparency for agricultural data sovereignty. 
 
 ---
 
@@ -272,13 +272,13 @@ This project is Licensed under the Coastal Alpine Tech Limited License. See `LIC
 
 ## Attribution
 
-**Built by:** Wayne Roberts, Coastal Alpine Tech Limited  
-**Supporting:** Horowhenua Mana Kai Project  
-**Location:** New Plymouth, Taranaki / Horowhenua, New Zealand  
+**Built by:** Wayne Roberts, Coastal Alpine Tech Limited 
+**Supporting:** Horowhenua Mana Kai Project 
+**Location:** New Plymouth, Taranaki / Horowhenua, New Zealand 
 **Date:** Active development (as of May 31, 2026)
 
-**Reference:**  
-[Running Gemma 4 E4B Locally](https://www.youtube.com/watch?v=NB9zRquoeI0) — Hardware constraints and edge configuration walkthrough.
+**Reference:** 
+[Running Gemma 4 E4B Locally](https://www.youtube.com/watch?v=NB9zRquoeI0) - Hardware constraints and edge configuration walkthrough.
 
 ---
 

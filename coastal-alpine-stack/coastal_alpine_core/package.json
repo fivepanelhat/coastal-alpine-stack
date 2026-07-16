@@ -1,13 +1,13 @@
 {
-  "name": "@fivepanelhat/coastal-alpine-core",
-  "version": "1.2.0",
-  "description": "Sovereign Stack Shared Core Models and Auth Logic",
-  "main": "dist/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fivepanelhat/Coastal-Alpine-Core.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  }
+ "name": "@fivepanelhat/coastal-alpine-core",
+ "version": "1.2.0",
+ "description": "Sovereign Stack Shared Core Models and Auth Logic",
+ "main": "dist/index.js",
+ "repository": {
+ "type": "git",
+ "url": "git+https://github.com/fivepanelhat/Coastal-Alpine-Core.git"
+ },
+ "publishConfig": {
+ "registry": "https://npm.pkg.github.com"
+ }
 }

@@ -40,20 +40,20 @@ sudo tee -a /etc/fstab > /dev/null << 'EOF'
 
 # Coastal Alpine Tech - Sovereign Root Lockdown
 # Mount core system components as read-only
-/dev/mmcblk0p2  /          ext4    ro,noatime,errors=remount-ro  0  1
-/dev/mmcblk0p1  /boot/firmware  vfat    ro,fmask=0022,dmask=0022  0  2
+/dev/mmcblk0p2 / ext4 ro,noatime,errors=remount-ro 0 1
+/dev/mmcblk0p1 /boot/firmware vfat ro,fmask=0022,dmask=0022 0 2
 
 # Mount persistent data partition as read-write
-/dev/mmcblk0p3  /mnt/sovereign-data  ext4  rw,noatime  0  2
+/dev/mmcblk0p3 /mnt/sovereign-data ext4 rw,noatime 0 2
 
 # Route Hailo, Python, and system volatile tasks directly to the 16GB RAM pool
-tmpfs           /tmp            tmpfs   nodev,nosuid,size=2G          0  0
-tmpfs           /var/log        tmpfs   nodev,nosuid,size=512M        0  0
-tmpfs           /var/tmp        tmpfs   nodev,nosuid,size=512M        0  0
+tmpfs /tmp tmpfs nodev,nosuid,size=2G 0 0
+tmpfs /var/log tmpfs nodev,nosuid,size=512M 0 0
+tmpfs /var/tmp tmpfs nodev,nosuid,size=512M 0 0
 
 # Crucial Hailo RT and Python wheel compilation directories mapped to RAM
-tmpfs           /root/.cache    tmpfs   nodev,nosuid,size=1G          0  0
-tmpfs           /var/lib/hailo  tmpfs   nodev,nosuid,size=256M        0  0
+tmpfs /root/.cache tmpfs nodev,nosuid,size=1G 0 0
+tmpfs /var/lib/hailo tmpfs nodev,nosuid,size=256M 0 0
 EOF
 
 # 3d. Configure nftables for sovereign network isolation
@@ -66,7 +66,7 @@ sudo systemctl restart nftables
 echo "Configuring Mosquitto MQTT access control list..."
 sudo cp mosquitto.acl /etc/mosquitto/mosquitto.acl 2>/dev/null || sudo cp rpi_secops/mosquitto.acl /etc/mosquitto/mosquitto.acl
 if [ -f /etc/mosquitto/mosquitto.conf ] && ! grep -q "acl_file" /etc/mosquitto/mosquitto.conf; then
-    echo "acl_file /etc/mosquitto/mosquitto.acl" | sudo tee -a /etc/mosquitto/mosquitto.conf > /dev/null
+ echo "acl_file /etc/mosquitto/mosquitto.acl" | sudo tee -a /etc/mosquitto/mosquitto.conf > /dev/null
 fi
 sudo systemctl restart mosquitto 2>/dev/null || true
 
@@ -76,7 +76,7 @@ sudo apt-get install -y dbus-user-session uidmap 2>/dev/null || true
 sudo systemctl disable --now docker.service docker.socket 2>/dev/null || true
 dockerd-rootless-setuptool.sh install 2>/dev/null || true
 if ! grep -q "DOCKER_HOST" ~/.bashrc; then
-    echo 'export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock' >> ~/.bashrc
+ echo 'export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock' >> ~/.bashrc
 fi
 
 # 3g. Stage the Traefik K3s HelmChart mesh deployment

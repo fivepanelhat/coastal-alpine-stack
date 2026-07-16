@@ -1,23 +1,23 @@
 version: '3.8'
 
 services:
-  sovereign-swarm:
-    build: .
-    container_name: coastal_alpine_swarm
-    restart: unless-stopped
-    ports:
-      - "8000:8000"
-    volumes:
-      # Mount the memory vaults so they persist outside the container
-      - ./swarm_audit.log:/app/swarm_audit.log
-      - ./swarm_memory.db:/app/swarm_memory.db
-      - ./chroma_memory:/app/chroma_memory
-      - ./.env:/app/.env:ro
-      # Mount the actual monorepo so Weaver can rewrite the files
-      - .:/app/repo 
-    environment:
-      # Tell the containerized swarm to talk to the bare-metal Ollama on the host machine
-      - OLLAMA_HOST=http://host.docker.internal:11434 
-    extra_hosts:
-      # Map the host network securely
-      - "host.docker.internal:host-gateway"
+ sovereign-swarm:
+ build: .
+ container_name: coastal_alpine_swarm
+ restart: unless-stopped
+ ports:
+ - "8000:8000"
+ volumes:
+ # Mount the memory vaults so they persist outside the container
+ - ./swarm_audit.log:/app/swarm_audit.log
+ - ./swarm_memory.db:/app/swarm_memory.db
+ - ./chroma_memory:/app/chroma_memory
+ - ./.env:/app/.env:ro
+ # Mount the actual monorepo so Weaver can rewrite the files
+ - .:/app/repo 
+ environment:
+ # Tell the containerized swarm to talk to the bare-metal Ollama on the host machine
+ - OLLAMA_HOST=http://host.docker.internal:11434 
+ extra_hosts:
+ # Map the host network securely
+ - "host.docker.internal:host-gateway"

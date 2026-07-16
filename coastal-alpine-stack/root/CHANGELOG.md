@@ -25,9 +25,9 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 - Created unified Coastal Alpine Stack monorepo workspace.
 - Implemented `coastal-alpine-core` shared Python package containing:
-  - `telemetry`: Latency tracking and energy-efficiency metrics.
-  - `models`: Robust Ollama client wrapper with auto-retries and health checks.
-  - `security`: Sanitization safeguards for input queries and multi-tenant scoping.
+ - `telemetry`: Latency tracking and energy-efficiency metrics.
+ - `models`: Robust Ollama client wrapper with auto-retries and health checks.
+ - `security`: Sanitization safeguards for input queries and multi-tenant scoping.
 - Restructured `weaver`, `Blue-Moon-Portal`, and `Sting-Operation-AI` directories with uniform presentation and metadata.
 - Created root `LICENSE`, `.gitignore`, `CONTRIBUTING.md`, `CHANGELOG.md`, and `requirements-dev.txt`.
 - Set up Docker environment template for local MQTT and Ollama edge integration.

@@ -10,239 +10,239 @@ import pytest
 
 # Add stack root and AquaGuard-Portal directory to path
 sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+ 0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 )
 sys.path.insert(
-    0,
-    os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
-    ),
+ 0,
+ os.path.abspath(
+ os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
+ ),
 )
 
 
 def _ensure_aquaguard_schema_path() -> None:
-    """Skip early when the AquaGuard submodule/schema path is not available."""
-    base_dir = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
-    )
-    schema_candidates = [
-        os.path.join(base_dir, "portal_schemas"),
-        os.path.join(base_dir, "src", "portal_schemas"),
-    ]
-    if not any(os.path.isdir(p) for p in schema_candidates):
-        pytest.skip(
-            "AquaGuard-Portal submodule with portal_schemas is required. "
-            "Run: git submodule update --init --recursive",
-            allow_module_level=False,
-        )
+ """Skip early when the AquaGuard submodule/schema path is not available."""
+ base_dir = os.path.abspath(
+ os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
+ )
+ schema_candidates = [
+ os.path.join(base_dir, "portal_schemas"),
+ os.path.join(base_dir, "src", "portal_schemas"),
+ ]
+ if not any(os.path.isdir(p) for p in schema_candidates):
+ pytest.skip(
+ "AquaGuard-Portal submodule with portal_schemas is required. "
+ "Run: git submodule update --init --recursive",
+ allow_module_level=False,
+ )
 
 
 def _ensure_aquaguard_core_path() -> None:
-    """Skip when AquaGuard portal_core package is unavailable."""
-    base_dir = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
-    )
-    core_candidates = [
-        os.path.join(base_dir, "portal_core"),
-        os.path.join(base_dir, "src", "portal_core"),
-    ]
-    if not any(os.path.isdir(p) for p in core_candidates):
-        pytest.skip(
-            "AquaGuard-Portal submodule with portal_core is required. "
-            "Run: git submodule update --init --recursive",
-            allow_module_level=False,
-        )
+ """Skip when AquaGuard portal_core package is unavailable."""
+ base_dir = os.path.abspath(
+ os.path.join(os.path.dirname(__file__), "../AquaGuard-Portal")
+ )
+ core_candidates = [
+ os.path.join(base_dir, "portal_core"),
+ os.path.join(base_dir, "src", "portal_core"),
+ ]
+ if not any(os.path.isdir(p) for p in core_candidates):
+ pytest.skip(
+ "AquaGuard-Portal submodule with portal_core is required. "
+ "Run: git submodule update --init --recursive",
+ allow_module_level=False,
+ )
 
 # Clean up cached portal modules to avoid monorepo namespace conflicts
 for mod in list(sys.modules.keys()):
-    if mod.startswith("portal_schemas") or mod.startswith("portal_core"):
-        del sys.modules[mod]
+ if mod.startswith("portal_schemas") or mod.startswith("portal_core"):
+ del sys.modules[mod]
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] AquaGuardSecurityTest: %(message)s",
+ level=logging.INFO,
+ format="%(asctime)s [%(levelname)s] AquaGuardSecurityTest: %(message)s",
 )
 logger = logging.getLogger("AquaGuardSecurityTest")
 
 
 def test_pydantic_constraints():
-    _ensure_aquaguard_schema_path()
-    from portal_schemas.compliance import (
-        WaterSensorReading,
-        WaterOptimizationPlan,
-    )
-    from pydantic import ValidationError
+ _ensure_aquaguard_schema_path()
+ from portal_schemas.compliance import (
+ WaterSensorReading,
+ WaterOptimizationPlan,
+ )
+ from pydantic import ValidationError
 
-    logger.info(
-        "\n"
-        + "=" * 50
-        + "\nAUDIT: AquaGuard Pydantic Schemas constraints\n"
-        + "=" * 50
-    )
+ logger.info(
+ "\n"
+ + "=" * 50
+ + "\nAUDIT: AquaGuard Pydantic Schemas constraints\n"
+ + "=" * 50
+ )
 
-    # 1. Test valid reading
-    try:
-        valid_reading = WaterSensorReading(
-            sensor_id="ph_sensor_1", sensor_type="pH", value=7.32, unit="pH"
-        )
-        logger.info(
-            f"✓ Valid telemetry parsing works: id={valid_reading.sensor_id}, value={valid_reading.value}"
-        )
-    except ValidationError as e:
-        logger.error(f"❌ Failed to parse valid telemetry: {e}")
-        raise
+ # 1. Test valid reading
+ try:
+ valid_reading = WaterSensorReading(
+ sensor_id="ph_sensor_1", sensor_type="pH", value=7.32, unit="pH"
+ )
+ logger.info(
+ f"[OK] Valid telemetry parsing works: id={valid_reading.sensor_id}, value={valid_reading.value}"
+ )
+ except ValidationError as e:
+ logger.error(f"❌ Failed to parse valid telemetry: {e}")
+ raise
 
-    # 2. Test invalid reading (string passed to value float field)
-    try:
-        WaterSensorReading(
-            sensor_id="do_sensor_1",
-            sensor_type="DO",
-            value="invalid_str_payload",  # should fail
-            unit="mg/L",
-        )
-        logger.error(
-            "❌ SECURITY FAILURE: Accepted string value for float telemetry value!"
-        )
-        raise AssertionError("Pydantic type constraint bypass!")
-    except ValidationError:
-        logger.info(
-            "✓ PASS: Correctly blocked string input on float telemetry value."
-        )
+ # 2. Test invalid reading (string passed to value float field)
+ try:
+ WaterSensorReading(
+ sensor_id="do_sensor_1",
+ sensor_type="DO",
+ value="invalid_str_payload", # should fail
+ unit="mg/L",
+ )
+ logger.error(
+ "❌ SECURITY FAILURE: Accepted string value for float telemetry value!"
+ )
+ raise AssertionError("Pydantic type constraint bypass!")
+ except ValidationError:
+ logger.info(
+ "[OK] PASS: Correctly blocked string input on float telemetry value."
+ )
 
-    # 3. Test invalid plan actions (Enum constraints)
-    try:
-        WaterOptimizationPlan(
-            plan_id="opt-9988",
-            aeration_action="super_high",  # invalid enum
-            pump_action="medium",
-            valve_action="closed",
-            confidence_score=0.9,
-            execution_window_minutes=15,
-            requires_human_review=False,
-        )
-        logger.error(
-            "❌ SECURITY FAILURE: Accepted invalid enum command for aerator ('super_high')!"
-        )
-        raise AssertionError("Pydantic enum constraint bypass!")
-    except ValidationError:
-        logger.info("✓ PASS: Correctly blocked invalid aeration enum command.")
+ # 3. Test invalid plan actions (Enum constraints)
+ try:
+ WaterOptimizationPlan(
+ plan_id="opt-9988",
+ aeration_action="super_high", # invalid enum
+ pump_action="medium",
+ valve_action="closed",
+ confidence_score=0.9,
+ execution_window_minutes=15,
+ requires_human_review=False,
+ )
+ logger.error(
+ "❌ SECURITY FAILURE: Accepted invalid enum command for aerator ('super_high')!"
+ )
+ raise AssertionError("Pydantic enum constraint bypass!")
+ except ValidationError:
+ logger.info("[OK] PASS: Correctly blocked invalid aeration enum command.")
 
-    # 4. Test boundary constraints (confidence score range 0.0 - 1.0)
-    try:
-        WaterOptimizationPlan(
-            plan_id="opt-9989",
-            aeration_action="high",
-            pump_action="medium",
-            valve_action="closed",
-            confidence_score=-0.5,  # invalid confidence < 0.0
-            execution_window_minutes=15,
-            requires_human_review=False,
-        )
-        logger.error(
-            "❌ SECURITY FAILURE: Accepted out-of-range confidence score (-0.5)!"
-        )
-        raise AssertionError("Pydantic validation range bypass!")
-    except ValidationError:
-        logger.info(
-            "✓ PASS: Correctly blocked out-of-bounds confidence score (<0.0)."
-        )
+ # 4. Test boundary constraints (confidence score range 0.0 - 1.0)
+ try:
+ WaterOptimizationPlan(
+ plan_id="opt-9989",
+ aeration_action="high",
+ pump_action="medium",
+ valve_action="closed",
+ confidence_score=-0.5, # invalid confidence < 0.0
+ execution_window_minutes=15,
+ requires_human_review=False,
+ )
+ logger.error(
+ "❌ SECURITY FAILURE: Accepted out-of-range confidence score (-0.5)!"
+ )
+ raise AssertionError("Pydantic validation range bypass!")
+ except ValidationError:
+ logger.info(
+ "[OK] PASS: Correctly blocked out-of-bounds confidence score (<0.0)."
+ )
 
 
 @pytest.mark.asyncio
 async def test_pruner_stress():
-    _ensure_aquaguard_core_path()
-    from portal_core.media_pruner import MediaPruner
+ _ensure_aquaguard_core_path()
+ from portal_core.media_pruner import MediaPruner
 
-    logger.info(
-        "\n"
-        + "=" * 50
-        + "\nSTRESS TEST: AquaGuard Storage Cleanup and Pruner Retention\n"
-        + "=" * 50
-    )
+ logger.info(
+ "\n"
+ + "=" * 50
+ + "\nSTRESS TEST: AquaGuard Storage Cleanup and Pruner Retention\n"
+ + "=" * 50
+ )
 
-    # Set up temporary directories
-    temp_media_dir = Path("./temp_aquaguard_media")
-    temp_logs_dir = Path("./temp_aquaguard_logs")
-    temp_compliance_dir = Path("./temp_aquaguard_compliance")
+ # Set up temporary directories
+ temp_media_dir = Path("./temp_aquaguard_media")
+ temp_logs_dir = Path("./temp_aquaguard_logs")
+ temp_compliance_dir = Path("./temp_aquaguard_compliance")
 
-    temp_media_dir.mkdir(exist_ok=True)
-    temp_logs_dir.mkdir(exist_ok=True)
-    temp_compliance_dir.mkdir(exist_ok=True)
+ temp_media_dir.mkdir(exist_ok=True)
+ temp_logs_dir.mkdir(exist_ok=True)
+ temp_compliance_dir.mkdir(exist_ok=True)
 
-    # Generate 100 dummy media files
-    file_count = 100
-    retention_hours = 2
-    logger.info(
-        f"Generating {file_count} dummy media files under {temp_media_dir}..."
-    )
-    for i in range(file_count):
-        file_path = temp_media_dir / f"test_frame_{i}.jpg"
-        file_path.write_bytes(b"A" * 1024)  # 1KB
+ # Generate 100 dummy media files
+ file_count = 100
+ retention_hours = 2
+ logger.info(
+ f"Generating {file_count} dummy media files under {temp_media_dir}..."
+ )
+ for i in range(file_count):
+ file_path = temp_media_dir / f"test_frame_{i}.jpg"
+ file_path.write_bytes(b"A" * 1024) # 1KB
 
-        # Modify time of half of the files to be older than retention
-        if i % 2 == 0:
-            mtime = time.time() - (retention_hours + 1) * 3600
-        else:
-            mtime = time.time()
-        os.utime(str(file_path), (mtime, mtime))
+ # Modify time of half of the files to be older than retention
+ if i % 2 == 0:
+ mtime = time.time() - (retention_hours + 1) * 3600
+ else:
+ mtime = time.time()
+ os.utime(str(file_path), (mtime, mtime))
 
-    # Generate a dummy compliance CSV/JSON that should NEVER be pruned
-    compliance_json = (
-        temp_compliance_dir / "audit_20260607_120000_aud-test.json"
-    )
-    compliance_json.write_text(
-        json.dumps({"audit_id": "aud-test", "status": "compliant"}),
-        encoding="utf-8",
-    )
+ # Generate a dummy compliance CSV/JSON that should NEVER be pruned
+ compliance_json = (
+ temp_compliance_dir / "audit_20260607_120000_aud-test.json"
+ )
+ compliance_json.write_text(
+ json.dumps({"audit_id": "aud-test", "status": "compliant"}),
+ encoding="utf-8",
+ )
 
-    # Set compliance file mod time to be very old (e.g. 10 days ago) to stress test retention protection
-    old_time = time.time() - 10 * 24 * 3600
-    os.utime(str(compliance_json), (old_time, old_time))
+ # Set compliance file mod time to be very old (e.g. 10 days ago) to stress test retention protection
+ old_time = time.time() - 10 * 24 * 3600
+ os.utime(str(compliance_json), (old_time, old_time))
 
-    # Initialize pruner
-    pruner = MediaPruner(
-        media_dir=str(temp_media_dir),
-        sensor_logs_dir=str(temp_logs_dir),
-        compliance_dir=str(temp_compliance_dir),
-        retention_hours=retention_hours,
-        critical_disk_usage_pct=95.0,
-    )
+ # Initialize pruner
+ pruner = MediaPruner(
+ media_dir=str(temp_media_dir),
+ sensor_logs_dir=str(temp_logs_dir),
+ compliance_dir=str(temp_compliance_dir),
+ retention_hours=retention_hours,
+ critical_disk_usage_pct=95.0,
+ )
 
-    initial_stats = pruner.get_storage_stats()
-    logger.info(
-        f"Initial stats: media_count={initial_stats['media_count']}, compliance_count={initial_stats['compliance_count']}"
-    )
+ initial_stats = pruner.get_storage_stats()
+ logger.info(
+ f"Initial stats: media_count={initial_stats['media_count']}, compliance_count={initial_stats['compliance_count']}"
+ )
 
-    # Run pruning cycle
-    deleted = await pruner.prune_old_media()
-    logger.info(f"Pruner cycle executed. Deleted: {deleted} files.")
+ # Run pruning cycle
+ deleted = await pruner.prune_old_media()
+ logger.info(f"Pruner cycle executed. Deleted: {deleted} files.")
 
-    post_stats = pruner.get_storage_stats()
-    logger.info(
-        f"Post cleanup stats: media_count={post_stats['media_count']}, compliance_count={post_stats['compliance_count']}"
-    )
+ post_stats = pruner.get_storage_stats()
+ logger.info(
+ f"Post cleanup stats: media_count={post_stats['media_count']}, compliance_count={post_stats['compliance_count']}"
+ )
 
-    # Clean up temp directories
-    shutil.rmtree(temp_media_dir)
-    shutil.rmtree(temp_logs_dir)
-    shutil.rmtree(temp_compliance_dir)
+ # Clean up temp directories
+ shutil.rmtree(temp_media_dir)
+ shutil.rmtree(temp_logs_dir)
+ shutil.rmtree(temp_compliance_dir)
 
-    # Assertions
-    assert deleted == 50, f"Expected 50 files deleted, but got {deleted}"
-    assert (
-        post_stats["media_count"] == 50
-    ), f"Expected 50 files remaining, but got {post_stats['media_count']}"
-    assert (
-        post_stats["compliance_count"] == 1
-    ), "❌ SECURITY FAILURE: Compliance reports were pruned!"
-    logger.info(
-        "✓ PASS: MediaPruner prunes old media files but preserves regional council compliance audits."
-    )
+ # Assertions
+ assert deleted == 50, f"Expected 50 files deleted, but got {deleted}"
+ assert (
+ post_stats["media_count"] == 50
+ ), f"Expected 50 files remaining, but got {post_stats['media_count']}"
+ assert (
+ post_stats["compliance_count"] == 1
+ ), "❌ SECURITY FAILURE: Compliance reports were pruned!"
+ logger.info(
+ "[OK] PASS: MediaPruner prunes old media files but preserves regional council compliance audits."
+ )
 
 
 if __name__ == "__main__":
-    test_pydantic_constraints()
-    asyncio.run(test_pruner_stress())
-    logger.info(
-        "ALL AQUAGUARD PORTAL SECURITY AND STRESS TESTS PASSED SUCCESSFULLY!"
-    )
+ test_pydantic_constraints()
+ asyncio.run(test_pruner_stress())
+ logger.info(
+ "ALL AQUAGUARD PORTAL SECURITY AND STRESS TESTS PASSED SUCCESSFULLY!"
+ )

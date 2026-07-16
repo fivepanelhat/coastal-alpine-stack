@@ -1,11 +1,11 @@
 # Coastal Alpine Tech Limited - Automated Package Signer
 param (
-    [string]$TargetPackagePath # The zip or tar.gz update payload
+ [string]$TargetPackagePath # The zip or tar.gz update payload
 )
 
 if (-not $TargetPackagePath) {
-    Write-Host "Error: You must provide a path to the target update file." -ForegroundColor Red
-    Exit
+ Write-Host "Error: You must provide a path to the target update file." -ForegroundColor Red
+ Exit
 }
 
 $packageName = Split-Path $TargetPackagePath -Leaf
@@ -14,7 +14,7 @@ Write-Host "Signing deployment payload: $packageName..." -ForegroundColor Cyan
 # Use absolute path to Git's openssl.exe if global openssl isn't registered
 $opensslPath = "C:\Program Files\Git\usr\bin\openssl.exe"
 if (-not (Test-Path $opensslPath)) {
-    $opensslPath = "openssl" # Fallback to path
+ $opensslPath = "openssl" # Fallback to path
 }
 
 # Generate a SHA-256 cryptographic hash signed by your master private key

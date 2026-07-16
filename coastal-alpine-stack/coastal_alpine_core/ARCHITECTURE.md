@@ -8,20 +8,20 @@ It contains both a Python package and a Node.js package, exposing telemetry, sec
 
 ```
 coastal_alpine_core/
-├── coastal_alpine_core/       # Python Package
-│   ├── analytics/             # Device posture and statistical z-score outlier detection
-│   ├── logging/               # PMIC power consumption and sequentially chained audit logging
-│   ├── models.py              # LLM client wrapper for Ollama Gemma 4 with retries
-│   ├── security.py            # Prompt injection scanning and multi-tenant constraints
-│   └── telemetry.py           # Core latency and resource tracking helpers
-├── src/                       # Node.js Package (CommonJS)
-│   ├── database/              # SQLCipher encrypted-at-rest local cache interface
-│   ├── security/              # Actuator command timing and velocity checking
-│   ├── sustainability/        # Battery adaptive sleep interval calculators
-│   ├── attestation_validator.js # TPM 2.0 quote and PCR baseline verifier
-│   └── validation.js          # Graceful payload boundary parsing and clamps
-├── pyproject.toml             # Python build configuration
-└── package.json               # Node.js package description
+|-- coastal_alpine_core/ # Python Package
+| |-- analytics/ # Device posture and statistical z-score outlier detection
+| |-- logging/ # PMIC power consumption and sequentially chained audit logging
+| |-- models.py # LLM client wrapper for Ollama Gemma 4 with retries
+| |-- security.py # Prompt injection scanning and multi-tenant constraints
+| `-- telemetry.py # Core latency and resource tracking helpers
+|-- src/ # Node.js Package (CommonJS)
+| |-- database/ # SQLCipher encrypted-at-rest local cache interface
+| |-- security/ # Actuator command timing and velocity checking
+| |-- sustainability/ # Battery adaptive sleep interval calculators
+| |-- attestation_validator.js # TPM 2.0 quote and PCR baseline verifier
+| `-- validation.js # Graceful payload boundary parsing and clamps
+|-- pyproject.toml # Python build configuration
+`-- package.json # Node.js package description
 ```
 
 ## Core Systems & Mechanisms

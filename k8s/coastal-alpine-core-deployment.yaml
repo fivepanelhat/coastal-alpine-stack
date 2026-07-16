@@ -1,48 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coastal-alpine-core
-  labels:
-    app: coastal-alpine-core
+ name: coastal-alpine-core
+ labels:
+ app: coastal-alpine-core
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: coastal-alpine-core
-  template:
-    metadata:
-      labels:
-        app: coastal-alpine-core
-    spec:
-      containers:
-      - name: core
-        image: coastal-alpine-core:latest
-        ports:
-        - containerPort: 8080
-        env:
-        - name: OLLAMA_HOST
-          value: "http://ollama-service:11434"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
-          runAsUser: 1000
+ replicas: 1
+ selector:
+ matchLabels:
+ app: coastal-alpine-core
+ template:
+ metadata:
+ labels:
+ app: coastal-alpine-core
+ spec:
+ containers:
+ - name: core
+ image: coastal-alpine-core:latest
+ ports:
+ - containerPort: 8080
+ env:
+ - name: OLLAMA_HOST
+ value: "http://ollama-service:11434"
+ resources:
+ requests:
+ memory: "256Mi"
+ cpu: "250m"
+ limits:
+ memory: "512Mi"
+ cpu: "500m"
+ securityContext:
+ allowPrivilegeEscalation: false
+ readOnlyRootFilesystem: true
+ runAsNonRoot: true
+ runAsUser: 1000
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: coastal-alpine-core
+ name: coastal-alpine-core
 spec:
-  selector:
-    app: coastal-alpine-core
-  ports:
-  - protocol: TCP
-    port: 8080
-    targetPort: 8080
+ selector:
+ app: coastal-alpine-core
+ ports:
+ - protocol: TCP
+ port: 8080
+ targetPort: 8080

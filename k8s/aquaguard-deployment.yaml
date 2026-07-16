@@ -1,39 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aquaguard-portal
+ name: aquaguard-portal
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: aquaguard
-  template:
-    metadata:
-      labels:
-        app: aquaguard
-    spec:
-      containers:
-      - name: portal
-        image: aquaguard-portal:latest
-        env:
-        - name: OLLAMA_HOST
-          value: "http://ollama-service:11434"
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "1000m"
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
+ replicas: 1
+ selector:
+ matchLabels:
+ app: aquaguard
+ template:
+ metadata:
+ labels:
+ app: aquaguard
+ spec:
+ containers:
+ - name: portal
+ image: aquaguard-portal:latest
+ env:
+ - name: OLLAMA_HOST
+ value: "http://ollama-service:11434"
+ resources:
+ requests:
+ memory: "1Gi"
+ cpu: "1000m"
+ securityContext:
+ allowPrivilegeEscalation: false
+ readOnlyRootFilesystem: true
+ runAsNonRoot: true
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: aquaguard-portal
+ name: aquaguard-portal
 spec:
-  selector:
-    app: aquaguard
-  ports:
-  - port: 8080
-    targetPort: 8080
+ selector:
+ app: aquaguard
+ ports:
+ - port: 8080
+ targetPort: 8080

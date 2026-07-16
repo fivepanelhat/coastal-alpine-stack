@@ -1,89 +1,89 @@
 version: '3.8'
 
 services:
-  # 1. The Core Message Broker (Weaver)
-  weaver-broker:
-    image: eclipse-mosquitto:2.0
-    container_name: weaver_broker
-    ports:
-      - "1883:1883"   # Standard MQTT (Internal testing)
-      - "8883:8883"   # Secure mTLS MQTT (Production Edge Nodes)
-    volumes:
-      - mosquitto_data:/mosquitto/data
-      - mosquitto_log:/mosquitto/log
-      # Map your secure certificates directly into the broker
-      - ./tls-certs:/mosquitto/config/certs:ro
-    restart: unless-stopped
-    networks:
-      - sovereign_network
+ # 1. The Core Message Broker (Weaver)
+ weaver-broker:
+ image: eclipse-mosquitto:2.0
+ container_name: weaver_broker
+ ports:
+ - "1883:1883" # Standard MQTT (Internal testing)
+ - "8883:8883" # Secure mTLS MQTT (Production Edge Nodes)
+ volumes:
+ - mosquitto_data:/mosquitto/data
+ - mosquitto_log:/mosquitto/log
+ # Map your secure certificates directly into the broker
+ - ./tls-certs:/mosquitto/config/certs:ro
+ restart: unless-stopped
+ networks:
+ - sovereign_network
 
-  # 2. The Log Harvester (Black Box Logger)
-  blackbox-logger:
-    build:
-      context: ./weaver
-      dockerfile: Dockerfile # Points to a standard python setup
-    container_name: blackbox_logger
-    volumes:
-      - local_logs:/app/logs
-    restart: unless-stopped
-    depends_on:
-      - weaver-broker # Ensures the broker is alive before trying to harvest logs
-    networks:
-      - sovereign_network
+ # 2. The Log Harvester (Black Box Logger)
+ blackbox-logger:
+ build:
+ context: ./weaver
+ dockerfile: Dockerfile # Points to a standard python setup
+ container_name: blackbox_logger
+ volumes:
+ - local_logs:/app/logs
+ restart: unless-stopped
+ depends_on:
+ - weaver-broker # Ensures the broker is alive before trying to harvest logs
+ networks:
+ - sovereign_network
 
-  # 3. The Local Web Gateway (SoilGuard / AquaGuard Portal)
-  agritech-portal:
-    build:
-      context: ./SoilGuard-Portal
-    container_name: soilguard_portal
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - WEAVER_EDGE_URL=ssl://weaver-broker:8883
-    restart: unless-stopped
-    depends_on:
-      - weaver-broker
-    networks:
-      - sovereign_network
+ # 3. The Local Web Gateway (SoilGuard / AquaGuard Portal)
+ agritech-portal:
+ build:
+ context: ./SoilGuard-Portal
+ container_name: soilguard_portal
+ ports:
+ - "3000:3000"
+ environment:
+ - NODE_ENV=production
+ - WEAVER_EDGE_URL=ssl://weaver-broker:8883
+ restart: unless-stopped
+ depends_on:
+ - weaver-broker
+ networks:
+ - sovereign_network
 
-  # 4. Prometheus Metrics Engine
-  prometheus:
-    image: prom/prometheus:v2.45.0
-    container_name: sovereign_prometheus
-    volumes:
-      - ./telemetry/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--storage.tsdb.retention.time=15d' # Keep local footprint small
-    restart: unless-stopped
-    networks:
-      - sovereign_network
+ # 4. Prometheus Metrics Engine
+ prometheus:
+ image: prom/prometheus:v2.45.0
+ container_name: sovereign_prometheus
+ volumes:
+ - ./telemetry/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+ - prometheus_data:/prometheus
+ command:
+ - '--config.file=/etc/prometheus/prometheus.yml'
+ - '--storage.tsdb.path=/prometheus'
+ - '--storage.tsdb.retention.time=15d' # Keep local footprint small
+ restart: unless-stopped
+ networks:
+ - sovereign_network
 
-  # 5. Dashboard Layer (Grafana)
-  grafana:
-    image: grafana/grafana-oss:10.0.0
-    container_name: sovereign_grafana
-    ports:
-      - "3001:3000" # Mapped to 3001 to avoid portal collision
-    volumes:
-      - grafana_data:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=lock_down_your_admin_password_here
-      - GF_USERS_ALLOW_SIGN_UP=false
-    restart: unless-stopped
-    networks:
-      - sovereign_network
+ # 5. Dashboard Layer (Grafana)
+ grafana:
+ image: grafana/grafana-oss:10.0.0
+ container_name: sovereign_grafana
+ ports:
+ - "3001:3000" # Mapped to 3001 to avoid portal collision
+ volumes:
+ - grafana_data:/var/lib/grafana
+ environment:
+ - GF_SECURITY_ADMIN_PASSWORD=lock_down_your_admin_password_here
+ - GF_USERS_ALLOW_SIGN_UP=false
+ restart: unless-stopped
+ networks:
+ - sovereign_network
 
 networks:
-  sovereign_network:
-    driver: bridge
+ sovereign_network:
+ driver: bridge
 
 volumes:
-  mosquitto_data:
-  mosquitto_log:
-  local_logs:
-  prometheus_data:
-  grafana_data:
+ mosquitto_data:
+ mosquitto_log:
+ local_logs:
+ prometheus_data:
+ grafana_data:

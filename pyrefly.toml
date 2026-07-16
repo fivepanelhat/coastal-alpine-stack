@@ -1,11 +1,11 @@
 project-includes = [
-    "**/*.py*",
+ "**/*.py*",
 ]
 search_path = [
-    "Blue-Moon-Portal",
-    "AquaGuard-Portal",
-    "SoilGuard-Portal",
-    "coastal_alpine_core",
-    "Weaver",
-    "."
+ "Blue-Moon-Portal",
+ "AquaGuard-Portal",
+ "SoilGuard-Portal",
+ "coastal_alpine_core",
+ "Weaver",
+ "."
 ]
