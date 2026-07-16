@@ -7,23 +7,23 @@ This document outlines the security perimeter setup and SecOps protocols configu
 ## 1. Local Edge Environment Security (`.gitignore`)
 The `.gitignore` has been updated to prevent key edge/development secrets and runtime artifacts from being committed:
 * **Exclusions:**
-  * Local configuration override templates (`.env.*`)
-  * Local private/public certificates (`*.pem`, `*.key`, `*.crt`)
-  * Edge secrets directory (`secrets/`)
-  * Local baseline mapping configuration (`.secrets.baseline`)
-  * Logs and debug directories (`*.log`)
+ * Local configuration override templates (`.env.*`)
+ * Local private/public certificates (`*.pem`, `*.key`, `*.crt`)
+ * Edge secrets directory (`secrets/`)
+ * Local baseline mapping configuration (`.secrets.baseline`)
+ * Logs and debug directories (`*.log`)
 
 ---
 
 ## 2. Secure Configuration Template (`.env.example`)
 Environment templates are set up to capture all required edge keys safely without leaking credentials. 
 * **Key configurations declared:**
-  ```bash
-  MQTT_BROKER_URL=ssl://your-broker-ip:8883
-  MQTT_USER=weaver_edge_node
-  MQTT_PASSWORD=insert_secure_password
-  MAGICBAG_API_KEY=insert_key_here
-  ```
+ ```bash
+ MQTT_BROKER_URL=ssl://your-broker-ip:8883
+ MQTT_USER=weaver_edge_node
+ MQTT_PASSWORD=insert_secure_password
+ MAGICBAG_API_KEY=insert_key_here
+ ```
 
 ---
 

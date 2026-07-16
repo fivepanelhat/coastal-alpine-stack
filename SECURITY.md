@@ -1,4 +1,4 @@
-# Security Policy — coastal-alpine-stack
+# Security Policy - coastal-alpine-stack
 
 Monorepo / superproject for the Kiwi Edge AI stack (submodules: Core, Weaver, portals, Sting, firmware).
 
@@ -6,7 +6,7 @@ Monorepo / superproject for the Kiwi Edge AI stack (submodules: Core, Weaver, po
 
 | Track | Supported |
 | ----- | --------- |
-| `main` | Yes — security updates |
+| `main` | Yes - security updates |
 | Tags `v*` | Best-effort if still deployed |
 
 ## Vulnerability Disclosure
@@ -29,16 +29,16 @@ Do **not** file public issues for exploitable stack defects.
 
 | ID | Threat | Severity | Stack mitigation |
 | -- | ------ | -------- | ---------------- |
-| GHSA-f4j7-r4q5-qw2c | ChromaDB pre-auth code injection (≤1.5.9, **no patch yet**) | Critical | Bind Chroma to `127.0.0.1` only; never expose `/api` externally; disable remote model trust; NetworkPolicy on K3s; watch for fixed release |
+| GHSA-f4j7-r4q5-qw2c | ChromaDB pre-auth code injection (1.5.9, **no patch yet**) | Critical | Bind Chroma to `127.0.0.1` only; never expose `/api` externally; disable remote model trust; NetworkPolicy on K3s; watch for fixed release |
 | GHSA-f4xh-w4cj-qxq8 | LangSmith TracingMiddleware file read | High | `langsmith>=0.8.18` in root requirements |
 | GHSA-4xgf-cpjx-pc3j | pydantic-settings secrets_dir symlink | Medium | `pydantic-settings>=2.14.2` |
 | CodeQL missing workflow permissions | Over-broad `GITHUB_TOKEN` | Warning | `permissions: contents: read` on Enterprise CI |
-| Prompt injection across portals | LLM abuse | High | Shared `SecurityGuard` from Core ≥0.5.4 |
+| Prompt injection across portals | LLM abuse | High | Shared `SecurityGuard` from Core 0.5.4 |
 
 ## Quality & SecOps
 
-- `enterprise-ci.yml` — lint, Bandit, Trivy, SDK import smoke (submodules recursive).
-- `secops.yml` / `redteam.yml` / `ci-scan.yml` — scheduled and PR security paths.
+- `enterprise-ci.yml` - lint, Bandit, Trivy, SDK import smoke (submodules recursive).
+- `secops.yml` / `redteam.yml` / `ci-scan.yml` - scheduled and PR security paths.
 - See also: `SECURITY_MATRIX.md`, `SECURITY_POSTURE_REPORT.md`, `THREAT_MODEL.md`, `PRODUCTION_HARDENING.md`.
 
 ## SLA

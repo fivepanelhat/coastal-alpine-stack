@@ -1,52 +1,52 @@
 name: SecOps Scan
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 */8 * * *"
-  push:
-    branches: [ main ]
-  pull_request:
-    types: [ opened, synchronize, reopened ]
+ workflow_dispatch:
+ schedule:
+ - cron: "0 */8 * * *"
+ push:
+ branches: [ main ]
+ pull_request:
+ types: [ opened, synchronize, reopened ]
 
 concurrency:
-  group: secops-${{ github.ref }}
-  cancel-in-progress: true
+ group: secops-${{ github.ref }}
+ cancel-in-progress: true
 
 permissions:
-  contents: read
+ contents: read
 
 jobs:
-  security-scan:
-    name: Comprehensive SecOps
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
+ security-scan:
+ name: Comprehensive SecOps
+ runs-on: ubuntu-latest
+ steps:
+ - name: Checkout
+ uses: actions/checkout@v4
+ with:
+ submodules: recursive
+ fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+ - name: Set up Python
+ uses: actions/setup-python@v5
+ with:
+ python-version: '3.10'
 
-      - name: Run Bandit SAST
-        run: |
-          pip install bandit
-          bandit -r . -ll --exclude ./tests_security_stress/ || true
+ - name: Run Bandit SAST
+ run: |
+ pip install bandit
+ bandit -r . -ll --exclude ./tests_security_stress/ || true
 
-      - name: Gitleaks Secret Scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Use repo allowlist (historical supabase curl placeholders + stress tests)
-          GITLEAKS_CONFIG_PATH: .gitleaks.toml
+ - name: Gitleaks Secret Scan
+ uses: gitleaks/gitleaks-action@v2
+ env:
+ GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+ # Use repo allowlist (historical supabase curl placeholders + stress tests)
+ GITLEAKS_CONFIG_PATH: .gitleaks.toml
 
-      - name: Trivy Filesystem Scan
-        uses: aquasecurity/trivy-action@0.35.0
-        with:
-          scan-type: 'fs'
-          severity: 'HIGH,CRITICAL'
-          exit-code: '0'   # Do not fail the build on findings for now
+ - name: Trivy Filesystem Scan
+ uses: aquasecurity/trivy-action@0.35.0
+ with:
+ scan-type: 'fs'
+ severity: 'HIGH,CRITICAL'
+ exit-code: '0' # Do not fail the build on findings for now

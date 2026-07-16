@@ -1,6 +1,6 @@
 # Security Policy for Coastal-Alpine-Core
 
-## ⚠️ CRITICAL INFRASTRUCTURE WARNING ⚠️
+## CRITICAL INFRASTRUCTURE WARNING 
 This repository contains the shared architectural core, data models, and cryptographic utilities for the Coastal Alpine Tech Sovereign Stack. 
 
 **Blast Radius:** A vulnerability in this repository propagates to all edge nodes, AI modules, and web portals.
