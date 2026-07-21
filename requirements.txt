@@ -21,7 +21,7 @@ langchain-community>=0.4.2,<1.0.0
 langgraph>=1.0.10
 
 # Sting-Operation-AI dependencies
-ultralytics>=8.4.66
+ultralytics>=8.4.103
 pyyaml>=6.0.1
 roboflow>=1.3.9
 torch>=2.1.0
