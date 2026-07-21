@@ -1,39 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blue-moon-portal
+ name: blue-moon-portal
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: blue-moon-portal
-  template:
-    metadata:
-      labels:
-        app: blue-moon-portal
-    spec:
-      containers:
-      - name: portal
-        image: blue-moon-portal:latest
-        env:
-        - name: OLLAMA_HOST
-          value: "http://ollama-service:11434"
-        resources:
-          requests:
-            memory: "1Gi"
-            cpu: "1000m"
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
+ replicas: 1
+ selector:
+ matchLabels:
+ app: blue-moon-portal
+ template:
+ metadata:
+ labels:
+ app: blue-moon-portal
+ spec:
+ containers:
+ - name: portal
+ image: blue-moon-portal:latest
+ env:
+ - name: OLLAMA_HOST
+ value: "http://ollama-service:11434"
+ resources:
+ requests:
+ memory: "1Gi"
+ cpu: "1000m"
+ securityContext:
+ allowPrivilegeEscalation: false
+ readOnlyRootFilesystem: true
+ runAsNonRoot: true
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: blue-moon-portal
+ name: blue-moon-portal
 spec:
-  selector:
-    app: blue-moon-portal
-  ports:
-  - port: 8080
-    targetPort: 8080
+ selector:
+ app: blue-moon-portal
+ ports:
+ - port: 8080
+ targetPort: 8080

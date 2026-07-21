@@ -5,18 +5,18 @@
 
 ![Sting Operation AI Banner](assets/social_preview.png)
 
-**Coastal Alpine Tech Limited**  
+**Coastal Alpine Tech Limited** 
 *Edge AI | Sovereign Systems | Practical Intelligence*
 
-[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE)  
-[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
-![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)  
-![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square)  
-![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square)  
-[![CI/CD: Active](https://github.com/fivepanelhat/Sting-Operation-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/fivepanelhat/Sting-Operation-AI/actions)  
-[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Sting-Operation-AI/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/Sting-Operation-AI/actions/workflows/secops.yml)  
-[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Sting-Operation-AI/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/Sting-Operation-AI/actions/workflows/redteam.yml)  
-![Dependabot](https://img.shields.io/badge/Dependencies-Monitored-brightgreen?style=flat-square&logo=dependabot)  
+[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE) 
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/) 
+![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white) 
+![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square) 
+![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square) 
+[![CI/CD: Active](https://github.com/fivepanelhat/Sting-Operation-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/fivepanelhat/Sting-Operation-AI/actions) 
+[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Sting-Operation-AI/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/Sting-Operation-AI/actions/workflows/secops.yml) 
+[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/Sting-Operation-AI/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/Sting-Operation-AI/actions/workflows/redteam.yml) 
+![Dependabot](https://img.shields.io/badge/Dependencies-Monitored-brightgreen?style=flat-square&logo=dependabot) 
 ![Sustainability](https://img.shields.io/badge/EECA%20NZ-Carbon%20Tracked-green?style=flat-square)
 
 Object detection system for protecting beehives by identifying honeybees versus invasive wasps using YOLO models and edge AI.
@@ -39,9 +39,9 @@ The problem we are solving is the accurate real-time detection and differentiati
 
 Additional challenges addressed:
 
-1. **Invasive Species Threat** — German wasps (*Vespula germanica*) and Yellow-legged hornets (*Vespa velutina*) threaten honeybee populations.
-2. **Labeling and Training Accuracy** — Incorrect class mappings and limited datasets reduce model reliability, especially for wasp detection.
-3. **Edge Deployment Constraints** — Traditional cloud-based vision systems introduce latency and privacy risks in remote apiaries.
+1. **Invasive Species Threat** - German wasps (*Vespula germanica*) and Yellow-legged hornets (*Vespa velutina*) threaten honeybee populations.
+2. **Labeling and Training Accuracy** - Incorrect class mappings and limited datasets reduce model reliability, especially for wasp detection.
+3. **Edge Deployment Constraints** - Traditional cloud-based vision systems introduce latency and privacy risks in remote apiaries.
 
 ---
 
@@ -72,13 +72,13 @@ git clone https://github.com/fivepanelhat/Sting-Operation-AI.git
 cd Sting-Operation-AI
 
 python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
+source venv/bin/activate # Windows: venv\Scripts\activate
 
 # Install shared core and dependencies
 pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
-cp .env.example .env   # If applicable
+cp .env.example .env # If applicable
 ```
 
 ### Setup & Validation
@@ -104,18 +104,18 @@ python predict.py data/images/val/
 
 ```mermaid
 flowchart TD
-    A["Input Images/Video"] --> B["YOLO Object Detection"]
-    B --> C["Class Mapping<br/>(Bee=0, Wasp=1, Hornet=2)"]
-    C --> D["Edge Inference<br/>(RPi + Hailo-10H)"]
-    D --> E["LangGraph / Ollama Reasoning"]
-    E --> F["Actions<br/>(Alerts, Servo Tracking, Relays)"]
-    
-    subgraph "Data Sovereignty"
-        B
-        D
-    end
-    
-    style D fill:#4ade80,stroke:#166534
+ A["Input Images/Video"] --> B["YOLO Object Detection"]
+ B --> C["Class Mapping<br/>(Bee=0, Wasp=1, Hornet=2)"]
+ C --> D["Edge Inference<br/>(RPi + Hailo-10H)"]
+ D --> E["LangGraph / Ollama Reasoning"]
+ E --> F["Actions<br/>(Alerts, Servo Tracking, Relays)"]
+ 
+ subgraph "Data Sovereignty"
+ B
+ D
+ end
+ 
+ style D fill:#4ade80,stroke:#166534
 ```
 
 *For full details, see [docs/](./docs/) and Edge AI Hardware Guide.*
@@ -126,15 +126,15 @@ flowchart TD
 
 ```bash
 Sting-Operation-AI/
-├── config/              # data.yaml and configurations
-├── data/                # images, labels, raw annotations
-├── models/              # base_weights and trained_models
-├── tools/               # tidy_and_fix.py, verify_setup.py
-├── predict.py
-├── train.py
-├── setup_project.bat
-├── .github/workflows/   # CI/CD
-└── README.md
+|-- config/ # data.yaml and configurations
+|-- data/ # images, labels, raw annotations
+|-- models/ # base_weights and trained_models
+|-- tools/ # tidy_and_fix.py, verify_setup.py
+|-- predict.py
+|-- train.py
+|-- setup_project.bat
+|-- .github/workflows/ # CI/CD
+`-- README.md
 ```
 
 ---
@@ -143,14 +143,14 @@ Sting-Operation-AI/
 
 ### Hardware
 
-- Raspberry Pi 5 + Hailo-10H NPU  
+- Raspberry Pi 5 + Hailo-10H NPU 
 - Camera modules and potential servo/relay actuators
 
 ### Software
 
-- **Detection:** Ultralytics YOLO  
-- **Orchestration:** Local scripts with optional LangGraph / Ollama  
-- **Dataset:** Roboflow integration  
+- **Detection:** Ultralytics YOLO 
+- **Orchestration:** Local scripts with optional LangGraph / Ollama 
+- **Dataset:** Roboflow integration 
 - **Deployment:** Edge-ready with systemd/Docker support
 
 ---
@@ -182,19 +182,19 @@ Sting-Operation-AI/
 ## Documentation
 
 - [Edge AI & IoT Hardware Setup Guide](./docs/)
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — Detailed system design
-- [CHANGELOG.md](./CHANGELOG.md) — Version history
-- [DEVELOPMENT.md](./DEVELOPMENT.md) — Contribution guidelines
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Detailed system design
+- [CHANGELOG.md](./CHANGELOG.md) - Version history
+- [DEVELOPMENT.md](./DEVELOPMENT.md) - Contribution guidelines
 
 ---
 
 ## License
 
-This project is licensed under the Coastal Alpine Tech Limited License — see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the Coastal Alpine Tech Limited License - see the [LICENSE](./LICENSE) file for details.
 
 ---
 
-**Built with focus on data sovereignty and edge intelligence.**  
+**Built with focus on data sovereignty and edge intelligence.** 
 Questions or collaboration? Contact Coastal Alpine Tech Limited.
 
 ---

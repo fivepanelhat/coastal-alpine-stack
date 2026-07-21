@@ -1,12 +1,20 @@
 # Changelog
 
+
+## Hybrid platform update (July 2026)
+
+- Dual-platform installers: `install.sh` (Linux/macOS) and `install.ps1` (Windows)
+- Mermaid system maps updated for hybridisation (Core | Weaver | Aether | stack) and Windows + Linux hosts
+- Architecture overview images refreshed for hybrid stack + dual OS targets
+- Developer setup / installation docs cover Windows and Linux prerequisites and packages
+
 All notable changes to the Coastal Alpine Stack will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [Unreleased] - 2026-06-16 — Enterprise Hardening & Data Flywheel Release
+## [Unreleased] - 2026-06-16 - Enterprise Hardening & Data Flywheel Release
 
 ### Added
 - **Full Data Flywheel system** with automatic trajectory recording across all portals
@@ -17,20 +25,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `DataFlywheel` and `Trajectory` classes in `coastal_alpine_core`
 - `BayesianOptimisationHook` scaffolding
 - New high-level documentation:
-  - `ARCHITECTURE.md` (system overview)
-  - `DATA_FLYWHEEL_GUIDE.md` (detailed usage guide)
-  - Updated root and individual repository READMEs
+ - `ARCHITECTURE.md` (system overview)
+ - `DATA_FLYWHEEL_GUIDE.md` (detailed usage guide)
+ - Updated root and individual repository READMEs
 
 ### Changed
 - Replaced legacy input guards with modern `SecurityGuard` + structured `SecurityResult`
 - Major upgrade to `TelemetryTracker` (context manager, psutil metrics, structured JSON logging)
 - CI/CD standardisation and hardening:
-  - All workflows now use Python 3.10 + pip caching
-  - Replaced unreliable manual Gitleaks installation with official GitHub Action
-  - Made Enterprise CI stricter (reduced error masking)
+ - All workflows now use Python 3.10 + pip caching
+ - Replaced unreliable manual Gitleaks installation with official GitHub Action
+ - Made Enterprise CI stricter (reduced error masking)
 - Packaging improvements:
-  - Added modern `pyproject.toml` to Weaver
-  - Improved `pyproject.toml` and dependency management in Coastal-Alpine-Core
+ - Added modern `pyproject.toml` to Weaver
+ - Improved `pyproject.toml` and dependency management in Coastal-Alpine-Core
 - Docker base image aligned to Python 3.10 for consistency
 
 ### Improved

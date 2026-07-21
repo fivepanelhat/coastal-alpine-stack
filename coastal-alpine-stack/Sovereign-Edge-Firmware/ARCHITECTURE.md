@@ -8,14 +8,14 @@ It interfaces with physical sensors and relays, performs secure network connecti
 
 ```
 Sovereign-Edge-Firmware/
-├── include/
-│   ├── edge_auth.h        # WiFi client connection and JWT registration definitions
-│   └── edge_mqtt.h        # Secure mTLS MQTT subscriber and publisher structures
-├── src/
-│   ├── main.cpp           # Primary execution setup and reporting loop
-│   ├── edge_auth.cpp      # WiFi connection and JWT auth handshake implementation
-│   └── edge_mqtt.cpp      # MQTT client, backoff circuit breakers, and publishers
-└── platformio.ini         # PlatformIO hardware and library dependency manager
+|-- include/
+| |-- edge_auth.h # WiFi client connection and JWT registration definitions
+| `-- edge_mqtt.h # Secure mTLS MQTT subscriber and publisher structures
+|-- src/
+| |-- main.cpp # Primary execution setup and reporting loop
+| |-- edge_auth.cpp # WiFi connection and JWT auth handshake implementation
+| `-- edge_mqtt.cpp # MQTT client, backoff circuit breakers, and publishers
+`-- platformio.ini # PlatformIO hardware and library dependency manager
 ```
 
 ## System Mechanisms

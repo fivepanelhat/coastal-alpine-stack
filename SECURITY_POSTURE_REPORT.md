@@ -1,20 +1,20 @@
 # Unified Security Posture & Hardening Report
 
-**Coastal Alpine Tech Kiwi Edge AI Stack**  
-**Date**: 11 July 2026  
+**Coastal Alpine Tech Kiwi Edge AI Stack** 
+**Date**: 11 July 2026 
 **Scope**: Coastal-Alpine-Core, Weaver, Blue-Moon-Portal, AquaGuard-Portal, SoilGuard-Portal, Sting-Operation-AI, coastal-alpine-stack, Aether, Front_Line_Whanau, whanau-preterm-support-hub
 
 ## Executive Summary
 
 The stack was re-audited against **GitHub security notifications** (Dependabot, Code Scanning, GHSA/NVD) and local `pip-audit` / `npm audit` runs.
 
-**Overall posture**: Strong — shared `SecurityGuard`, SecOps/red-team CI, least-privilege workflow tokens, and dependency floors for known CVEs. One **critical** upstream gap remains: ChromaDB pre-auth RCE has **no fixed release** yet (network isolation required).
+**Overall posture**: Strong - shared `SecurityGuard`, SecOps/red-team CI, least-privilege workflow tokens, and dependency floors for known CVEs. One **critical** upstream gap remains: ChromaDB pre-auth RCE has **no fixed release** yet (network isolation required).
 
 ## Notification sources used
 
 | Source | Result (2026-07-11) |
 | ------ | ------------------- |
-| Dependabot open alerts (all org repos scanned) | None open (many repos previously lacked Dependabot config — now enabled) |
+| Dependabot open alerts (all org repos scanned) | None open (many repos previously lacked Dependabot config - now enabled) |
 | Code scanning open | coastal-alpine-stack: missing workflow permissions (fixed); Sting: clear-text API key write (fixed) |
 | `pip-audit` | Aether env transitive: langsmith, pydantic-settings (floored in Weaver/stack); chromadb GHSA critical (mitigated, not patched upstream) |
 | `npm audit` (Front_Line, whanau, portals) | 0 vulnerabilities |
@@ -61,9 +61,9 @@ The stack was re-audited against **GitHub security notifications** (Dependabot, 
 
 ## Remaining gaps
 
-1. **ChromaDB GHSA-f4j7-r4q5-qw2c** — wait for fixed release; keep network isolation.
-2. **Secret scanning** disabled on some repos (e.g. Weaver) — enable at org/repo settings when plan allows.
-3. **Code scanning** not configured on all repos (Aether, FLW, etc.) — enable CodeQL where feasible.
+1. **ChromaDB GHSA-f4j7-r4q5-qw2c** - wait for fixed release; keep network isolation.
+2. **Secret scanning** disabled on some repos (e.g. Weaver) - enable at org/repo settings when plan allows.
+3. **Code scanning** not configured on all repos (Aether, FLW, etc.) - enable CodeQL where feasible.
 4. Full multi-portal e2e security regression in a single CI job still optional (member repos own CI).
 
 ## Conclusion

@@ -1,15 +1,15 @@
 # Coastal Alpine Stack: Edge Agentic AI Workspace (v1.2.0)
 
-**Coastal Alpine Tech Limited**  
+**Coastal Alpine Tech Limited** 
 *Edge AI | Sovereign Systems | Practical Intelligence*
 
-[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE)  
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
-![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)  
-![Hardware](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%20%2B%20Hailo--10H%20NPU-orange.svg)  
-[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/coastal-alpine-stack/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/secops.yml)  
-[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/coastal-alpine-stack/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/redteam.yml)  
-![Interop](https://img.shields.io/badge/Interop-MQTT%20%7C%20OPC--UA-orange?style=flat-square)  
+[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE) 
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/) 
+![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white) 
+![Hardware](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%20%2B%20Hailo--10H%20NPU-orange.svg) 
+[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/coastal-alpine-stack/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/secops.yml) 
+[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/coastal-alpine-stack/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/coastal-alpine-stack/actions/workflows/redteam.yml) 
+![Interop](https://img.shields.io/badge/Interop-MQTT%20%7C%20OPC--UA-orange?style=flat-square) 
 ![Sustainability](https://img.shields.io/badge/EECA%20NZ-Carbon%20Tracked-green?style=flat-square)
 
 A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autonomous agricultural control, and heavy-industry client compliance.
@@ -28,9 +28,9 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 
 ## The Problems We Are Solving
 
-1. **Cloud Dependability & Intermittent Connectivity** — Remote farms, forestry blocks, and construction sites lose connection frequently. The stack operates 100% offline at the edge.
-2. **Data Sovereignty & Client Isolation** — High-compliance industrial sectors cannot permit client operational data to leak to the public cloud or cross-contaminate. The stack enforces strict service-level and DB-level tenant boundaries.
-3. **Pest Control Harm to Beneficial Species** — Standard broad-spectrum pest control destroys native and beneficial insect populations. The stack uses precision YOLO detection to target pests while sparing beneficial honeybees.
+1. **Cloud Dependability & Intermittent Connectivity** - Remote farms, forestry blocks, and construction sites lose connection frequently. The stack operates 100% offline at the edge.
+2. **Data Sovereignty & Client Isolation** - High-compliance industrial sectors cannot permit client operational data to leak to the public cloud or cross-contaminate. The stack enforces strict service-level and DB-level tenant boundaries.
+3. **Pest Control Harm to Beneficial Species** - Standard broad-spectrum pest control destroys native and beneficial insect populations. The stack uses precision YOLO detection to target pests while sparing beneficial honeybees.
 
 ---
 
@@ -58,26 +58,26 @@ A unified sovereign edge AI ecosystem coordinating biosecurity sentinels, autono
 
 1. **Lock down the hardware perimeter** (on the Pi 5 target):
 
-   ```bash
-   chmod +x ./rpi_secops/secure_boot_setup.sh
-   ./rpi_secops/secure_boot_setup.sh
-   ```
+ ```bash
+ chmod +x ./rpi_secops/secure_boot_setup.sh
+ ./rpi_secops/secure_boot_setup.sh
+ ```
 
-   *Note: This stages the EEPROM security parameters, configures PCIe Gen 3/NPU device overlays, and configures the read-only root system layouts.*
+ *Note: This stages the EEPROM security parameters, configures PCIe Gen 3/NPU device overlays, and configures the read-only root system layouts.*
 
 2. **Clone and build Python environment**:
 
-   ```bash
-   git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
-   cd coastal-alpine-stack
+ ```bash
+ git clone https://github.com/fivepanelhat/coastal-alpine-stack.git
+ cd coastal-alpine-stack
 
-   python -m venv .venv
-   source .venv/bin/activate  # Windows: .venv\Scripts\activate
+ python -m venv .venv
+ source .venv/bin/activate # Windows: .venv\Scripts\activate
 
-   # Install shared core in editable mode
-   pip install -e ./coastal_alpine_core
-   pip install -r requirements-dev.txt
-   ```
+ # Install shared core in editable mode
+ pip install -e ./coastal_alpine_core
+ pip install -r requirements-dev.txt
+ ```
 
 ### Model Setup
 
@@ -100,34 +100,34 @@ The system runs completely local, utilizing a shared core library to power safet
 
 ```mermaid
 flowchart TD
-    subgraph "Coastal Alpine Tech Monorepo"
-        Core[Shared Core Package <br/> coastal_alpine_core]
-        
-        Weaver[Weaver Agent <br/> Multi-Tenant Helpdesk]
-        Moon[Blue-Moon-Portal <br/> Crop Tracker]
-        Sting[Sting-Operation-AI <br/> Biosecurity Sentinel]
-        Aqua[AquaGuard-Portal <br/> Water Monitor]
-        
-        Weaver & Moon & Sting & Aqua -->|Imports| Core
-    end
-    
-    Core --> Telemetry[telemetry.py <br/> Power & Latency]
-    Core --> Models[models.py <br/> Ollama Client Wrapper]
-    Core --> Security[security.py <br/> SQL/Prompt Guard]
+ subgraph "Coastal Alpine Tech Monorepo"
+ Core[Shared Core Package <br/> coastal_alpine_core]
+ 
+ Weaver[Weaver Agent <br/> Multi-Tenant Helpdesk]
+ Moon[Blue-Moon-Portal <br/> Crop Tracker]
+ Sting[Sting-Operation-AI <br/> Biosecurity Sentinel]
+ Aqua[AquaGuard-Portal <br/> Water Monitor]
+ 
+ Weaver & Moon & Sting & Aqua -->|Imports| Core
+ end
+ 
+ Core --> Telemetry[telemetry.py <br/> Power & Latency]
+ Core --> Models[models.py <br/> Ollama Client Wrapper]
+ Core --> Security[security.py <br/> SQL/Prompt Guard]
 
-    subgraph "Edge Deployment Hardware"
-        RPi[Raspberry Pi 5 Node]
-        Hailo[Hailo-10H NPU]
-        Ollama[Local Ollama Server]
-        Sensors[ESP32 / CSI Cameras]
-        
-        Weaver & Moon & Sting & Aqua -->|Deployed on| RPi
-        Sting -->|Hardware Accelerated via| Hailo
-        Moon & Weaver & Aqua -->|Local SLM via| Ollama
-        Moon & Aqua -->|Ingests data from| Sensors
-    end
-    
-    style Core fill:#4ade80,stroke:#166534
+ subgraph "Edge Deployment Hardware"
+ RPi[Raspberry Pi 5 Node]
+ Hailo[Hailo-10H NPU]
+ Ollama[Local Ollama Server]
+ Sensors[ESP32 / CSI Cameras]
+ 
+ Weaver & Moon & Sting & Aqua -->|Deployed on| RPi
+ Sting -->|Hardware Accelerated via| Hailo
+ Moon & Weaver & Aqua -->|Local SLM via| Ollama
+ Moon & Aqua -->|Ingests data from| Sensors
+ end
+ 
+ style Core fill:#4ade80,stroke:#166534
 ```
 
 *For more details on the architecture of each individual repo, see their sub-directories. You can edit the Mermaid diagram directly in this README.*
@@ -138,14 +138,14 @@ flowchart TD
 
 ```bash
 coastal-alpine-stack/
-├── coastal_alpine_core/       # Shared Python library for telemetry & LLM controls
-├── AquaGuard-Portal/          # Autonomous Water Quality & Aquaculture Monitor
-├── Blue-Moon-Portal/          # Agritech IoT Crop Optimization Portal
-├── Sting-Operation-AI/        # Real-time computer vision wasp detection sentinel
-├── weaver/                    # White-label multi-tenant governance agent scaffold
-├── LICENSE                    # Proprietary License
-├── README.md                  # This entry point
-└── CHANGELOG.md               # Unified change log
+|-- coastal_alpine_core/ # Shared Python library for telemetry & LLM controls
+|-- AquaGuard-Portal/ # Autonomous Water Quality & Aquaculture Monitor
+|-- Blue-Moon-Portal/ # Agritech IoT Crop Optimization Portal
+|-- Sting-Operation-AI/ # Real-time computer vision wasp detection sentinel
+|-- weaver/ # White-label multi-tenant governance agent scaffold
+|-- LICENSE # Proprietary License
+|-- README.md # This entry point
+`-- CHANGELOG.md # Unified change log
 ```
 
 ---
@@ -171,11 +171,11 @@ coastal-alpine-stack/
 
 ## Documentation
 
-- [weaver/README.md](./weaver/README.md) — Weaver Agents documentation
-- [AquaGuard-Portal/README.md](./AquaGuard-Portal/README.md) — AquaGuard-Portal documentation
-- [Blue-Moon-Portal/README.md](./Blue-Moon-Portal/README.md) — Blue-Moon-Portal documentation
-- [Sting-Operation-AI/README.md](./Sting-Operation-AI/README.md) — Sting-Operation-AI documentation
-- [CHANGELOG.md](./CHANGELOG.md) — Version history
+- [weaver/README.md](./weaver/README.md) - Weaver Agents documentation
+- [AquaGuard-Portal/README.md](./AquaGuard-Portal/README.md) - AquaGuard-Portal documentation
+- [Blue-Moon-Portal/README.md](./Blue-Moon-Portal/README.md) - Blue-Moon-Portal documentation
+- [Sting-Operation-AI/README.md](./Sting-Operation-AI/README.md) - Sting-Operation-AI documentation
+- [CHANGELOG.md](./CHANGELOG.md) - Version history
 
 ---
 
@@ -198,11 +198,11 @@ Our tests run locally on the Raspberry Pi 5 to record execution time and power f
 
 ## License
 
-Licensed under the Coastal Alpine Tech Limited License — see [LICENSE](./LICENSE) for details.
+Licensed under the Coastal Alpine Tech Limited License - see [LICENSE](./LICENSE) for details.
 
 ---
 
-**Built with focus on data sovereignty and edge intelligence.**  
+**Built with focus on data sovereignty and edge intelligence.** 
 Questions or collaboration? Contact Coastal Alpine Tech Limited.
 
 ---
