@@ -3,16 +3,16 @@ FROM python:3.10-slim-bookworm AS builder
 
 # Enforce strict deterministic behavior and prevent disk-write bloat
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1
+ PYTHONUNBUFFERED=1 \
+ PIP_NO_CACHE_DIR=1 \
+ PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # Install bare-minimum system dependencies for C++ / NPU bindings
 # We immediately purge the apt cache to keep the layer size down
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libglib2.0-0 \
-    && rm -rf /var/lib/apt/lists/*
+ build-essential \
+ libglib2.0-0 \
+ && rm -rf /var/lib/apt/lists/*
 
 # Set up the isolated working directory
 WORKDIR /opt/coastal_alpine
@@ -27,15 +27,15 @@ COPY requirements.txt .
 
 # Install production edge dependencies
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt
+ pip install -r requirements.txt
 
 # --- Final Edge Runner Stage ---
 FROM python:3.10-slim-bookworm AS runner
 
 # Enforce environment variables for the edge node execution
 ENV PATH="/opt/venv/bin:$PATH" \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+ PYTHONDONTWRITEBYTECODE=1 \
+ PYTHONUNBUFFERED=1
 
 # SecOps Directive: Create a strictly permissioned, non-root user.
 # We absolutely do not run edge inference containers as root.

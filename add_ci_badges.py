@@ -19,9 +19,9 @@ def get_owner_repo(repo_path):
                 )
                 if m:
                     return m.group(1), m.group(2)
-    # Fallback: use folder name as repo name and unknown owner
+    # Fallback: use folder name as repo name and the fivepanelhat org
     repo_name = os.path.basename(repo_path)
-    return "UNKNOWN_OWNER", repo_name
+    return "fivepanelhat", repo_name
 
 
 def has_badge(content):

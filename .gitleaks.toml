@@ -4,13 +4,32 @@ title = "Coastal Alpine Tech Gitleaks Config"
 useDefault = true
 
 [allowlist]
+description = "Stress tests, local DBs, and retired example supabase curl snippets (localhost-only placeholders)"
 paths = [
-  ".gitleaks.toml",
-  "tests_security_stress/",
-  "swarm_memory.db",
+ '''\.gitleaks\.toml''',
+ '''tests_security_stress/''',
+ '''swarm_memory\.db''',
+ # Historical edge-function examples (no longer in tree); curl demos used local 127.0.0.1 + placeholder apiKeys
+ '''supabase/''',
+ '''supabase/functions/''',
 ]
 regexes = [
-  'example\.com',
-  "localhost",
-  '127\.0\.0\.1',
+ '''example\.com''',
+ '''localhost''',
+ '''127\.0\.0\.1''',
+ '''YOUR_[A-Z0-9_]+''',
+ '''changeme''',
+ '''placeholder''',
+ '''xxxx+''',
+]
+# Known historical false positives (placeholder keys in removed supabase function docs)
+commits = [
+ "fc666308a67172a2a3ca685b56dbeb386ee0ef51",
+ "4156fdafb9d12ae4ddf3af6e2c2b68f0ab6f5f0b",
+]
+fingerprints = [
+ "fc666308a67172a2a3ca685b56dbeb386ee0ef51:supabase/functions/skill-monitor-fleet/index.ts:curl-auth-header:42",
+ "fc666308a67172a2a3ca685b56dbeb386ee0ef51:supabase/functions/skill-monitor-fleet/index.ts:generic-api-key:43",
+ "4156fdafb9d12ae4ddf3af6e2c2b68f0ab6f5f0b:supabase/functions/weaver-orchestrator/index.ts:generic-api-key:43",
+ "4156fdafb9d12ae4ddf3af6e2c2b68f0ab6f5f0b:supabase/functions/weaver-orchestrator/index.ts:curl-auth-header:42",
 ]

@@ -16,9 +16,6 @@
 [submodule "coastal_alpine_core"]
 	path = coastal_alpine_core
 	url = https://github.com/fivepanelhat/coastal-alpine-core
-[submodule "fivepanelhat"]
-	path = fivepanelhat
-	url = https://github.com/fivepanelhat/fivepanelhat
 [submodule "weaver"]
 	path = weaver
 	url = https://github.com/fivepanelhat/Weaver.git

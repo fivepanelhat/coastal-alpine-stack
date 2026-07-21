@@ -1,4 +1,4 @@
-# Production Hardening Guide — Coastal Alpine Stack
+# Production Hardening Guide - Coastal Alpine Stack
 
 ## Overview
 This guide provides enterprise and government-grade hardening recommendations for deploying the Coastal Alpine Stack in production environments (edge, K3s, air-gapped, or sovereign data centers).

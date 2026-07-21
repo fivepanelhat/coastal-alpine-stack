@@ -67,7 +67,7 @@ jobs:
       - name: Integration import checks
         # tests/ holds a HIL chaos simulator, not unit suites, and the
         # adversarial suite (tests_security_stress) runs in the scheduled
-        # RedTeam workflow — this job proves the SDK installs and exposes
+        # RedTeam workflow - this job proves the SDK installs and exposes
         # its public surface from a clean submodule checkout.
         run: |
           python -c "import coastal_alpine_core; print('core', coastal_alpine_core.__name__, 'ok')"
