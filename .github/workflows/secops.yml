@@ -38,7 +38,7 @@ jobs:
           bandit -r . -ll --exclude ./tests_security_stress/ || true
 
       - name: Gitleaks Secret Scan
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Use repo allowlist (historical supabase curl placeholders + stress tests)
