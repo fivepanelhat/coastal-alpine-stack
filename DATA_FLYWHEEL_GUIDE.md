@@ -1,4 +1,4 @@
-# Data Flywheel Guide — Coastal Alpine Stack
+# Data Flywheel Guide - Coastal Alpine Stack
 
 ## Overview
 
@@ -26,10 +26,10 @@ Main interface for recording and managing trajectories.
 
 **Key Methods**:
 - `record_trajectory(trajectory)`
-- `record_hardware_outcome(plan_id, action, success, ...)` — Convenience method used after `enforce_plan()`
+- `record_hardware_outcome(plan_id, action, success, ...)` - Convenience method used after `enforce_plan()`
 - `update_with_human_feedback(original_id, feedback, new_outcome)`
-- `evaluate_trajectory(trajectory, llm_judge_func=None)` — Rule-based + optional LLM judge
-- `curate_golden_set(min_quality=0.7)` — Returns high-quality trajectories for training
+- `evaluate_trajectory(trajectory, llm_judge_func=None)` - Rule-based + optional LLM judge
+- `curate_golden_set(min_quality=0.7)` - Returns high-quality trajectories for training
 - `get_recent_trajectories(limit=100)`
 
 **Usage Pattern**:
@@ -40,10 +40,10 @@ flywheel = DataFlywheel(storage_path="flywheel_my_portal.jsonl")
 
 # Automatic recording after plan generation or hardware action
 flywheel.record_hardware_outcome(
-    plan_id=plan["plan_id"],
-    action="irrigation",
-    success=True,
-    metadata=plan
+ plan_id=plan["plan_id"],
+ action="irrigation",
+ success=True,
+ metadata=plan
 )
 ```
 
@@ -54,13 +54,13 @@ Currently contains placeholder methods that can be connected to a real optimiser
 
 ## Integration Across the Stack
 
-| Component               | Integration Level      | What is Recorded                          |
+| Component | Integration Level | What is Recorded |
 |-------------------------|------------------------|-------------------------------------------|
-| Blue-Moon-Portal        | Full                   | Plan generation + Hardware outcomes       |
-| AquaGuard-Portal        | Full                   | Plan generation + Hardware outcomes       |
-| SoilGuard-Portal        | Full                   | Plan generation + Hardware outcomes       |
-| Sting-Operation-AI      | Full (Inference)       | YOLO detection results + confidence       |
-| Weaver                  | Partial                | Orchestrator message processing           |
+| Blue-Moon-Portal | Full | Plan generation + Hardware outcomes |
+| AquaGuard-Portal | Full | Plan generation + Hardware outcomes |
+| SoilGuard-Portal | Full | Plan generation + Hardware outcomes |
+| Sting-Operation-AI | Full (Inference) | YOLO detection results + confidence |
+| Weaver | Partial | Orchestrator message processing |
 
 All portals now automatically record trajectories when:
 - An optimization plan is generated
@@ -72,9 +72,9 @@ Operators can provide feedback on specific trajectories:
 
 ```python
 flywheel.update_with_human_feedback(
-    original_trajectory_id="traj-abc123",
-    feedback="Irrigation should have been higher",
-    new_outcome="human_corrected"
+ original_trajectory_id="traj-abc123",
+ feedback="Irrigation should have been higher",
+ new_outcome="human_corrected"
 )
 ```
 
@@ -82,7 +82,7 @@ Feedback is stored as new correction trajectories and can be used for quality sc
 
 ## Evaluation Loop
 
-`evaluate_trajectory()` assigns a `quality_score` (0.0–1.0) using:
+`evaluate_trajectory()` assigns a `quality_score` (0.0-1.0) using:
 - Rule-based heuristics (outcome, `requires_human_review` flag)
 - Optional LLM-as-Judge (pass any callable that scores text)
 
@@ -100,11 +100,11 @@ These are stored locally on the edge node for full data sovereignty.
 
 ## Future Roadmap
 
-1. **Prometheus Metrics Export** — Expose flywheel statistics as metrics.
-2. **Active Learning Pipeline** — Use low-confidence or failed trajectories to trigger targeted data collection.
-3. **LLM-as-Judge Refinement** — Improve automated quality scoring.
-4. **LoRA Fine-Tuning Integration** — Periodically fine-tune local models using curated golden sets.
-5. **Bayesian Optimisation** — Replace placeholder hook with real multi-objective optimiser.
+1. **Prometheus Metrics Export** - Expose flywheel statistics as metrics.
+2. **Active Learning Pipeline** - Use low-confidence or failed trajectories to trigger targeted data collection.
+3. **LLM-as-Judge Refinement** - Improve automated quality scoring.
+4. **LoRA Fine-Tuning Integration** - Periodically fine-tune local models using curated golden sets.
+5. **Bayesian Optimisation** - Replace placeholder hook with real multi-objective optimiser.
 
 ## Related Documentation
 
@@ -114,4 +114,4 @@ These are stored locally on the edge node for full data sovereignty.
 
 ---
 
-*Maintained by Coastal Alpine Tech — June 2026*
+*Maintained by Coastal Alpine Tech - June 2026*

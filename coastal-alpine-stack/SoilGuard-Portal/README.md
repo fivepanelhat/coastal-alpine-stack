@@ -5,19 +5,19 @@
 
 ![SoilGuard Portal Banner](assets/social_preview.png)
 
-**Coastal Alpine Tech Limited**  
+**Coastal Alpine Tech Limited** 
 *Edge AI | Sovereign Systems | Practical Intelligence*
 
-[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE)  
-[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)  
-![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white)  
-![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square)  
-![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square)  
-[![CI/CD: Active](https://github.com/fivepanelhat/SoilGuard-Portal/actions/workflows/ci.yml/badge.svg)](https://github.com/fivepanelhat/SoilGuard-Portal/actions)  
-[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/SoilGuard-Portal/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/SoilGuard-Portal/actions/workflows/secops.yml)  
-[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/SoilGuard-Portal/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/SoilGuard-Portal/actions/workflows/redteam.yml)  
-![Dependabot](https://img.shields.io/badge/Dependencies-Monitored-brightgreen?style=flat-square&logo=dependabot)  
-![Interop](https://img.shields.io/badge/Interop-MQTT%20%7C%20OPC--UA-orange?style=flat-square)  
+[![License](https://img.shields.io/badge/License-Proprietary--Commercial-blue?style=flat-square)](LICENSE) 
+[![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/) 
+![Hardware Target](https://img.shields.io/badge/Hardware-Raspberry%20Pi%205%2016GB-C11A5B?style=flat-square&logo=raspberry-pi&logoColor=white) 
+![NPU Acceleration](https://img.shields.io/badge/NPU-Hailo--10H%20Accelerated-005A9C?style=flat-square) 
+![Sovereignty](https://img.shields.io/badge/Sovereignty-NZ%20Data%20Bound-00247D?style=flat-square) 
+[![CI/CD: Active](https://github.com/fivepanelhat/SoilGuard-Portal/actions/workflows/ci.yml/badge.svg)](https://github.com/fivepanelhat/SoilGuard-Portal/actions) 
+[![SecOps Scan](https://img.shields.io/github/actions/workflow/status/fivepanelhat/SoilGuard-Portal/secops.yml?branch=main&label=SecOps%20Scan&style=flat-square&color=success)](https://github.com/fivepanelhat/SoilGuard-Portal/actions/workflows/secops.yml) 
+[![RedTeam](https://img.shields.io/github/actions/workflow/status/fivepanelhat/SoilGuard-Portal/redteam.yml?branch=main&label=RedTeam&style=flat-square&color=critical)](https://github.com/fivepanelhat/SoilGuard-Portal/actions/workflows/redteam.yml) 
+![Dependabot](https://img.shields.io/badge/Dependencies-Monitored-brightgreen?style=flat-square&logo=dependabot) 
+![Interop](https://img.shields.io/badge/Interop-MQTT%20%7C%20OPC--UA-orange?style=flat-square) 
 ![Sustainability](https://img.shields.io/badge/EECA%20NZ-Carbon%20Tracked-green?style=flat-square)
 
 Autonomous on-premise soil quality monitoring and agricultural control system for New Zealand dairy farms, glasshouses, and orchards. Powered by local edge AI, it runs fully offline in remote and regulated rural catchments to maintain data sovereignty.
@@ -36,10 +36,10 @@ Autonomous on-premise soil quality monitoring and agricultural control system fo
 
 ## The Problem We Are Solving
 
-1. **Cloud Blackouts in Rural NZ** — Remote farms and high-country stations regularly experience cell tower and internet drops, which makes cloud-based agritech platforms unreliable for daily irrigation and compliance data logging.
-2. **Strict Nitrate Application Caps** — The National Environmental Standards for Freshwater (NES-F 2020) limits synthetic nitrogen fertilizer application to **190 kg N/ha/year**. Exceeding this limit leads to substantial fines.
-3. **Erosion & Silt Runoff** — Over-irrigation on clay or silty soils induces soil erosion and carries fertilizer runoff into local rivers, causing a breach of regional permitted activity consents (e.g. Waikato Rule 3.5.5.1).
-4. **Customary Data Rights** — Māori landowners and iwi trusts managing ancestral *whenua* demand that environmental and production telemetry remain under local custody (respecting *Te Mana Raraunga* or Māori Data Sovereignty network principles).
+1. **Cloud Blackouts in Rural NZ** - Remote farms and high-country stations regularly experience cell tower and internet drops, which makes cloud-based agritech platforms unreliable for daily irrigation and compliance data logging.
+2. **Strict Nitrate Application Caps** - The National Environmental Standards for Freshwater (NES-F 2020) limits synthetic nitrogen fertilizer application to **190 kg N/ha/year**. Exceeding this limit leads to substantial fines.
+3. **Erosion & Silt Runoff** - Over-irrigation on clay or silty soils induces soil erosion and carries fertilizer runoff into local rivers, causing a breach of regional permitted activity consents (e.g. Waikato Rule 3.5.5.1).
+4. **Customary Data Rights** - Maori landowners and iwi trusts managing ancestral *whenua* demand that environmental and production telemetry remain under local custody (respecting *Te Mana Raraunga* or Maori Data Sovereignty network principles).
 
 ---
 
@@ -59,20 +59,20 @@ Autonomous on-premise soil quality monitoring and agricultural control system fo
 
 ```bash
 SoilGuard-Portal/
-├── portal_schemas/           # Pydantic schemas (compliance, readings, plans)
-├── portal_core/              # Core modules (config, mqtt, av, hardware, pruner)
-├── telemetry_data/           # Local ledger dumps and transient media buffers
-├── tests/                    # Unit and security stress test files
-├── main.py                   # Unattended orchestrator entrypoint
-├── validate.py               # diagnostics boot sequences
-├── setup.py                  # pip installation setup script
-├── soilguard.service         # Systemd service unit template
-├── requirements.txt          # Production package requirements
-├── requirements-dev.txt      # Unit test requirements
-├── .env.example              # Local configuration template
-├── ARCHITECTURE.md           # Mermaid sequence flows and layout mapping
-├── COMPLIANCE.md             # NZ Legislative mapping details
-└── README.md                 # Project user documentation
+|-- portal_schemas/ # Pydantic schemas (compliance, readings, plans)
+|-- portal_core/ # Core modules (config, mqtt, av, hardware, pruner)
+|-- telemetry_data/ # Local ledger dumps and transient media buffers
+|-- tests/ # Unit and security stress test files
+|-- main.py # Unattended orchestrator entrypoint
+|-- validate.py # diagnostics boot sequences
+|-- setup.py # pip installation setup script
+|-- soilguard.service # Systemd service unit template
+|-- requirements.txt # Production package requirements
+|-- requirements-dev.txt # Unit test requirements
+|-- .env.example # Local configuration template
+|-- ARCHITECTURE.md # Mermaid sequence flows and layout mapping
+|-- COMPLIANCE.md # NZ Legislative mapping details
+`-- README.md # Project user documentation
 ```
 
 ---
@@ -81,48 +81,48 @@ SoilGuard-Portal/
 
 ### Hardware Prerequisites
 
-* **Raspberry Pi 5 (16GB RAM)** — Available locally via PB Tech or Kiwi Electronics.
-* **Raspberry Pi AI Accelerator / AI HAT+ 2** (40 TOPS, Hailo-10H NPU) — Key for offline generative AI workloads.
-* **Soil Probes & ESP32 gateway** — Telemetry sensors broadcasting over MQTT.
-* **USB/CSI Camera** — Installed above crop canopy in IP67 enclosure.
+* **Raspberry Pi 5 (16GB RAM)** - Available locally via PB Tech or Kiwi Electronics.
+* **Raspberry Pi AI Accelerator / AI HAT+ 2** (40 TOPS, Hailo-10H NPU) - Key for offline generative AI workloads.
+* **Soil Probes & ESP32 gateway** - Telemetry sensors broadcasting over MQTT.
+* **USB/CSI Camera** - Installed above crop canopy in IP67 enclosure.
 
 ### Installation & Run
 
 1. **Clone the Portal Repository:**
 
-   ```bash
-   git clone https://github.com/fivepanelhat/SoilGuard-Portal.git
-   cd SoilGuard-Portal
-   ```
+ ```bash
+ git clone https://github.com/fivepanelhat/SoilGuard-Portal.git
+ cd SoilGuard-Portal
+ ```
 
 2. **Configure Virtual Environment:**
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
-   pip install -r requirements.txt -r requirements-dev.txt
-   cp .env.example .env
-   ```
+ ```bash
+ python -m venv venv
+ source venv/bin/activate # Windows: venv\Scripts\activate
+ pip install git+https://github.com/fivepanelhat/coastal-alpine-core.git
+ pip install -r requirements.txt -r requirements-dev.txt
+ cp .env.example .env
+ ```
 
 3. **Deploy Gemma 4 Model:**
 
-   ```bash
-   ollama serve
-   ollama pull gemma4:e4b
-   ```
+ ```bash
+ ollama serve
+ ollama pull gemma4:e4b
+ ```
 
 4. **Verify System Setup:**
 
-   ```bash
-   python validate.py
-   ```
+ ```bash
+ python validate.py
+ ```
 
 5. **Start Orchestrator Daemon:**
 
-   ```bash
-   python main.py
-   ```
+ ```bash
+ python main.py
+ ```
 
 ---
 
@@ -134,5 +134,5 @@ SoilGuard-Portal/
 
 ---
 
-**Built for New Zealand — data sovereign, edge-native, compliance-aware.**  
+**Built for New Zealand - data sovereign, edge-native, compliance-aware.** 
 Questions or collaboration? Contact Coastal Alpine Tech Limited, New Plymouth, Taranaki.

@@ -1,19 +1,19 @@
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
-  name: sovereign-edge-mesh
-  namespace: kube-system
+ name: sovereign-edge-mesh
+ namespace: kube-system
 spec:
-  chart: traefik
-  repo: https://helm.traefik.io/traefik
-  targetNamespace: default
-  valuesContent: |
-    deployment:
-      kind: DaemonSet # Ensures networking maps to every single node on site
-    providers:
-      kubernetesIngress:
-        publishedService:
-          enabled: true
-    securityContext:
-      runAsNonRoot: true
-      runAsUser: 10001 # Strict non-root execution inside the K3s boundary
+ chart: traefik
+ repo: https://helm.traefik.io/traefik
+ targetNamespace: default
+ valuesContent: |
+ deployment:
+ kind: DaemonSet # Ensures networking maps to every single node on site
+ providers:
+ kubernetesIngress:
+ publishedService:
+ enabled: true
+ securityContext:
+ runAsNonRoot: true
+ runAsUser: 10001 # Strict non-root execution inside the K3s boundary

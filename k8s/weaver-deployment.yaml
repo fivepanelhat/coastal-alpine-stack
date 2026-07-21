@@ -1,39 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: weaver-orchestrator
+ name: weaver-orchestrator
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: weaver
-  template:
-    metadata:
-      labels:
-        app: weaver
-    spec:
-      containers:
-      - name: weaver
-        image: weaver:latest
-        env:
-        - name: TENANT_ID
-          value: "default"
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: true
-          runAsNonRoot: true
+ replicas: 2
+ selector:
+ matchLabels:
+ app: weaver
+ template:
+ metadata:
+ labels:
+ app: weaver
+ spec:
+ containers:
+ - name: weaver
+ image: weaver:latest
+ env:
+ - name: TENANT_ID
+ value: "default"
+ resources:
+ requests:
+ memory: "512Mi"
+ cpu: "500m"
+ securityContext:
+ allowPrivilegeEscalation: false
+ readOnlyRootFilesystem: true
+ runAsNonRoot: true
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: weaver
+ name: weaver
 spec:
-  selector:
-    app: weaver
-  ports:
-  - port: 8000
-    targetPort: 8000
+ selector:
+ app: weaver
+ ports:
+ - port: 8000
+ targetPort: 8000

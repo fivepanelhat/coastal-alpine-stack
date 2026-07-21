@@ -36,7 +36,7 @@ jobs:
           if [ -f requirements-dev.txt ]; then
             pip install -r requirements-dev.txt
           fi
-      - name: Lint (fatal errors — syntax and undefined names)
+      - name: Lint (fatal errors - syntax and undefined names)
         # Style rules live in each repo's own lint config; this scheduled
         # scan gates only on errors that always indicate broken code.
         run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.venv,venv,node_modules,build,dist,data,out
@@ -50,5 +50,5 @@ jobs:
             fi
             python -m pytest tests -q
           else
-            echo "No pytest suite at tests/ — lint-only scan."
+            echo "No pytest suite at tests/ - lint-only scan."
           fi

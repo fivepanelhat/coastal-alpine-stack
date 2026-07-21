@@ -1,17 +1,17 @@
 # coastal-alpine-stack production dependencies
 # Enforcing exact versions for deterministic edge deployment
 
-aiohttp>=3.14.1             # Replaced 'requests' for async, non-blocking local API calls
-ollama>=0.4.8,<1.0.0        # Local inference bridging
-paho-mqtt==2.1.0           # Hardware telemetry
-pydantic>=2.10.0           # Schema enforcement (loosen for Python 3.14 compatibility)
-pydantic-settings>=2.14.2  # GHSA-4xgf-cpjx-pc3j symlink secrets_dir fix
-numpy>=2.1.0,<3           # Data arrays (ensure Hailo NPU and langchain compatibility)
+aiohttp>=3.14.1 # Replaced 'requests' for async, non-blocking local API calls
+ollama>=0.4.8,<1.0.0 # Local inference bridging
+paho-mqtt==2.1.0 # Hardware telemetry
+pydantic>=2.10.0 # Schema enforcement (loosen for Python 3.14 compatibility)
+pydantic-settings>=2.14.2 # GHSA-4xgf-cpjx-pc3j symlink secrets_dir fix
+numpy>=2.1.0,<3 # Data arrays (ensure Hailo NPU and langchain compatibility)
 opencv-python-headless==4.10.0.84 # Replaced standard OpenCV to strip GUI bloat (pin for roboflow)
-python-dotenv==1.2.2       # Environment variables
-orjson==3.11.6             # High-speed JSON parsing
-aiofiles==23.2.1           # Async disk I/O
-structlog==23.2.0          # Structured telemetry logging
+python-dotenv==1.2.2 # Environment variables
+orjson==3.11.6 # High-speed JSON parsing
+aiofiles==23.2.1 # Async disk I/O
+structlog==23.2.0 # Structured telemetry logging
 
 # Weaver dependencies
 SQLAlchemy>=2.0.0,<3.0.0
@@ -35,10 +35,10 @@ uvicorn==0.49.0
 langgraph-checkpoint-sqlite
 langchain-chroma
 # GHSA-f4j7-r4q5-qw2c (CVE-2026-45829): pre-auth code injection in chromadb <=1.5.9.
-# No upstream patch yet — keep local-only (127.0.0.1), never expose /api to untrusted nets,
+# No upstream patch yet - keep local-only (127.0.0.1), never expose /api to untrusted nets,
 # do not enable trust_remote_code. Re-pin when a fixed release ships.
 chromadb>=1.5.9
-langsmith>=0.8.18          # GHSA-f4xh-w4cj-qxq8 TracingMiddleware path traversal
+langsmith>=0.8.18 # GHSA-f4xh-w4cj-qxq8 TracingMiddleware path traversal
 tenacity
 requests
 langchain-ollama

@@ -6,10 +6,10 @@ description = "Internal workspace for Coastal Alpine Tech stack"
 
 [tool.uv.workspace]
 members = [
-    "coastal_alpine_core",
-    "AquaGuard-Portal",
-    "SoilGuard-Portal",
-    "Blue-Moon-Portal",
+ "coastal_alpine_core",
+ "AquaGuard-Portal",
+ "SoilGuard-Portal",
+ "Blue-Moon-Portal",
 ]
 
 [tool.uv.sources]
