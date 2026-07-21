@@ -38,14 +38,14 @@ jobs:
           bandit -r . -ll --exclude ./tests_security_stress/ || true
 
       - name: Gitleaks Secret Scan
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Use repo allowlist (historical supabase curl placeholders + stress tests)
           GITLEAKS_CONFIG_PATH: .gitleaks.toml
 
       - name: Trivy Filesystem Scan
-        uses: aquasecurity/trivy-action@0.35.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           severity: 'HIGH,CRITICAL'
