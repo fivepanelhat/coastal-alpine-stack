@@ -9,9 +9,9 @@ pydantic-settings>=2.14.2 # GHSA-4xgf-cpjx-pc3j symlink secrets_dir fix
 numpy>=2.1.0,<3 # Data arrays (ensure Hailo NPU and langchain compatibility)
 opencv-python-headless==4.10.0.84 # Replaced standard OpenCV to strip GUI bloat (pin for roboflow)
 python-dotenv==1.2.2 # Environment variables
-orjson==3.11.6 # High-speed JSON parsing
-aiofiles==23.2.1 # Async disk I/O
-structlog==23.2.0 # Structured telemetry logging
+orjson==3.11.9 # High-speed JSON parsing
+aiofiles==25.1.0 # Async disk I/O
+structlog==26.1.0 # Structured telemetry logging
 
 # Weaver dependencies
 SQLAlchemy>=2.0.0,<3.0.0
