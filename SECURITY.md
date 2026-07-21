@@ -44,3 +44,11 @@ Do **not** file public issues for exploitable stack defects.
 ## SLA
 
 Critical edge/actuator paths: mitigation within **48 hours**. Multi-tenant isolation defects: treat as Critical.
+
+## Fleet security principles
+
+- **No silent exfiltration** of personal or tenant operational data
+- Prefer **local-first** processing; third-party AI only with explicit operator configuration and UI/docs disclosure
+- Report vulnerabilities via GitHub Security Advisories or the maintainer contact on the org profile
+- High-stakes production changes require human approval (HITL)
+
