@@ -26,7 +26,7 @@ langgraph-checkpoint-sqlite
 langchain-chroma
 # GHSA-f4j7-r4q5-qw2c (CVE-2026-45829): no fixed chromadb release yet - local-only bind.
 chromadb>=1.5.9
-langsmith>=0.8.18
+langsmith>=0.10.9
 tenacity
 requests
 langchain-ollama
