@@ -1,5 +1,5 @@
-# Use Python 3.10 for consistency with CI and pyproject.toml
-FROM python:3.10-slim
+# Python 3.11 to match pyproject requires-python (>=3.11) and CI.
+FROM python:3.11-slim
 
 WORKDIR /app
 

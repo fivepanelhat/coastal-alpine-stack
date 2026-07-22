@@ -1,47 +1,47 @@
 name: RedTeam & Adversarial Testing
 
 on:
- schedule:
- - cron: "0 */12 * * *"
- workflow_dispatch:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
 
 concurrency:
- group: redteam-${{ github.ref }}
- cancel-in-progress: true
+  group: redteam-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
- contents: read
+  contents: read
 
 jobs:
- redteam:
- runs-on: ubuntu-latest
- steps:
- - name: Checkout repository
- uses: actions/checkout@v4
- with:
- submodules: recursive
- fetch-depth: 0
+  redteam:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
- - name: Set up Python
- uses: actions/setup-python@v5
- with:
- python-version: '3.10'
- cache: 'pip'
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.10'
+          cache: 'pip'
 
- - name: Install testing dependencies
- run: |
- python -m pip install --upgrade pip
- pip install pytest requests
+      - name: Install testing dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest requests
 
- - name: Run Security Stress Tests (Adversarial / Prompt Injection)
- run: |
- python -m pytest tests_security_stress/ -v --tb=short
- # Note: This job is allowed to continue on failure for now
- # as these are simulated red-team scenarios used for hardening validation.
- continue-on-error: true
+      - name: Run Security Stress Tests (Adversarial / Prompt Injection)
+        run: |
+          python -m pytest tests_security_stress/ -v --tb=short
+        # Note: This job is allowed to continue on failure for now
+        # as these are simulated red-team scenarios used for hardening validation.
+        continue-on-error: true
 
- - name: Summary
- if: always()
- run: |
- echo "Red Team simulation completed."
- echo "Review test output above for adversarial resilience findings."
+      - name: Summary
+        if: always()
+        run: |
+          echo "Red Team simulation completed."
+          echo "Review test output above for adversarial resilience findings."
