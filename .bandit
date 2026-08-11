@@ -1,0 +1,28 @@
+# Coastal Alpine Stack Bandit config
+# Suppress Low-severity noise on intentional admin/orchestration scripts
+# and test asserts. High + Medium stay fully gated by enterprise-ci (-ll).
+#
+# Rationale:
+#   B101   asserts used as runtime guards + test assertions
+#   B404   subprocess required by workflow apply / OTA / webhook helpers
+#   B603/B607  controlled non-user-supplied command lists
+#   B105   only in unit tests with fake secrets
+#   B110   utility file-walkers that intentionally swallow permission errors
+
+skips:
+  - B101
+  - B105
+  - B110
+  - B404
+  - B603
+  - B607
+
+exclude_dirs:
+  - tests_security_stress
+  - .git
+  - node_modules
+  - __pycache__
+  - .venv
+  - venv
+  - dist
+  - build
