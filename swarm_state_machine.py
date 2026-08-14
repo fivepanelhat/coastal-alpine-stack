@@ -109,7 +109,7 @@ def input_shield_node(state: SwarmState):
         return {"sender": "shield"}
 
     except Exception as e:
-        err_msg = f"SECURITY SHIELD BLOCK: {str(e)}"
+        err_msg = f"SECURITY SHIELD BLOCK: {e!s}"
         logger.critical(err_msg)
         return {"sender": "shield", "agent_errors": state.get("agent_errors", []) + [err_msg]}
 
@@ -157,7 +157,7 @@ def _run_with_timeout(func, state: SwarmState, node_name: str):
             logger.error(f"[{swarm_context.session_id}] {err_msg}")
             return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
         except Exception as e:
-            err_msg = f"{node_name} Crash: {str(e)}"
+            err_msg = f"{node_name} Crash: {e!s}"
             logger.error(f"[{swarm_context.session_id}] {err_msg}")
             return {"sender": node_name.lower(), "agent_errors": state.get("agent_errors", []) + [err_msg]}
 
