@@ -4,7 +4,7 @@ ollama>=0.4.8,<1.0.0
 paho-mqtt==2.1.0
 pydantic>=2.10.0
 pydantic-settings>=2.5.0
-numpy>=2.1.0,<3
+numpy>=2.4.6,<3
 python-dotenv==1.2.2
 orjson==3.11.6
 aiofiles==23.2.1
