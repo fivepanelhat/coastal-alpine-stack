@@ -21,7 +21,7 @@ mypy>=1.13.0
 # types-pyyaml omitted (no compatible distribution for Python 3.13)
 
 # Linting
-pylint>=3.3.0
+pylint>=4.0.7
 flake8>=7.1.0
 
 # Code Quality
