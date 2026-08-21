@@ -13,6 +13,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoUrl = if ($env:STACK_REPO_URL) { $env:STACK_REPO_URL } else { "https://github.com/fivepanelhat/coastal-alpine-stack.git" }
 $InstallDir = if ($env:STACK_HOME) { $env:STACK_HOME } else { Join-Path $env:USERPROFILE ".coastal-alpine-stack-app" }
+$CorePin = if ($env:STACK_CORE_REF) { $env:STACK_CORE_REF } else { "v0.5.9" }
 
 function Info($m) { Write-Host "[stack] $m" -ForegroundColor Cyan }
 function Warn($m) { Write-Host "[stack] $m" -ForegroundColor Yellow }
@@ -78,8 +79,8 @@ if (Test-Path "coastal_alpine_core") {
  Require-Ok "pip install core"
  }
 } else {
- Warn "Local coastal_alpine_core not found; installing from GitHub"
- & $VenvPython -m pip install "git+https://github.com/fivepanelhat/Coastal-Alpine-Core.git@v0.5.4"
+ Warn "Local coastal_alpine_core not found; installing from GitHub @$CorePin"
+ & $VenvPython -m pip install "git+https://github.com/fivepanelhat/Coastal-Alpine-Core.git@$CorePin"
  Require-Ok "pip install core from GitHub"
 }
 
@@ -108,7 +109,7 @@ Info "Done. Activate with:"
 Write-Host " $VenvDir\Scripts\Activate.ps1"
 Write-Host ""
 Info "Hybrid components:"
-Write-Host " Core: coastal_alpine_core / https://github.com/fivepanelhat/Coastal-Alpine-Core"
+Write-Host " Core: coastal_alpine_core / https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/$CorePin"
 Write-Host " Weaver: weaver/ or https://github.com/fivepanelhat/Weaver"
 Write-Host " Aether: irm https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.ps1 | iex"
 Write-Host ""
