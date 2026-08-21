@@ -14,6 +14,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased] - 2026-08-21 - Core Sprint A–C alignment
+
+### Changed
+- Installer Core fallback pin **v0.5.4 → v0.5.9** (`install.sh`, `install.ps1`)
+- Override via `STACK_CORE_REF` if needed
+
+### Stack seams (Core / Weaver / Aether)
+| Seam | Core | Notes |
+|------|------|-------|
+| SessionEvent audit stream | [v0.5.7](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.7) | HITL evidence JSONL |
+| LLM provider Protocol + profiles | [v0.5.8](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.8) | local-first Ollama |
+| Session → Trajectory flywheel | [v0.5.9](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.9) | outcome samples |
+
+---
+
 ## [Unreleased] - 2026-06-16 - Enterprise Hardening & Data Flywheel Release
 
 ### Added
