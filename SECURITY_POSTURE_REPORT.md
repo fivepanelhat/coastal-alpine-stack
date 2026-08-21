@@ -1,7 +1,7 @@
 # Unified Security Posture & Hardening Report
 
-**Coastal Alpine Tech Kiwi Edge AI Stack** 
-**Date**: 11 July 2026 
+**Coastal Alpine Tech Kiwi Edge AI Stack**  
+**Date**: 21 August 2026 (refreshed from 11 July 2026)  
 **Scope**: Coastal-Alpine-Core, Weaver, Blue-Moon-Portal, AquaGuard-Portal, SoilGuard-Portal, Sting-Operation-AI, coastal-alpine-stack, Aether, Front_Line_Whanau, whanau-preterm-support-hub
 
 ## Executive Summary
@@ -9,6 +9,8 @@
 The stack was re-audited against **GitHub security notifications** (Dependabot, Code Scanning, GHSA/NVD) and local `pip-audit` / `npm audit` runs.
 
 **Overall posture**: Strong - shared `SecurityGuard`, SecOps/red-team CI, least-privilege workflow tokens, and dependency floors for known CVEs. One **critical** upstream gap remains: ChromaDB pre-auth RCE has **no fixed release** yet (network isolation required).
+
+**August 2026**: Core advanced to **v0.5.9** (SessionEvent audit, provider Protocol, session→Trajectory). Installers and Weaver/Aether pins aligned.
 
 ## Notification sources used
 
@@ -21,13 +23,15 @@ The stack was re-audited against **GitHub security notifications** (Dependabot, 
 
 ## Component status
 
-### Coastal-Alpine-Core (v0.5.4)
+### Coastal-Alpine-Core ([v0.5.9](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.9))
 - Expanded `SecurityGuard` patterns (jailbreak, SSRF metadata, exfil, pipe-to-shell, private keys).
-- Precompiled hot-path guards, flywheel rotation, edge Ollama client (from 0.5.3).
+- Precompiled hot-path guards, flywheel rotation, edge Ollama client.
+- **Sprint A–C**: `SessionEventStore` (HITL evidence), `LLMProvider` Protocol + profiles, `record_session_trajectory`.
 - SECURITY.md threat register + SLA.
 
 ### Weaver
-- `langsmith>=0.8.18`, `pydantic-settings>=2.14.2`, Core pin bump path to 0.5.3+.
+- `langsmith>=0.8.18`, `pydantic-settings>=2.14.2`, Core pin **@v0.5.9**.
+- SessionEvent + Trajectory on process paths; provider soft seam.
 - CI least-privilege permissions; Dependabot pip weekly.
 
 ### Portals (Aqua / Blue-Moon / SoilGuard)
@@ -41,10 +45,12 @@ The stack was re-audited against **GitHub security notifications** (Dependabot, 
 ### coastal-alpine-stack
 - Enterprise CI permissions fixed (clears CodeQL `actions/missing-workflow-permissions`).
 - Dependabot for pip/Actions/Docker; chromadb threat documented; floors for langsmith / pydantic-settings.
+- Installer Core fallback **@v0.5.9** (`STACK_CORE_REF` override).
 - SECURITY.md rewritten (was placeholder template).
 
 ### Aether / Front_Line_Whanau / whanau-preterm-support-hub
 - Dependabot added; SECURITY.md + notifications; CI permissions on FLW/Aether.
+- Aether soft SessionEvent + Trajectory bridges; optional `aether[core]` @ v0.5.9.
 
 ## Cross-cutting controls
 
@@ -57,7 +63,8 @@ The stack was re-audited against **GitHub security notifications** (Dependabot, 
 | Dependabot | Active | All scanned product repos |
 | npm supply chain | Clean | 0 high/critical on audited lockfiles |
 | ChromaDB exposure | Mitigated | Localhost-only until upstream patch |
-| Prompt injection | Strong | Core `SecurityGuard` 0.5.4 patterns |
+| Prompt injection | Strong | Core `SecurityGuard` 0.5.x patterns |
+| Session audit / flywheel | Strong | SessionEvent + Trajectory (Core ≥0.5.9); no secrets in payloads |
 
 ## Remaining gaps
 
