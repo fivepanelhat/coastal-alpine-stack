@@ -13,6 +13,7 @@ set -euo pipefail
 
 REPO_URL="${STACK_REPO_URL:-https://github.com/fivepanelhat/coastal-alpine-stack.git}"
 INSTALL_DIR="${STACK_HOME:-$HOME/.coastal-alpine-stack-app}"
+CORE_PIN="${STACK_CORE_REF:-v0.5.9}"
 
 info() { printf '\033[36m[stack]\033[0m %s\n' "$1"; }
 warn() { printf '\033[33m[stack]\033[0m %s\n' "$1"; }
@@ -69,8 +70,8 @@ if [[ -d "coastal_alpine_core" ]]; then
  info "Installing Coastal-Alpine-Core (editable hybrid SDK)"
  pip install -e "./coastal_alpine_core[dev]" || pip install -e "./coastal_alpine_core"
 else
- warn "Local coastal_alpine_core not found; installing from GitHub"
- pip install "git+https://github.com/fivepanelhat/Coastal-Alpine-Core.git@v0.5.4"
+ warn "Local coastal_alpine_core not found; installing from GitHub @${CORE_PIN}"
+ pip install "git+https://github.com/fivepanelhat/Coastal-Alpine-Core.git@${CORE_PIN}"
 fi
 
 if [[ -f "requirements-dev.txt" ]]; then
@@ -92,7 +93,7 @@ info "Done. Activate with:"
 echo " source $VENV_DIR/bin/activate"
 echo
 info "Hybrid components:"
-echo " Core: coastal_alpine_core / https://github.com/fivepanelhat/Coastal-Alpine-Core"
+echo " Core: coastal_alpine_core / https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/${CORE_PIN}"
 echo " Weaver: weaver/ or https://github.com/fivepanelhat/Weaver"
 echo " Aether: curl -fsSL https://raw.githubusercontent.com/fivepanelhat/Aether/main/install.sh | bash"
 echo
