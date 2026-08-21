@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Bump stack gitlinks for Core + Weaver after Sprint A–C.
+# Bump stack gitlinks for Core + Weaver.
 # Git submodule pointers cannot be updated via GitHub file API — run locally.
 #
 # Usage (from coastal-alpine-stack clone):
 #   ./scripts/bump-core-submodule.sh
 #   git add coastal_alpine_core weaver
-#   git commit -m "chore(submodules): Core v0.5.9 + Weaver main"
+#   git commit -m "chore(submodules): Core v0.5.10 + Weaver main"
 #   git push
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-CORE_REF="${STACK_CORE_REF:-v0.5.9}"
+CORE_REF="${STACK_CORE_REF:-v0.5.10}"
 WEAVER_REF="${STACK_WEAVER_REF:-main}"
 
 echo "[stack] Updating coastal_alpine_core → $CORE_REF"
