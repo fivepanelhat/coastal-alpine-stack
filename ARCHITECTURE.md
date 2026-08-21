@@ -1,8 +1,9 @@
 # Coastal Alpine Tech - High-Level Architecture
 
-**Version**: July 2026 
-**Status**: Active Development - Enterprise Hardening Phase 
-**Canonical hardware**: Raspberry Pi 5 16GB + Hailo-10H NPU (40 TOPS)
+**Version**: August 2026  
+**Status**: Active Development - Enterprise Hardening Phase  
+**Canonical hardware**: Raspberry Pi 5 16GB + Hailo-10H NPU (40 TOPS)  
+**Core pin**: [v0.5.9](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.9)
 
 ---
 
@@ -78,8 +79,10 @@ flowchart TB
  subgraph SDK["Coastal-Alpine-Core SDK"]
  SG["SecurityGuard"]
  TEL["TelemetryTracker"]
+ SE["SessionEventStore"]
  FW["DataFlywheel"]
  OCL["SovereignOllamaClient"]
+ PR["LLMProvider + profiles"]
  PC["portal_core<br/>AIAgent | MQTT | AV | Hardware"]
  end
 
@@ -104,6 +107,7 @@ flowchart TB
  CH["ChromaDB<br/>localhost only"]
  SQL["SQLite / SQLCipher"]
  JL["flywheel_*.jsonl"]
+ SEJL["session_events.jsonl"]
  end
  end
 
@@ -125,6 +129,8 @@ flowchart TB
  ST --> HAI
  BM --> HAI
  AQ & SO & BM & ST --> FW
+ LG --> SE
+ SE --> SEJL
  FW --> JL
  LG --> RAG
  RAG --> CH
@@ -136,11 +142,11 @@ flowchart TB
 
  class ESP,CAM field
  class MQTT,NFT fabric
- class SG,TEL,FW,OCL,PC core
+ class SG,TEL,SE,FW,OCL,PR,PC core
  class LG,RAG orch
  class AQ,SO,BM,ST portal
  class OLL,HAI ai
- class CH,SQL,JL fly
+ class CH,SQL,JL,SEJL fly
  class HITL,SEC sec
  class K3,PROM ops
 ```
@@ -151,12 +157,20 @@ flowchart TB
 |:-:|:------|:-----------|:-----|
 | 1 | **Field** | Sovereign-Edge-Firmware, cameras/mics | Sense physical world; mTLS client identity |
 | 2 | **Fabric** | Mosquitto, ACLs, nftables | Encrypted, topic-scoped message bus |
-| 3a | **SDK** | Coastal-Alpine-Core | Guards, telemetry, flywheel, Ollama client, portal_core |
-| 3b | **Orchestration** | Weaver (LangGraph) | Multi-tenant routing + RAG |
+| 3a | **SDK** | Coastal-Alpine-Core | Guards, telemetry, SessionEvent, flywheel, providers, portal_core |
+| 3b | **Orchestration** | Weaver (LangGraph) | Multi-tenant routing + RAG + audit emits |
 | 3c | **Portals** | AquaGuard, SoilGuard, Blue-Moon, Sting | Domain agents + actuators |
 | 3d | **AI** | Ollama + Hailo-10H | Offline LLM + NPU vision |
-| 3e | **Memory** | Chroma (local), SQLCipher, JSONL flywheels | Sovereign stores |
+| 3e | **Memory** | Chroma (local), SQLCipher, JSONL flywheels / session_events | Sovereign stores |
 | 4 | **Trust** | HITL, SecOps CI, Prometheus | Governance + observability |
+
+### Sprint A–C Core seams (Aug 2026)
+
+| Seam | Core | Stack adoption |
+|------|------|----------------|
+| SessionEvent | [v0.5.7](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.7) | Weaver + Aether HITL evidence |
+| LLMProvider + profiles | [v0.5.8](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.8) | Soft bridges; local Ollama default |
+| Session → Trajectory | [v0.5.9](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.9) | Outcome samples for flywheel / golden-set |
 
 ---
 
@@ -219,8 +233,9 @@ Typical path:
 
 | Concern | Implementation | Status |
 |---------|----------------|--------|
-| Prompt / injection | Core `SecurityGuard` (v0.5.4+ patterns) | Strong |
+| Prompt / injection | Core `SecurityGuard` (v0.5.9 patterns) | Strong |
 | Tenant isolation | Weaver routing + `tenant_isolated_query` | Strong |
+| Session audit | `SessionEventStore` + Trajectory (no secrets) | Strong |
 | Transit | mTLS MQTT :8883, ACLs, nftables | Strong |
 | Supply chain | Dependabot, Gitleaks, Bandit, red-team | Strong |
 | Vector DB | Chroma **localhost-only** until upstream RCE patch | Mitigated |
@@ -238,21 +253,25 @@ Detail: [`SECURITY.md`](./SECURITY.md) | [`SECURITY_MATRIX.md`](./SECURITY_MATRI
 
 - `SecurityGuard` / `SecurityResult` - prompt, SSRF-lure, SQL, credential patterns
 - `TelemetryTracker` - latency, optional system metrics
-- `DataFlywheel` - trajectories, HITL feedback, golden sets, rotation
+- `SessionEventStore` / `make_event` - append-only HITL evidence stream
+- `DataFlywheel` / `record_session_trajectory` - trajectories, HITL feedback, golden sets
+- `LLMProvider` Protocol + edge profiles (`get_provider`)
 - `SovereignOllamaClient` - keep-alive session, edge defaults, LRU cache
 - `portal_core` - AIAgent, MQTTClient, AVCapture, HardwareController, MediaPruner
 
 ### 5.2 Weaver (orchestration)
 
 - Multi-tenant LangGraph orchestrator
-- Security + telemetry + flywheel on process paths
+- Security + telemetry + SessionEvent + Trajectory on process paths
 - Tenant-aware routing between specialist agents
 - Dual-platform install (`install.sh` / `install.ps1` / `bootstrap.py`)
+- Core pin: `@v0.5.9`
 
 ### 5.3 Aether (hybrid companion)
 
 - ReAct agentic development orchestrator
 - Markdown skills (`kiwi-edge-architecture`, security, sovereignty)
+- Soft SessionEvent + Trajectory bridges (optional `aether[core]`)
 - **Computer use** hybrid: desktop actuation on Windows + Linux
 - HITL gates aligned with stack trust plane
 - Install: `install.sh` (Linux) | `install.ps1` (Windows)
@@ -286,7 +305,7 @@ flowchart LR
  HYBRID --> EDGE
 ```
 
-### 5.3 Domain portals
+### 5.5 Domain portals
 
 | Portal | Domain | Key capabilities |
 |--------|--------|------------------|
@@ -295,7 +314,7 @@ flowchart LR
 | SoilGuard-Portal | Pasture / soil | Nutrients + soil health |
 | Sting-Operation-AI | Biosecurity (wasps) | YOLO / Hailo vision inference |
 
-### 5.4 Hardware & deployment
+### 5.6 Hardware & deployment
 
 - **Edge nodes**: Raspberry Pi 5 16GB + Hailo-10H
 - **Runtime**: K3s or docker-compose (`k8s/`, `docker-compose.yml`)
@@ -304,11 +323,11 @@ flowchart LR
 
 ---
 
-## 6. Maturity (July 2026)
+## 6. Maturity (August 2026)
 
 | Area | Status |
 |------|--------|
-| Core SDK | Production foundations + edge optimisations (0.5.x) |
+| Core SDK | Production foundations + Sprint A–C seams (0.5.9) |
 | Portals | Flywheel + SecurityGuard integrated |
 | CI / SecOps | Enterprise CI, secops, red-team, Dependabot |
 | Deployment | K3s manifests + hardening guide |

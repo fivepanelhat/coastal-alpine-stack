@@ -6,6 +6,15 @@ The Data Flywheel is a core component of the Coastal Alpine sovereign edge AI pl
 
 Its purpose is to turn real-world operational data (sensor readings, AI plans, hardware outcomes) into a growing asset for model improvement while maintaining full data sovereignty.
 
+**Complementary stream (Core ≥0.5.7 / 0.5.9):**
+
+| Stream | Granularity | Purpose |
+|--------|-------------|--------|
+| **SessionEvent** | Step-level | HITL evidence, resume, audit (`session_events.jsonl`) |
+| **Trajectory** | Outcome-level | Eval, golden-set, flywheel (`flywheel_*.jsonl`) |
+
+Bridge helper: `coastal_alpine_core.record_session_trajectory(...)` — [Core v0.5.9](https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.9).
+
 ## Core Components
 
 ### 1. `Trajectory` (Dataclass)
@@ -13,11 +22,11 @@ A structured record of a single meaningful event in the system.
 
 Key fields:
 - `trajectory_id`
-- `action` (e.g. `generate_optimization_plan`, `hardware_irrigation`)
-- `outcome` (`success`, `failure`, `human_corrected`)
-- `input_summary` / `output_summary`
+- `action` (e.g. `generate_optimization_plan`, `hardware_irrigation`, `weaver.process_message`)
+- `outcome` (`success`, `failure`, `human_corrected`, `blocked`, `error`)
+- `input_summary` / `output_summary` (**no secrets / raw PII** — lengths and status codes)
 - `latency_seconds`, `estimated_energy_joules`
-- `metadata` (plan_id, requires_human_review, etc.)
+- `metadata` (plan_id, session_id, tenant_id, requires_human_review, etc.)
 - `quality_score` (assigned by evaluation loop)
 - `human_feedback`
 
@@ -32,18 +41,34 @@ Main interface for recording and managing trajectories.
 - `curate_golden_set(min_quality=0.7)` - Returns high-quality trajectories for training
 - `get_recent_trajectories(limit=100)`
 
+**Session bridge (Sprint C)**:
+```python
+from coastal_alpine_core import record_session_trajectory
+
+record_session_trajectory(
+    session_id="s-1",
+    action="weaver.process_message",
+    outcome="success",
+    input_summary="chars=42",
+    output_summary="status=ok",
+    latency_seconds=0.12,
+    tenant_id="tenant-a",
+    storage_path="flywheel_tenant-a.jsonl",
+)
+```
+
 **Usage Pattern**:
 ```python
-from coastal_alpine_core.flywheel import DataFlywheel, Trajectory
+from coastal_alpine_core import DataFlywheel, Trajectory
 
 flywheel = DataFlywheel(storage_path="flywheel_my_portal.jsonl")
 
 # Automatic recording after plan generation or hardware action
 flywheel.record_hardware_outcome(
- plan_id=plan["plan_id"],
- action="irrigation",
- success=True,
- metadata=plan
+    plan_id=plan["plan_id"],
+    action="irrigation",
+    success=True,
+    metadata=plan
 )
 ```
 
@@ -60,11 +85,14 @@ Currently contains placeholder methods that can be connected to a real optimiser
 | AquaGuard-Portal | Full | Plan generation + Hardware outcomes |
 | SoilGuard-Portal | Full | Plan generation + Hardware outcomes |
 | Sting-Operation-AI | Full (Inference) | YOLO detection results + confidence |
-| Weaver | Partial | Orchestrator message processing |
+| Weaver | Full (orchestrator) | SessionEvent steps + outcome Trajectory |
+| Aether | Soft (optional Core) | SessionEvent + Trajectory on run end |
 
 All portals now automatically record trajectories when:
 - An optimization plan is generated
 - A hardware action is executed (success/failure)
+
+Weaver/Aether also emit SessionEvents (prompt, security, agent_step, session_end) and record outcome Trajectories when Core ≥0.5.9 is installed.
 
 ## Human-in-the-Loop (HITL)
 
@@ -72,9 +100,9 @@ Operators can provide feedback on specific trajectories:
 
 ```python
 flywheel.update_with_human_feedback(
- original_trajectory_id="traj-abc123",
- feedback="Irrigation should have been higher",
- new_outcome="human_corrected"
+    original_trajectory_id="traj-abc123",
+    feedback="Irrigation should have been higher",
+    new_outcome="human_corrected"
 )
 ```
 
@@ -95,6 +123,9 @@ Each portal uses its own flywheel file:
 - `flywheel_aquaguard.jsonl`
 - `flywheel_soilguard.jsonl`
 - `flywheel_sting_operation.jsonl`
+- Weaver: `flywheel_{tenant_id}.jsonl`
+- Aether: `~/.aether/flywheel_trajectories.jsonl`
+- Session events: `session_events_{tenant}.jsonl` / `~/.aether/session_events.jsonl`
 
 These are stored locally on the edge node for full data sovereignty.
 
@@ -110,8 +141,10 @@ These are stored locally on the edge node for full data sovereignty.
 
 - `SECURITY_POSTURE_REPORT.md`
 - `PRODUCTION_HARDENING.md`
-- `coastal_alpine_core/flywheel.py` (source code)
+- `ARCHITECTURE.md`
+- Core source: `session_events.py`, `session_flywheel.py`, `telemetry.py`
+- Release: https://github.com/fivepanelhat/Coastal-Alpine-Core/releases/tag/v0.5.9
 
 ---
 
-*Maintained by Coastal Alpine Tech - June 2026*
+*Maintained by Coastal Alpine Tech - August 2026*
